@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../Header'
 import {Row,Avatar,Image} from 'antd'
 import MainCard from '../Card/MainCard'
+import AdminPage from './AdminPage'
 function FirstPage(props) {
     const card =[
         {icon:<Avatar size={70} icon={<Image src="/folder.png" width={40}preview={false}/>} style={{ backgroundColor: '#27A7B2' }}/>,
@@ -54,19 +55,28 @@ function FirstPage(props) {
         
 
     ]
+   
     const cardfunc = (cards)=>{
         return cards.map(card =><MainCard card ={card} key={card.title} path={card.path}/>)
     }
     return (
         <div >
             
-            <Header />
+            
             {props.role === 'employee' ||props.role === 'leader'?
+            <>
+            <Header />
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{paddingLeft:160}}>
                     {cardfunc(card)}
                 
             </Row>
+            </>
             :null
+            }
+            {props.role ==='admin'&&
+                <div >
+                    <AdminPage />
+                </div>
             }
         </div>
     )

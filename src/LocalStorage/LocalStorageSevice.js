@@ -13,7 +13,7 @@ function removeToken (){
 function getRole(){
     if(getToken()){
         let token = getToken();
-        let role = jwtDecode(token).Role;
+        let role = jwtDecode(token).role;
         return role
     }
     return "guest"

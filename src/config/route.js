@@ -8,6 +8,7 @@ import Land from '../component/Pages/Land/Land'
 import Build from '../component/Pages/Build/Build'
 import FirstPage from '../component/Pages/FirstPage'
 import Folder from '../component/Pages/Folder/Folder'
+import Manage from '../component/Pages/Manage/Manage'
 const components ={
     login:{
         url:"/login",
@@ -54,6 +55,10 @@ const components ={
     folder:{
         url:'/folder',
         component:Folder
+    },
+    manage:{
+        url:'/manage',
+        component:Manage
     }
     
 }
@@ -84,7 +89,8 @@ const userRole ={
             components.condo,
             components.building,
             components.tax,
-            components.customer
+            components.customer,
+            components.manage
         ],
         redirectRoutes:"/main"
      },

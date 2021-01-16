@@ -28,11 +28,14 @@ export default function Header(props) {
             <Row gutter={{xs:8,sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" span={17}/>
                 <Col className="gutter-row" span={7}  >
+                    {user?.role ==="leader"&&
+                        <Link to="/manage" style={{backgroundColor:'#EDBE1E',color:'gray'}}><b>ในส่วนของหัวหน้า</b></Link>
+                    }
                     <Link to="/main" style={{padding:20,color:'black'}}><Image src="/home.png" width={20}preview={false}/>  หน้าหลัก</Link>
                     <Dropdown overlay={menu}>
                     <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                         <Avatar size={40} icon={<UserOutlined />} style={{ backgroundColor: '#9EC1C4' }}/>
-                                {user&& <b style={{padding:10,color:'black'}}>{`${user.Fname} ${user.name}`}</b>}<DownOutlined />               
+                                {user&& <b style={{padding:10,color:'black'}}>{`${user.Fname} ${user.Lname}`}</b>}<DownOutlined />               
                     </a>
                     </Dropdown>
                 </Col>

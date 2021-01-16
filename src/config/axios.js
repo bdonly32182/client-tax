@@ -16,7 +16,7 @@ axios.interceptors.request.use(
         Promise.reject(err)
     }
 )
-axios.interceptors.request.use(
+axios.interceptors.response.use(
     //will get respone and error from server
     response =>{
         return response
@@ -31,7 +31,6 @@ axios.interceptors.request.use(
 
         }
         if (err.response?.status === 403) {
-            console.log('axios stauts 403');
             notification.error({message:"ข้อมูลนี้คุณไม่มีสิทธิ์ในการเข้าถึง"})
             window.location.replace('/main')
             return Promise.reject(err)

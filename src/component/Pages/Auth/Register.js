@@ -35,7 +35,7 @@ function Register(props) {
                     {...layout}
                     initialValues={{ 
                         remember: true ,
-                        DistrictDistrictNo:"503",
+                        distict_member_id:"503",
                         role_name:'employee'
                     }}
                     onFinish={onFinish}
