@@ -1,6 +1,7 @@
 import Login from '../component/Pages/Auth/Login'
 import Register from '../component/Pages/Auth/Register'
 import Condo from '../component/Pages/Condo/Condo'
+import CustomerPage from '../component/Pages/Customer/CustomerPage'
 import EditCustomer from '../component/Pages/Customer/EditCustomer'
 import EditEmployee from '../component/Pages/Employee/EditEmployee'
 import Tax from '../component/Pages/Tax/Tax'
@@ -24,7 +25,7 @@ const components ={
     },
     customer:{
         url:'/customer',
-        component:EditCustomer
+        component:CustomerPage
     }
     ,
     editCustomer:{
@@ -90,7 +91,8 @@ const userRole ={
             components.building,
             components.tax,
             components.customer,
-            components.manage
+            components.manage,
+            components.editCustomer
         ],
         redirectRoutes:"/main"
      },
@@ -104,7 +106,9 @@ const userRole ={
             components.condo,
             components.building,
             components.tax,
-            components.customer
+            components.customer,
+            components.editCustomer
+            
 
         ],
         redirectRoutes:"/main"

@@ -22,7 +22,6 @@ axios.interceptors.response.use(
         return response
     },
     err=>{
-        console.log('error aixos');
         if (err.response?.status === 401) {
             LocalStorageService.removeToken();
             window.location.reload();
@@ -31,8 +30,9 @@ axios.interceptors.response.use(
 
         }
         if (err.response?.status === 403) {
-            notification.error({message:"ข้อมูลนี้คุณไม่มีสิทธิ์ในการเข้าถึง"})
             window.location.replace('/main')
+            notification.error({message:"ข้อมูลนี้คุณไม่มีสิทธิ์ในการเข้าถึง"})
+            
             return Promise.reject(err)
         }
         return Promise.reject(err)

@@ -1,1 +1,5 @@
 export const USER_LOGIN = 'user_login'
+export const EDIT_CUSTOMER = 'edit_customer'
+export const FETCHS_CUSTOMER = 'fetchs_customer'
+export const FETCH_CUSTOMER = 'fetch_customer'
+export const FETCH_LAND = 'fetch_land'

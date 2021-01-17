@@ -16,12 +16,13 @@ function ChangeProfile(props) {
           span: 16,
         },
       };
-      useEffect(() => form.resetFields(), [props.user]);
+      useEffect(() =>{ 
+        form.setFieldsValue(props.user);
+      }, [props.user]);
 
       const onFinish = (values) => {
           props.onSubmit(values)
         };
-        console.log(props.user);
     return (
         <div style={{padding:80}}>
          <Row gutter={{xs:8,sm: 16, md: 24, lg: 32 }}>
@@ -32,9 +33,10 @@ function ChangeProfile(props) {
                 <Form
                     form={form}
                     {...layout}
-                    initialValues={{ 
-                       ...props.user
-                    }}
+                    // initialValues={{ 
+                    //    ...props.user,
+                       
+                    // }}
                     onFinish={onFinish}
                   >
                     <Form.Item

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {Layout, Menu,notification} from 'antd'
 import {ProfileOutlined,AlertOutlined,MenuUnfoldOutlined,MenuFoldOutlined} from '@ant-design/icons'
 import Header from '../../Header';
@@ -9,12 +9,19 @@ function Manage(props) {
     const [collapsed,setCollapsed] = useState(false)
     const [keys,setKeys] =useState("1")
     const [employee,setEmployee] = useState([])
+    useEffect(() => {
+        axios.get('/api/emplist').then((result) => {
+            setEmployee(result.data)
+        }).catch((err) => {
+            notification.error({message:'เรียกดูข้อมูลพนักงานล้มเหลว'})
+        });
+    }, [])
    const toggle = () => {
        setCollapsed(!collapsed)
       };
     const onClickMenu =(value)=>{
         setKeys(value.key)
-        if (value.key === "1") {
+        if (value.key === "1" && !employee) {
             axios.get('/api/emplist').then((result) => {
                 setEmployee(result.data)
             }).catch((err) => {
