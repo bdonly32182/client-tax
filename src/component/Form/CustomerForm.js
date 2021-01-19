@@ -80,7 +80,7 @@ function CustomerForm(props) {
                               <Form.Item
                                 label="ชื่อ"
                                 name="Cus_Fname"
-                                rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                rules={[{ required: true, message: 'กรุณากรอกชื่อ!' }]}
                               >
                                 <Input />
                               </Form.Item>
@@ -89,7 +89,7 @@ function CustomerForm(props) {
                                <Form.Item
                                 label="นามสกุล "
                                 name="Cus_Lname"
-                                rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                rules={[{ required: true, message: 'กรุณากรอกนามสกุล!' }]}
                               >
                                 <Input />
                               </Form.Item>
@@ -102,7 +102,18 @@ function CustomerForm(props) {
                         <Form.Item
                                   label="รหัสบัตรประชาชน "
                                   name="Cus_No"
-                                  rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                  rules={[{ required: true, message: 'กรุณากรอกรหัสบัตรประชาชน!' },
+                                  ({getFieldValue})=>({
+                                    validator(_, value) {
+                                        if (value.length !== 13) {
+                                          return Promise.reject('กรุณากรอกบัตรประชาชน 13 หลัก!');
+                                          
+                                        }
+                                          return Promise.resolve();
+                                        
+                                      },
+                                })
+                                ]}
                                 >
                                   <Input />
                           </Form.Item>
@@ -121,7 +132,7 @@ function CustomerForm(props) {
                             <Form.Item
                                 label="บ้านเลขที่"
                                 name="Num_House"
-                                rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                rules={[{ required: true, message: 'กรุณากรอกบ้านเลขที่!' }]}
                               >
                                 <Input />
                               </Form.Item>
@@ -130,7 +141,7 @@ function CustomerForm(props) {
                              <Form.Item
                               label="หมู่"
                               name="Moo"
-                              rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                              rules={[{ required: true, message: 'กรุณากรอกหมู่!' }]}
                             >
                               <Input />
                             </Form.Item> 
@@ -145,7 +156,7 @@ function CustomerForm(props) {
                           <Form.Item
                               label="ถนน"
                               name="Road_Name"
-                              rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                              rules={[{ required: true, message: 'กรุณากรอกถนน!' }]}
                             >
                               <Input />
                             </Form.Item>
@@ -154,7 +165,7 @@ function CustomerForm(props) {
                             <Form.Item
                               label="ซอย"
                               name="Soi"
-                              rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                              rules={[{ required: true, message: 'กรุณากรอกซอย!' }]}
                             >
                               <Input />
                             </Form.Item>
@@ -168,7 +179,7 @@ function CustomerForm(props) {
                               <Form.Item
                                   label="ตำบล/แขวง"
                                   name="Tambol"
-                                  rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                  rules={[{ required: true, message: 'กรุณากรอกแขวง!' }]}
                                 >
                                   <Input />
                                 </Form.Item> 
@@ -190,7 +201,7 @@ function CustomerForm(props) {
                             <Form.Item
                               label="จังหวัด"
                               name="Changwat"
-                              rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                              rules={[{ required: true, message: 'กรุณากรอกจังหวัด!' }]}
                             >
                               <Input />
                             </Form.Item>
@@ -199,7 +210,7 @@ function CustomerForm(props) {
                             <Form.Item
                               label="รหัสไปรษณีย์"
                               name="Post_No"
-                              rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                              rules={[{ required: true, message: 'กรุณากรอกรหัสไปรษณีย์!' }]}
                             >
                               <Input />
                             </Form.Item>
@@ -208,7 +219,7 @@ function CustomerForm(props) {
                               <Form.Item
                                 label="เบอร์ติดต่อ"
                                 name="Phone_no"
-                                rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                // rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
                               >
                                 <Input />
                               </Form.Item>

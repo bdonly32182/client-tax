@@ -10,6 +10,8 @@ import Build from '../component/Pages/Build/Build'
 import FirstPage from '../component/Pages/FirstPage'
 import Folder from '../component/Pages/Folder/Folder'
 import Manage from '../component/Pages/Manage/Manage'
+import EditTax from '../component/Pages/Tax/EditTax'
+import DetialLand from '../component/Pages/Land/DetialLand'
 const components ={
     login:{
         url:"/login",
@@ -60,6 +62,14 @@ const components ={
     manage:{
         url:'/manage',
         component:Manage
+    },
+    editTax:{
+        url:'/tax/:id',
+        component:EditTax
+    },
+    detialLand:{
+        url:'/land/detial/:id',
+        component:DetialLand
     }
     
 }
@@ -92,7 +102,9 @@ const userRole ={
             components.tax,
             components.customer,
             components.manage,
-            components.editCustomer
+            components.editCustomer,
+            components.editTax,
+            components.detialLand
         ],
         redirectRoutes:"/main"
      },
@@ -107,9 +119,9 @@ const userRole ={
             components.building,
             components.tax,
             components.customer,
-            components.editCustomer
-            
-
+            components.editCustomer,
+            components.editTax,
+            components.detialLand
         ],
         redirectRoutes:"/main"
      }

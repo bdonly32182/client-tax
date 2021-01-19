@@ -26,8 +26,8 @@ export default function Header(props) {
     return (
         <div style={{width:"100%",paddingTop:10}}>
             <Row gutter={{xs:8,sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row" span={17}/>
-                <Col className="gutter-row" span={7}  >
+                <Col className="gutter-row" span={15}/>
+                <Col className="gutter-row" span={9}  >
                     {user?.role ==="leader"&&
                         <Link to="/manage" style={{backgroundColor:'#EDBE1E',color:'gray'}}><b>ในส่วนของหัวหน้า</b></Link>
                     }

@@ -41,14 +41,15 @@ function CustomerTable(props) {
             render:(text,record)=>
                 <>
                 <Button onClick={()=>editCustomer(record.id_customer)}>ดูรายละเอียด</Button>
-                <Button>ลบ</Button>
                 </>
             
         }
     ]
     return (
+        <>
+        {props.isEdit&&<h3>{`รายการประชาชน (${props.customer&&props.customer.length})`}</h3>}  
         <Table columns={column} dataSource={props.customer}
-              
+                bordered={true}
                 rowKey={(record)=>{
                     if (!record.__uniqueId)
                 record.__uniqueId = ++uniqueId;
@@ -56,6 +57,7 @@ function CustomerTable(props) {
                 }}
                 onChange={handleTableChange}
         ></Table>
+        </>
     )
 }
 

@@ -5,7 +5,7 @@ import MainCard from '../Card/MainCard'
 import AdminPage from './AdminPage'
 function FirstPage(props) {
     const card =[
-        {icon:<Avatar size={70} icon={<Image src="/folder.png" width={40}preview={false}/>} style={{ backgroundColor: '#27A7B2' }}/>,
+        {icon:<Avatar size={70} icon={<Image src="/folder.png" width={40}preview={false}/>} style={{ backgroundColor: '#27A7B2',padding:5 }}/>,
         title:'เอกสาร',
         description:'จัดการเกี่ยวกับเอกสาร',
         path:'/folder'
@@ -16,7 +16,7 @@ function FirstPage(props) {
         path:'/land'
 
         },
-        {icon:<Avatar size={70} icon={<Image src="/home.png" width={40}preview={false}/>} style={{ backgroundColor: '#27A7B2' }}/>,
+        {icon:<Avatar size={70} icon={<Image src="/home.png" width={40}preview={false}/>} style={{ backgroundColor: '#27A7B2'}}/>,
         title:'ทะเบียนสิ่งปลูกสร้าง',
         description:'รายการสิ่งปลูกสร้างทั้งหมดในระบบ',
         path:'/building'
@@ -28,13 +28,13 @@ function FirstPage(props) {
         path:'/condo'
 
         },
-        {icon:<Avatar size={70} icon={<Image src="/user.png" width={40}preview={false} />} style={{ backgroundColor: '#27A7B2' }}/>,
+        {icon:<Avatar size={70} icon={<Image src="/user.png" width={40}preview={false} />} style={{ backgroundColor: '#27A7B2',padding:5 }}/>,
         title:'ประชาชน',
         description:'รายชื่อประชาชนของแต่ละเขต',
         path:'/customer'
 
         },
-        {icon:<Avatar size={70} icon={<Image src="/money.png" width={50}preview={false}/>} style={{ backgroundColor: '#27A7B2' }}/>,
+        {icon:<Avatar size={70} icon={<Image src="/money.png" width={50}preview={false}/>} style={{ backgroundColor: '#27A7B2' ,padding:10}}/>,
         title:'ราคาประเมินที่ดิน',
         description:'ข้อมูลล่าสุดจากกรมธนารักษ์',
         path:'/rate/land'
@@ -66,7 +66,7 @@ function FirstPage(props) {
             {props.role === 'employee' ||props.role === 'leader'?
             <>
             <Header />
-            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{paddingLeft:160}}>
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{paddingLeft:160}} align="middle">
                     {cardfunc(card)}
                 
             </Row>
