@@ -11,9 +11,9 @@ function CustomerPage(props) {
     let customers = useSelector(state=>state.customers)
     useEffect(() => {
         dispatch(fetchs_customer())
-    }, [dispatch,customers])
+    }, [dispatch])
     return (
-        <div>
+        <div style={{padding:10}}>
               <Header />  
             
             <FilterCustomer />

@@ -16,6 +16,11 @@ function CustomerModal(props) {
         setConfirmLoading(true);
         form.validateFields()
             .then((values)=>{
+                // สร้างข้อมูลประชาชน ที่ Ownersmodal ของหน้า /land/detial/:id
+                if (props.onCreated) {
+                    return props.onCreated(values)
+                }
+                //สร้างข้อมูลประชาชน path /customer
                 dispatch(create_customer(values))
             }).catch((info)=>{
                 notification.error({message:"Validate Failed",info})
@@ -31,8 +36,9 @@ function CustomerModal(props) {
     const handleCancel = () => {
         setVisible(false);
     };
+    
     return (
-        <div style={{padding:10}}>
+        <div >
             <Button type="primary" onClick={showModal} style={props.style?props.style:null}>
                 {props.title}
             </Button>

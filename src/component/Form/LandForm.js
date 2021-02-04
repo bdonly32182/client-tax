@@ -2,13 +2,14 @@ import React,{useState,useEffect} from 'react'
 import { Form, Input, Button, Col,Select ,Divider} from 'antd';
 import CodeLandModal from '../Modal/CodelandModal'
 import {category_doc,districtname,Tambolname} from '../Select/data'
+import {edit_land} from '../../store/action/LandAction'
+import {useDispatch} from 'react-redux'
 function LandForm(props) {
     const [tambol,setTambol] = useState(Tambolname[districtname[0].no]);
     const [secondTambol,setSecondTambol] = useState(Tambolname[districtname[0].no][0])
     const [form] = Form.useForm();
     const {Option} = Select
-    
-    
+    const dispatch = useDispatch();
     useEffect(() => form.resetFields(), [props.land,form]);
 
     const onChangeSelect = value=>{
@@ -20,12 +21,9 @@ function LandForm(props) {
     }
     const onFinish = (values) => { 
         console.log(values);
-        props.onEdit(props.id,values);      
-         
+         dispatch(edit_land(values.code_land,values,values.code_land));
     };
-    const onFinishFailed = (errorInfo) => {
-          console.log('Failed:', errorInfo);
-    };
+   
  
     return (
         <div>
@@ -33,7 +31,6 @@ function LandForm(props) {
                 form={form}
                     wrapperCol={{offset:3}}
                     onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                     initialValues={props.land}
                     style={{borderBlockColor:"ActiveBorder",border:"groove"}}
                   ><Form.Item  >
@@ -138,7 +135,7 @@ function LandForm(props) {
                            <Col>
                                 <Form.Item
                                     label="เขต/อำเภอ"
-                                    name="DistrictDistrictNo"
+                                    name="distict_id"
                                     rules={[{ required: true, message: 'กรุณาเลือกเขต!' }]}
                                     >
                                      <Select placeholder="เลือกเขตหรืออำเภอ" onChange={onChangeSelect} style={{ width: 120 }} >
@@ -242,10 +239,10 @@ function LandForm(props) {
                                 </Button>
                             </Col>
                             <Col span={8}>
-                            <CodeLandModal edit ={props.onEdit} button ="แก้ไขรหัสแปลงที่ดิน" style={{background:"#F3B80E"}} target={props.id}/>
+                            <CodeLandModal onEdit ={true} title ="แก้ไขรหัสแปลงที่ดิน" target={props.land.code_land} />
                             </Col>
                             <Col span={8}>
-                                
+                                <Button style={{backgroundColor:'red',color:'whitesmoke'}}>ลบที่ดินแปลงนี้</Button>
                             </Col>   
                         </Input.Group>
                       

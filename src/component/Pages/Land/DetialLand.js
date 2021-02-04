@@ -4,27 +4,30 @@ import {fetch_land} from '../../../store/action/LandAction'
 import {useParams} from 'react-router-dom'
 import {Row,Col,Divider} from 'antd'
 import LandForm from '../../Form/LandForm'
+import OwnerLand from './OwnerLand'
+import UsefulLand from './UsefulLand'
 function DetialLand(props) {
     const dispatch = useDispatch();
     const {id} = useParams();
-    const land = useSelector(state => state.lands)
+    const land = useSelector(state => state.lands);
     useEffect(() => {
        dispatch(fetch_land(id))
-    }, [dispatch,id])
-    console.log(land);
+    }, [dispatch,id,land.totalPlace])
     return (
-        <div>
+        <div >
+            <Row gutter={12}>
+                 <h2 style={{paddingLeft:555,color:'#5CC5D5'}}> รหัสผู้เสียภาษี : {land.Land_Tax_ID}</h2>
+            </Row>
             <Row >
                 <Col span={1} >
                 </Col>
                 <Col xs={2} sm={4} md={8} lg={10} xl={12}>
-                    <h1>{land.Tax_ID}</h1>
                     <LandForm land={land}/>
                 </Col>
                 <Col span={1} >     
                 </Col>
-                <Col  xs={9} sm={4} md={20} lg={10} xl={10} >
-                {/* <OwnerLand customer ={props.lands.Customers} onCreate={props.select_owner_land} codeland={props.lands.code_land} history={history} cancle_owner={props.cancle_owner} Payment_Cus={props.lands.Payment_Cus} Tax_ID={props.lands.Tax_ID}/> */}
+                <Col  xs={2} sm={4} md={6} lg={8} xl={10} >
+                    <OwnerLand code_land={land.code_land} customers={land.Tax_Group&&land.Tax_Group.Customers}/>
                 <Divider />
                 {/* <NextToLand customer ={props.lands.Customers}  codeland={props.lands.code_land} land={props.nextlands} onSelect={props.save_next_land} Tax_ID={props.lands.Tax_ID} /> */}
                 
@@ -32,10 +35,9 @@ function DetialLand(props) {
                 
             </Row>
             <Divider />
-            <Row>
-                <Col span={1}></Col>
-                <Col >
-                 {/* <Useful create_useful={props.create_useful} codeland={props.lands.code_land} usefuls={props.lands.UsefulLands} customer ={props.lands.Customers} onDelete={props.delete_building} Tax_ID={props.lands.Tax_ID}/> */}
+            <Row >
+                <Col xs={2} sm={4} md={6} lg={8} xl={12}>
+                    <UsefulLand  code_land={land.code_land} totalPlace ={land.totalPlace} tax_id_land ={land.Land_Tax_ID} usefullands={land.UsefulLands}/>
                 </Col>
                 
             </Row>

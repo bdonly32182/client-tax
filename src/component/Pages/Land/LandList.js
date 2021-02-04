@@ -41,8 +41,9 @@ function LandList(props) {
         },
         {
             title:"ระวาง",
-            dataIndex:["UTM_Code","UTM_Map","UTM_No"],
-            key:"UTM_No" 
+            dataIndex:'UTM_Code',
+            key:"UTM_Code" ,
+            render:(text,record)=><p>{text?`${text} ${record.UTM_Map} ${record.UTM_No}`:null}</p>
         },
         {
             title:"เนื้อที่ (ไร่-งาน-ตร.ว)",
@@ -79,6 +80,7 @@ function LandList(props) {
                 record.__uniqueId = ++uniqueId;
                 return record.__uniqueId;
                 }}
+                pagination={{pageSize:props.size}}
             />
             
         </div>
