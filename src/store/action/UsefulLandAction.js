@@ -4,10 +4,10 @@ import {notification} from 'antd'
 export const create_useful_land = (body,id_land) => {
     return dispatch => {
         axios.post('/api/create/useful',body).then((result) => {
-            axios.get(`/api/useful/${id_land}`).then((result) => {
-                dispatch({type:FETCHS_USEFUL_IN_LAND,payload:result.data})
+            axios.get(`/api/land/${id_land}`).then((result) => {
+                dispatch({type:FETCH_LAND,payload:result.data})
             }).catch((err) => {
-                notification.error({message:'การเรียกดูข้อมูลการใช้ประโยชน์ของที่ดินล้มเหลว'})
+                notification.error({message:'เรียกดูข้อมูลที่ดินแปลงนี้ล้มเหลว'})
             });
         }).catch((err) => {
             notification.error({message:'สร้างการใช้ประโยชน์ทัี่ดินล้มเหลว'})
@@ -43,6 +43,21 @@ export const edit_useful = (id,body,land_id) =>{
         }).catch((err) => {
             notification.error({message:'แก้ไขการใช้ประโยชน์ของที่ดินล้มเหลว'});
 
+        });
+    }
+}
+export const delete_usefulland = (id,land_id) =>{
+    return dispatch => {
+        axios.delete(`/api/delete/useful/${id}`).then((result) => {
+            notification.success({message:'ลบการใช้ประโยชน์ที่ดินเรียบร้อยแล้ว'})
+            window.location.reload();
+            // axios.get(`/api/land/${land_id}`).then((result) => {
+            //     dispatch({type:FETCH_LAND,payload:result.data})
+            // }).catch((err) => {
+            //     notification.error({message:'เรียกดูข้อมูลที่ดินแปลงนี้ล้มเหลว'})
+            // });
+        }).catch((err) => {
+            notification.error({message:'ลบการใช้ประโยชน์ของที่ดินล้มเหลว'})
         });
     }
 }

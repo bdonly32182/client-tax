@@ -1,13 +1,16 @@
 import React from 'react';
-import {Table,Space,Spin,Popconfirm,Button} from 'antd';
+import {Table,Space,Popconfirm,Button} from 'antd';
 import { EditFilled,DeleteFilled,CheckOutlined,QuestionCircleOutlined} from'@ant-design/icons';
-import axios from '../../config/axios';
+import {useDispatch} from 'react-redux'
 import UsefulModal from '../Modal/UsefulModal';
+import {delete_usefulland} from '../../store/action/UsefulLandAction'
 function UsefulTable(props) {
     let uniqueId = 0;
+    const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
-    const onConfirm = id => {
-
+    const onConfirm = useful => {
+        // useful_id Land_id
+        dispatch(delete_usefulland(useful.useful_id,useful.Land_id));
     }
     return (
         <>
@@ -57,10 +60,10 @@ function UsefulTable(props) {
                 render= {(text,record)=>(
                     <>
                     <Space>
-                    <UsefulModal button={<EditFilled />} type="link" usefulTable ={record} onEdit={true} />
-                    <Popconfirm title="คุณต้องการลบใช่หรือไม่"
+                    <UsefulModal button={<EditFilled />} type="link" usefulTable ={record} onEdit={true} PriceLand={props.PriceLand}/>
+                    <Popconfirm title="เมื่อคุณลบการใช้ประโยชน์ที่ดิน สิ่งปลูกสร้างจะถูกลบไปด้วย ยืนยันที่จะลบหรือไม่"
                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                    onConfirm={()=>onConfirm(record.Building.Build_Id)}
+                    onConfirm={()=>onConfirm(record)}
                     >
                         <Button type="link">
                             <DeleteFilled style={{ color: 'red' ,fontSize:15}}/>

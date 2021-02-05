@@ -13,6 +13,7 @@ function DetialLand(props) {
     useEffect(() => {
        dispatch(fetch_land(id))
     }, [dispatch,id,land.totalPlace])
+    console.log(land);
     return (
         <div >
             <Row gutter={12}>
@@ -22,22 +23,25 @@ function DetialLand(props) {
                 <Col span={1} >
                 </Col>
                 <Col xs={2} sm={4} md={8} lg={10} xl={12}>
-                    <LandForm land={land}/>
+                    <LandForm land={land} />
                 </Col>
                 <Col span={1} >     
                 </Col>
                 <Col  xs={2} sm={4} md={6} lg={8} xl={10} >
                     <OwnerLand code_land={land.code_land} customers={land.Tax_Group&&land.Tax_Group.Customers}/>
-                <Divider />
-                {/* <NextToLand customer ={props.lands.Customers}  codeland={props.lands.code_land} land={props.nextlands} onSelect={props.save_next_land} Tax_ID={props.lands.Tax_ID} /> */}
-                
+                <Divider />                
                 </Col>
                 
             </Row>
             <Divider />
             <Row >
                 <Col xs={2} sm={4} md={6} lg={8} xl={12}>
-                    <UsefulLand  code_land={land.code_land} totalPlace ={land.totalPlace} tax_id_land ={land.Land_Tax_ID} usefullands={land.UsefulLands}/>
+                    <UsefulLand  code_land={land.code_land} 
+                    totalPlace ={land.totalPlace} tax_id_land ={land.Land_Tax_ID}
+                     usefullands={land.UsefulLands}
+                     PriceLand ={land.Price}
+                     categoryTax={land.Tax_Group}
+                     />
                 </Col>
                 
             </Row>

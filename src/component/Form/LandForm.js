@@ -2,8 +2,9 @@ import React,{useState,useEffect} from 'react'
 import { Form, Input, Button, Col,Select ,Divider} from 'antd';
 import CodeLandModal from '../Modal/CodelandModal'
 import {category_doc,districtname,Tambolname} from '../Select/data'
-import {edit_land} from '../../store/action/LandAction'
+import {edit_land,delete_land} from '../../store/action/LandAction'
 import {useDispatch} from 'react-redux'
+import ConfirmModal from '../Modal/ConfirmModal';
 function LandForm(props) {
     const [tambol,setTambol] = useState(Tambolname[districtname[0].no]);
     const [secondTambol,setSecondTambol] = useState(Tambolname[districtname[0].no][0])
@@ -23,7 +24,9 @@ function LandForm(props) {
         console.log(values);
          dispatch(edit_land(values.code_land,values,values.code_land));
     };
-   
+   const onDelete = () => {
+    dispatch(delete_land(props.land.code_land))
+   }
  
     return (
         <div>
@@ -242,7 +245,10 @@ function LandForm(props) {
                             <CodeLandModal onEdit ={true} title ="แก้ไขรหัสแปลงที่ดิน" target={props.land.code_land} />
                             </Col>
                             <Col span={8}>
-                                <Button style={{backgroundColor:'red',color:'whitesmoke'}}>ลบที่ดินแปลงนี้</Button>
+                                <ConfirmModal titleButton ="ลบที่ดินแปลงนี้"
+                                    content="เมื่อคุณลบที่ดิน สิ่งปลูกสร้างบนแปลงที่ดินจะถูกลบไปด้วย คุณแน่ใจที่จะลบใช่หรือไม่"
+                                    confrimDelete={onDelete}
+                                />
                             </Col>   
                         </Input.Group>
                       

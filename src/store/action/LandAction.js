@@ -21,6 +21,17 @@ export const fetch_land = id =>{
         });
     }
 }
+export const delete_land = id => {
+    return dispatch => {
+        axios.delete(`/api/delete/land/${id}`).then((result) => {
+            notification.success({message:'ลบแปลงที่ดินเรียบร้อยแล้ว'});
+            window.location.replace('/land');
+        }).catch((err) => {
+            notification.error({message:'ลบแปลงที่ดินแปลงนี้ล้มเหลว'});
+
+        });
+    }
+}
 export const fetchs_land = () =>{
     return dispatch => {
         axios.get('/api/lands').then((result) => {

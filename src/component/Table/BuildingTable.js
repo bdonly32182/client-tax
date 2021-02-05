@@ -88,7 +88,7 @@ function BuildingTable(props) {
 
                 />
                 <Column title="ว่างเปล่า" 
-                    render={(text,record)=><p>{record.Building.EmptyType&&record.Building.EmptyType.Empy_size }</p>}
+                    render={(text,record)=><p>{record.Building.EmptyType&&record.Building.EmptyType.Empty_Size }</p>}
 
                 />
                 <Column title="อื่นๆ" 

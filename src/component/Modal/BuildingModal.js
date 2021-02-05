@@ -25,7 +25,7 @@ function BuildingModal(props) {
                    FarmType&&values.Farm_Size !== 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id,id:FarmType.id});
                    LiveType&&values.Live_Size !==0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:checkLive,Build_live_ID:Build_Id,id:LiveType.id});
                    OtherType&&values.Other_Size !== 0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id,id:OtherType.id});
-                   EmptyType&&values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empy_size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id,id:EmptyType.id});
+                   EmptyType&&values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id,id:EmptyType.id});
                    
                     //Percen_Age
                     let find_percent = depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
@@ -44,7 +44,7 @@ function BuildingModal(props) {
                 values.Farm_Size !== 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id});
                 values.Live_Size !==0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:checkLive,Build_live_ID:Build_Id});
                 values.Other_Size !== 0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id});
-                values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empy_size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id});
+                values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id});
                 
                 //Percen_Age
                 let find_percent = depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
