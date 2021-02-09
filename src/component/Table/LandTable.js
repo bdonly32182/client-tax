@@ -1,15 +1,21 @@
 import React from 'react'
 import {Table} from 'antd'
-import {EditFilled} from '@ant-design/icons'
-function LandTable(props) {
+import {EditFilled,CheckSquareTwoTone} from '@ant-design/icons'
+function LandTable({isEdit,lands,onSelectCross}) {
     const {Column,ColumnGroup} = Table
-
+    let uniqueId = 0 ;
     return (
         <>
-        {props.isEdit&&
-            <h3>{`รายการที่เป็นเจ้าของแปลงที่ดิน (${props.lands&&props.lands.length})`}</h3>
+        {isEdit&&
+            <h3>{`รายการที่เป็นเจ้าของแปลงที่ดิน (${lands&&lands.length})`}</h3>
         }
-        <Table dataSource={props.lands} bordered={true} size="small">
+        <Table dataSource={lands} bordered={true} size="small"
+                rowKey={(record)=>{
+                    if (!record.__uniqueId)
+                record.__uniqueId = ++uniqueId;
+                return record.__uniqueId;
+                }}
+        >
             <Column 
             title="ประเภทเอกสาร"
             dataIndex="Category_doc"
@@ -45,7 +51,9 @@ function LandTable(props) {
              key="WA"  />
              </ColumnGroup>
             <Column 
-            render={(text,record)=><EditFilled onClick={()=>window.open(`/land/detial/${record.code_land}`,'_blank')}/>}
+            title="จัดการ"
+            render={(text,record)=>onSelectCross?<CheckSquareTwoTone  onClick={()=>onSelectCross(record)} style={{fontSize:25}}/>//from BuildAccrossModal
+                :<EditFilled onClick={()=>window.open(`/land/detial/${record.code_land}`,'_blank')}/>}//from EditTax
             />
         </Table>
         </>

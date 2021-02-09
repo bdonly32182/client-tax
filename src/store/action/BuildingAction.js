@@ -1,10 +1,10 @@
 import axios from '../../config/axios';
-import {FETCHS_BUILD_IN_USEFULLAND, FETCH_BUILDING,DELETE_BUILDING} from './ActionType'
+import {FETCHS_BUILD_IN_USEFULLAND,DELETE_BUILDING} from './ActionType'
 import {notification} from 'antd'
-export const create_building = (body,useful_id,code_land) => {
+export const create_building = (body,useful_id) => {
     return dispatch => {
             axios.post('/api/create/build',body).then((result) => {
-                axios.get(`/api/read/usefuls?useful_id=${useful_id}&Land_id=${code_land}`).then((result) => {
+                axios.get(`/api/read/usefuls?useful_id=${useful_id}`).then((result) => {
                     dispatch({type:FETCHS_BUILD_IN_USEFULLAND,payload:result.data.BuildOnUsefulLands})
                 }).catch((err) => {
                     notification.error({message:'การเรียกดูข้อมูลการใช้ประโยชน์ของที่ดินล้มเหลว'})

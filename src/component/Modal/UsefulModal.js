@@ -110,7 +110,6 @@ function UsefulModal(props) {
             notification.error({message:'ค้นหาข้อมูลผู้เสียภาษีล้มเหลว'})
         });
     }
-    console.log(taxID);
   
     return (
         <>
@@ -123,7 +122,7 @@ function UsefulModal(props) {
             onOk={handleOk}
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
-            width="50%"
+            width="60%"
             wrapClassName="center"
             style={{justifyContent:"center"}}
                 > 

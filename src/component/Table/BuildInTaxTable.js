@@ -4,12 +4,19 @@ import {CheckOutlined,DeleteFilled,EditFilled} from '@ant-design/icons'
 
 function BuildInTaxTable(props) {
     const {Column,ColumnGroup} = Table
+    let uniqueId = 0 ;
     return (
         <div>
             {props.isEdit&&
                 <h3>{`รายการที่เป็นเจ้าของสิ่งปลูกสร้าง (${props.building&&props.building.length})`}</h3>
             }
-            <Table dataSource={props.building} bordered={true} size="small">
+            <Table dataSource={props.building} bordered={true} size="small" 
+                    rowKey={(record)=>{
+                        if (!record.__uniqueId)
+                    record.__uniqueId = ++uniqueId;
+                    return record.__uniqueId;
+                    }}
+            >
             <Column 
             title="บ้านเลขที่"
             dataIndex="No_House"

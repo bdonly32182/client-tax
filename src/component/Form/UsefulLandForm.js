@@ -20,7 +20,6 @@ const layout = {
   
 function UsefulLandForm(props) {
     const  {Option} = Select;
-    console.log(props.balancePlace);
     useEffect(() => {
         props.formModal.resetFields();
     }, [props.balancePlace,props.formModal])
@@ -106,7 +105,7 @@ function UsefulLandForm(props) {
                         <Col>
                                 <Form.Item
                                 label="หมายเหตุ"
-                                name="Mark"
+                                name="marks"
                                 >
                                 <Input style={{width:400}}/>
                                 </Form.Item>

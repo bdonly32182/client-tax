@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Table,Popover, Divider,Row,Col} from 'antd'
+import {Button, Table,Popover, Divider,Row} from 'antd'
 function UsefulTaxTable(props) {
     const {Column} = Table;
     let uniqueId = 0;
@@ -20,7 +20,6 @@ function UsefulTaxTable(props) {
             </div>
         )
     }
-    console.log(props.customers);
     return (
         <Table dataSource={props.customers[0]&&props.customers[0].Tax_Groups}
                 rowKey={(record)=>{

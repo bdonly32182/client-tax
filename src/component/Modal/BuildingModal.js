@@ -10,26 +10,24 @@ function BuildingModal(props) {
     const [form] = Form.useForm();
     const [visible,setVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    let usefulTypeAll = [];
-    const [checkLive , setCheckLive] = useState(false);
-    
+    let usefulTypeAll = [];   
     const onOk =() => {
         setConfirmLoading(true);
         form.validateFields()
-            .then((values)=>{
+            .then(async(values)=>{
 
-                let Build_Total_Place = values.Farm_Size+  + values.Live_Size+ + values.Other_Size+ + values.Empty_Size;
+                let Build_Total_Place = +values.Farm_Size+  + values.Live_Size+ + values.Other_Size+ + values.Empty_Size;
                if (props.onEdit&&props.building) {
                    //usefulAll
                    let {FarmType,LiveType,OtherType,EmptyType,Build_Id} = props.building
-                   FarmType&&values.Farm_Size !== 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id,id:FarmType.id});
-                   LiveType&&values.Live_Size !==0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:checkLive,Build_live_ID:Build_Id,id:LiveType.id});
-                   OtherType&&values.Other_Size !== 0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id,id:OtherType.id});
-                   EmptyType&&values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id,id:EmptyType.id});
+                   FarmType&&values.Farm_Size !== 0&&values.Percent_Farm !== 0 &&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:values.Percent_Farm,Build_farm_ID:Build_Id,id:FarmType.id});
+                   LiveType&&values.Live_Size !==0&&values.Percent_Live !== 0 &&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:values.Percent_Live,Live_Status:values.Live_Status,Build_live_ID:Build_Id,id:LiveType.id});
+                   OtherType&&values.Other_Size !== 0&&values.Percent_Other !== 0 && usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:values.Percent_Other,Build_other_ID:Build_Id,id:OtherType.id});
+                   EmptyType&&values.Empty_Size !== 0 && values.Percent_Empty !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:values.Percent_Empty,Build_empty_ID:Build_Id,id:EmptyType.id});
                    
                     //Percen_Age
-                    let find_percent = depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
-                    let Percent_Age = find_percent&&find_percent.percent || 0;
+                    let find_percent = await depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
+                    let Percent_Age = find_percent.percent || 0;
                     let body ={
                         ...values,
                         Percent_Age,
@@ -39,16 +37,15 @@ function BuildingModal(props) {
                   return  dispatch(edit_building(body,props.useful_id,props.code_land));
                }
                 let Build_Id = setBuildingID(props.buildings);
-               //usefulAll
-               console.log(Build_Id);
+               //usefulAll  props.useful_id
                 values.Farm_Size !== 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id});
-                values.Live_Size !==0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:checkLive,Build_live_ID:Build_Id});
+                values.Live_Size !==0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:values.Live_Status,Build_live_ID:Build_Id});
                 values.Other_Size !== 0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id});
                 values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id});
                 
                 //Percen_Age
-                let find_percent = depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
-                let Percent_Age = find_percent&&find_percent.percent || 0;
+                let find_percent =await depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
+                let Percent_Age = (find_percent&& find_percent.percent) || 0;
                 let body ={
                     ...values,
                     Percent_Age,
@@ -58,8 +55,7 @@ function BuildingModal(props) {
                     usefulTypeAll:usefulTypeAll,
                     useful_id:props.useful_id
                 }
-               
-                dispatch(create_building(body,props.useful_id,props.code_land));
+                dispatch(create_building(body,props.useful_id));
             })
             // .catch((info)=>{
             //         notification.error({message:"Validate Failed",info})
@@ -94,8 +90,8 @@ function BuildingModal(props) {
             confirmLoading={confirmLoading}
             width="70%"
             >   
-            {props.onEdit?<div><TabsBuild building={props.building} TypeName={props.TypeName} formModal ={form} useful_id={props.useful_id}/></div>
-            :<BuildingForm TypeName={props.TypeName} formModal ={form} uid_tax={props.uid_tax}/>
+            {props.onEdit&&props.building?<div><TabsBuild building={props.building} TypeName={props.TypeName} formModal ={form} useful_id={props.useful_id}/></div>
+            :<BuildingForm TypeName={props.TypeName} formModal ={form} uid_tax={props.uid_tax} />
 
             }
             

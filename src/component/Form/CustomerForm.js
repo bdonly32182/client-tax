@@ -13,8 +13,8 @@ function CustomerForm(props) {
     const [title,setTitle] = useState(title_customer[category_customer[0]])
     const [secondTitle, setSecondTitle] = useState(title_customer[category_customer[0]][0])
     useEffect(()=>{
-        form.setFieldsValue(props.customer)
-    },[props.customer,form])
+      props.customer&& form.setFieldsValue(props.customer)
+    },[props.customer,form,props.formModal])
     const onFinish = (values) => { 
    props.onEdit(values.id_customer,values)
   };

@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import { Form, Input, Button, Col,Select ,Divider} from 'antd';
+import { Form, Input, Col,Select ,Divider,Checkbox} from 'antd';
 import {code_cate_building,sub_Cate} from '../Select/data'
 function BuildingForm(props) {
   const [category,setCategory] = useState(sub_Cate[code_cate_building[0].code]);//เอาไปเป็นตัวเลือก
@@ -19,18 +19,24 @@ function BuildingForm(props) {
             labelCol={{offset:10}}
             initialValues={props.onEdit?{
               ...props.building,
-              Farm_Size:props.building.FarmType&&props.building.OtherType.Farm_Size ,
-              Live_Size:props.building.LiveType&&props.building.OtherType.Live_Size ,
-              Empty_Size:props.building.EmptyType&&props.building.OtherType.Empty_Size ,
+              Farm_Size:props.building.FarmType&&props.building.FarmType.Farm_Size ,
+              Live_Size:props.building.LiveType&&props.building.LiveType.Live_Size ,
+              Empty_Size:props.building.EmptyType&&props.building.EmptyType.Empty_Size ,
               Other_Size:props.building.OtherType&&props.building.OtherType.Other_Size ,
-              rating_id:props.building.RateOfBuilding.Code
+              rating_id:props.building.RateOfBuilding.Code,
+              Percent_Farm:props.building.FarmType&&props.building.FarmType.Percent_Farm,
+              Percent_Live:props.building.LiveType&&props.building.LiveType.Percent_Live,
+              Percent_Other:props.building.OtherType&&props.building.OtherType.Percent_Other,
+              Percent_Empty:props.building.EmptyType&&props.building.EmptyType.Percent_Empty,
+              Live_Status:props.building.LiveType&&props.building.LiveType.Live_Status
             }:{
               rating_id:code_cate_building[0].code,
               Sub_Category:secondCate,
               Farm_Size:0,
               Live_Size:0,
               Empty_Size:0,
-              Other_Size:0
+              Other_Size:0,
+              Live_Status:false
             }}
           >
            {!props.onEdit&& <h1>รหัสผู้เสียภาษีเริ่มต้นของสิ่งปลูกสร้าง {props.uid_tax}</h1>}
@@ -159,10 +165,16 @@ function BuildingForm(props) {
                       label="การเกษตร(ตารางเมตร)"
                       name="Farm_Size"
                     >
-                      <Input disabled={props.TypeName === "การเกษตร"||props.TypeName==="หลายประเภท" ?false:true}/>
+                      <Input disabled={props.TypeName === "เกษตร"||props.TypeName==="หลายประเภท" ?false:true}/>
                       
                     </Form.Item>
-                   
+                    {props.building&&
+                        <Form.Item
+                        name="Percent_Farm"
+                      >
+                        <Input disabled={props.TypeName === "เกษตร"||props.TypeName==="หลายประเภท" ?false:true}/>
+                      </Form.Item>
+                    }
                   </Col>
                  <Col>
                     <Form.Item
@@ -170,11 +182,24 @@ function BuildingForm(props) {
                       name="Live_Size"
                     >
                       <Input disabled={props.TypeName === "อยู่อาศัย"||props.TypeName==="หลายประเภท" ?false:true}/>
-                      
                     </Form.Item>
-                 
+                    {props.building&&
+                      <Form.Item
+                        name="Percent_Live"
+                      >
+                        <Input disabled={props.TypeName === "อยู่อาศัย"||props.TypeName==="หลายประเภท" ?false:true}/>
+                      </Form.Item>}
                   </Col>
-                  
+                  <Col>
+                      <Form.Item
+                        label="เลือกที่อยู่หลังหลัก หรือ หลังรอง"
+                        name="Live_Status"
+                        valuePropName="checked"
+                      >
+                        <Checkbox  disabled={props.TypeName === "อยู่อาศัย"||props.TypeName==="หลายประเภท" ?false:true}
+                        />
+                      </Form.Item>
+                  </Col>
               </Input.Group>
               
             </Form.Item>
@@ -189,7 +214,13 @@ function BuildingForm(props) {
                       <Input disabled={props.TypeName === "อื่นๆ"||props.TypeName==="หลายประเภท"?false:true}/>
                       
                     </Form.Item>
-                 
+                      {props.building&&
+                        <Form.Item
+                          name="Percent_Other"
+                        >
+                          <Input disabled={props.TypeName === "อื่นๆ"||props.TypeName==="หลายประเภท"?false:true}/>
+                        </Form.Item>
+                      } 
                   </Col>
                   <Col>
                    <Form.Item
@@ -199,7 +230,14 @@ function BuildingForm(props) {
                       <Input disabled={props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?false:true}/>
                       
                     </Form.Item>
-                   
+                    {props.building &&
+                        <Form.Item
+                        name="Percent_Empty"
+                      >
+                        <Input disabled={props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?false:true}/>
+                      </Form.Item>
+                      
+                      }
                   </Col>
                   
                       

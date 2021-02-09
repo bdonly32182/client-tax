@@ -51,6 +51,7 @@ function CustomerModal(props) {
             width="80%"
             wrapClassName="center"
             style={{justifyContent:"center"}}
+            getContainer={false}
             >
                 <CustomerForm formModal={form}/>
             </Modal>

@@ -4,7 +4,7 @@ import { EditFilled,DeleteFilled,CheckOutlined,QuestionCircleOutlined} from'@ant
 import {useDispatch} from 'react-redux'
 import UsefulModal from '../Modal/UsefulModal';
 import {delete_usefulland} from '../../store/action/UsefulLandAction'
-function UsefulTable(props) {
+function UsefulTable({ListUseful,PriceLand}) {
     let uniqueId = 0;
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
@@ -14,7 +14,7 @@ function UsefulTable(props) {
     }
     return (
         <>
-            <Table size="small" dataSource={props.ListUseful&&[props.ListUseful]} bordered={true} pagination={false}
+            <Table size="small" dataSource={ListUseful&&[ListUseful]} bordered={true} pagination={false}
                 rowKey={(record)=>{
                     if (!record.__uniqueId)
                 record.__uniqueId = ++uniqueId;
@@ -60,7 +60,7 @@ function UsefulTable(props) {
                 render= {(text,record)=>(
                     <>
                     <Space>
-                    <UsefulModal button={<EditFilled />} type="link" usefulTable ={record} onEdit={true} PriceLand={props.PriceLand}/>
+                    <UsefulModal button={<EditFilled />} type="link" usefulTable ={record} onEdit={true} PriceLand={PriceLand}/>
                     <Popconfirm title="เมื่อคุณลบการใช้ประโยชน์ที่ดิน สิ่งปลูกสร้างจะถูกลบไปด้วย ยืนยันที่จะลบหรือไม่"
                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                     onConfirm={()=>onConfirm(record)}

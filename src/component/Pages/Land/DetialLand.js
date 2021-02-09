@@ -6,6 +6,7 @@ import {Row,Col,Divider} from 'antd'
 import LandForm from '../../Form/LandForm'
 import OwnerLand from './OwnerLand'
 import UsefulLand from './UsefulLand'
+import Header from '../../Header'
 function DetialLand(props) {
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -16,8 +17,10 @@ function DetialLand(props) {
     console.log(land);
     return (
         <div >
+            <Header />     
             <Row gutter={12}>
                  <h2 style={{paddingLeft:555,color:'#5CC5D5'}}> รหัสผู้เสียภาษี : {land.Land_Tax_ID}</h2>
+
             </Row>
             <Row >
                 <Col span={1} >

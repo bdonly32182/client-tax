@@ -18,7 +18,7 @@ function ChangeProfile(props) {
       };
       useEffect(() =>{ 
         form.setFieldsValue(props.user);
-      }, [props.user]);
+      }, [props.user,form]);
 
       const onFinish = (values) => {
           props.onSubmit(values)

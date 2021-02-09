@@ -31,7 +31,8 @@ function UsefulLand(props) {
     const onClickMenu =(menu)=>{
         setMenukey(menu.key);
         if (menu.key !== menukey) {
-                axios.get(`/api/read/usefuls?useful_id=${menu.key}&Land_id=${props.code_land}`).then((result) => {
+            //back-end ลบ querystring Land_id แล้ว จะมีหรือไม่มีก็ได้
+                axios.get(`/api/read/usefuls?useful_id=${menu.key}`).then((result) => {
                 dispatch({type:FETCH_USEFUL_LAND,payload:result.data})
                 dispatch({type:FETCHS_BUILD_IN_USEFULLAND,payload:result.data.BuildOnUsefulLands})
 
@@ -41,7 +42,7 @@ function UsefulLand(props) {
         };
         
     }
-    console.log(buildings);
+    console.log(useful);
     return (
         <>
             <Layout style={{height:"100vh" , width:'180vh',margin:'4px 26px 0'}}>
