@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import {Tabs,Col,Row,Divider ,notification,Layout} from 'antd'
+import {Tabs,Col,Row,Divider ,notification,Layout,Checkbox} from 'antd'
 import axios from '../../../config/axios'
 import {useDispatch,useSelector} from 'react-redux'
 import {fetch_tax} from '../../../store/action/TaxAction'
@@ -10,7 +10,10 @@ import LandTable from '../../Table/LandTable'
 import BuildInTaxTable from '../../Table/BuildInTaxTable'
 import AddressForm from '../../Form/AddressForm'
 import PDS3Table from '../../Table/PDS3Table'
+import PDS7Table from '../../Table/PDS7Table'
 import Header from '../../Header'
+import PDS8Table from '../../Table/PDS8Table'
+import PDS4Table from '../../Table/PDS4Table'
 
 function EditTax(props) {
     const dispatch = useDispatch();
@@ -18,7 +21,11 @@ function EditTax(props) {
     const tax = useSelector(state => state.taxs);
     const [pds3,setPds3] = useState([]);
     const [pds7,setPds7] = useState([]);
+    const [pds8,setPds8] = useState([]);
+    const [showCol,setShowCol] = useState(true)
     const [loading3,setLoading3] = useState(true);
+    const [loading7,setLoading7] = useState(true);
+    const [loading8 , setLoading8] = useState(true);
     const {TabPane} = Tabs
     useEffect(() => {
         dispatch(fetch_tax(id))
@@ -26,6 +33,7 @@ function EditTax(props) {
     const onTabClick =(value)=>{
         if (value === "3") {
            pds3.length===0&& axios.get('/api/pds3/'+tax.uid_tax).then((result) => {
+               console.log(result.data);
                 setPds3(result.data);
                 result.data&& setLoading3(false);
             }).catch((err) => {
@@ -36,20 +44,32 @@ function EditTax(props) {
             pds7.length===0&& axios.get('/api/pds7/'+tax.uid_tax).then((result) => {
                 console.log(result.data);
                 setPds7(result.data)
+                result.data&&setLoading7(false)
             }).catch((err) => {
                 notification.error({message:"ร้องขอ ภ.ด.ส. 7 ล้มเหลว"})
             }); 
         }
+        if (value === "6"||value === "5") {
+            pds8.length===0&&
+            axios.get(`/api/pds4/${tax.uid_tax}`).then((result) => {
+                setPds8(result.data)
+                result.data&&setLoading8(false);
+            }).catch((err) => {
+                notification.error({message:'เรียกดู ภ.ด.ส.8 ล้มเหลว'})
+            });
+        }
        
     }
+   
+    console.log(tax);
     return (
         <div>
             <Header />
             <Tabs type="card" onTabClick={onTabClick} onTabScroll={{direction:"top"}}>
                 <TabPane key="1" tab="จัดการข้อมูลเจ้าของทรัพย์สิน">
-                    <Row style={{padding:50}}>
+                    <Row style={{padding:'60px',textAlign:'center'}}>
                         
-                        <Col xs={2} sm={4} md={6} lg={8} xl={20}>
+                        <Col xs={24} sm={24} md={20} lg={20} xl={20}>
                         <Layout>
                             <CustomerTable customer = {tax.Customers} isEdit={true}/>
                         </Layout>
@@ -59,7 +79,7 @@ function EditTax(props) {
                         </Layout>
                         <Divider />
                         <Layout>
-                            <BuildInTaxTable building={tax.Buildings} isEdit={true}/>
+                            <BuildInTaxTable building={tax.Buildings} isEdit={true} />
                         </Layout>
                         <Layout>
                             <CondoTable condos={tax.Rooms} isEdit={true}/>
@@ -88,25 +108,38 @@ function EditTax(props) {
                         
                         
                         {pds3 && (
-                            <>
-                            {/* <CustomerPds3 customer ={pds3.Customers} Tax_ID={pds3.Tax_ID}/> */}
-                           
+                            <>                           
                              <PDS3Table land={pds3} uid_tax={tax.uid_tax} loading={loading3}/>
                             </>
                         )}
                     </Layout>
                 
                 </TabPane>
-                
-                {/* <TabPane key="4" tab="ภ.ด.ส.7 ">
-                    {pds7 &&(
+                <TabPane key="5" tab="ภ.ด.ส.4 ">
+                    {pds8 &&(
                         <>
-                           
-                           <PDS7Table dataSource = {pds7}/>
+                        <PDS4Table condo={pds8} loading={loading8}/>
                            </> 
                     )}
                            
-                </TabPane> */}
+                </TabPane>
+                <TabPane key="4" tab="ภ.ด.ส.7 ">
+                    {pds7 &&(
+                        <>
+                           <Checkbox onChange={()=>setShowCol(!showCol)} checked={showCol}>แสดงคอลัมน์ทั้งหมด</Checkbox>
+                           <PDS7Table land = {pds7} tax={tax} loading={loading7} show={showCol}/>
+                           </> 
+                    )}
+                           
+                </TabPane>
+                <TabPane key="6" tab="ภ.ด.ส.8 ">
+                    {pds8 &&(
+                        <>
+                           <PDS8Table condo={pds8} loading={loading8}/>
+                           </> 
+                    )}
+                           
+                </TabPane>
             </Tabs>
         </div>
     )

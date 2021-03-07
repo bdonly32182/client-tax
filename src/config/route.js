@@ -12,6 +12,8 @@ import Folder from '../component/Pages/Folder/Folder'
 import Manage from '../component/Pages/Manage/Manage'
 import EditTax from '../component/Pages/Tax/EditTax'
 import DetialLand from '../component/Pages/Land/DetialLand'
+import RateBuild from '../component/Pages/Build/RateBuild'
+import EditCondo from '../component/Pages/Condo/EditCondo'
 const components ={
     login:{
         url:"/login",
@@ -70,6 +72,14 @@ const components ={
     detialLand:{
         url:'/land/detial/:id',
         component:DetialLand
+    },
+    rate:{
+        url:'/rate/build',
+        component:RateBuild
+    },
+    editCondo:{
+        url:'/condo/:id',
+        component:EditCondo
     }
     
 }
@@ -104,7 +114,9 @@ const userRole ={
             components.manage,
             components.editCustomer,
             components.editTax,
-            components.detialLand
+            components.detialLand,
+            components.rate,
+            components.editCondo
         ],
         redirectRoutes:"/main"
      },
@@ -121,7 +133,9 @@ const userRole ={
             components.customer,
             components.editCustomer,
             components.editTax,
-            components.detialLand
+            components.detialLand,
+            components.rate,
+            components.editCondo
         ],
         redirectRoutes:"/main"
      }

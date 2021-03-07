@@ -36,7 +36,7 @@ function UsefulLandForm(props) {
                     :{
                     Place:props.balancePlace,
                     Usage:true,
-                    Special_Useful:'1'}}
+                    Special_Useful:'0'}}
             >
                 <Form.Item>
                     <Input.Group compact>
@@ -89,11 +89,11 @@ function UsefulLandForm(props) {
                             name="Special_Useful"
                             rules={[{ required: true, message: 'กรุณาเลือกลักษณะพิเศษ!' }]}
                         >
-                            <Select placeholder="เลือกการยกเว้นภาษี" >
-                                <Option value="1">ไม่เลือก</Option>
-                                <Option value="100">ยกเว้นภาษี 100 %</Option>
-                                <Option value="90">ยกเว้นภาษี 90 %</Option>
-                                <Option value="50">ยกเว้นภาษี 50 %</Option>                                          
+                            <Select placeholder="เลือกการยกเว้นภาษี" style={{width:220}}>
+                                <Option value="0">ไม่เลือก</Option>
+                                <Option value="100">ยกเว้นภาษีตาม พรบ.มาตรา 8</Option>
+                                <Option value="90">ยกเว้นภาษีตาม พรก.มาตรา 4</Option>
+                                <Option value="50">ยกเว้นภาษีตาม พรก.มาตรา 3 </Option>                                          
                             </Select>
                         </Form.Item>
                     </Col>

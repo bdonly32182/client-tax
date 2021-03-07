@@ -1,5 +1,5 @@
 import axios from '../../config/axios';
-import {FETCHS_BUILD_IN_USEFULLAND,DELETE_BUILDING} from './ActionType'
+import {FETCHS_BUILD_IN_USEFULLAND,DELETE_BUILDING,FETCH_BUILDING,FETCHS_BUILDING} from './ActionType'
 import {notification} from 'antd'
 export const create_building = (body,useful_id) => {
     return dispatch => {
@@ -30,15 +30,25 @@ export const edit_building =(body,useful_id,code_land)=>{
     }
 }
 
-// export const fetch_building =(build_id)=>{
-//     return dispatch => {
-//         axios.get().then((result) => {
-//             dispatch({type:FETCH_BUILDING,payload:result.data})
-//         }).catch((err) => {
-//             notification.error({message:'เรียกดูข้อมูลสิ่งปลูกสร้างล้มเหลว'})
-//         });
-//     }
-// }
+export const fetch_building =(build_id)=>{
+    return dispatch => {
+        axios.get(`/api/building/${build_id}`).then((result) => {
+            dispatch({type:FETCH_BUILDING,payload:result.data})
+        }).catch((err) => {
+            notification.error({message:'เรียกดูข้อมูลสิ่งปลูกสร้างล้มเหลว'})
+        });
+    }
+}
+
+export const fetchs_building =()=>{
+    return dispatch=>{
+        axios.get('/api/buildings').then((result) => {
+            dispatch({type:FETCHS_BUILDING,payload:result.data})
+        }).catch((err) => {
+            notification.error({message:'เรียกดูข้อมูลสิ่งปลูกสร้างล้มเหลว'})
+        });
+    }
+}
 
 export const generate_building =(uid_tax,land_id,id_customer,customer,Category_Tax,Build_Id,useful_id)=>{
     return dispatch => {

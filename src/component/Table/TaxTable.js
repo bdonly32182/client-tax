@@ -16,6 +16,7 @@ function TaxTable(props) {
                 return record.__uniqueId;
                 }}
                 bordered={true}
+                size={props.tableSize||"large"}
                 pagination={{pageSize:props.size}}
                 onChange={props.HandleChangePage}
                 >

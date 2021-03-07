@@ -51,11 +51,6 @@ export const delete_usefulland = (id,land_id) =>{
         axios.delete(`/api/delete/useful/${id}`).then((result) => {
             notification.success({message:'ลบการใช้ประโยชน์ที่ดินเรียบร้อยแล้ว'})
             window.location.reload();
-            // axios.get(`/api/land/${land_id}`).then((result) => {
-            //     dispatch({type:FETCH_LAND,payload:result.data})
-            // }).catch((err) => {
-            //     notification.error({message:'เรียกดูข้อมูลที่ดินแปลงนี้ล้มเหลว'})
-            // });
         }).catch((err) => {
             notification.error({message:'ลบการใช้ประโยชน์ของที่ดินล้มเหลว'})
         });

@@ -27,12 +27,12 @@ function UsefulModal(props) {
             if (Mod_RAI >= 100) {
                 let GNAN = Math.floor(Mod_RAI/100)
                 let Mod_Metre = Mod_RAI % 100
-                Obj_Place.Useful_GNAN=GNAN
-                Obj_Place.Useful_WA= Mod_Metre
+                Obj_Place.Useful_GNAN=GNAN.toFixed(2)
+                Obj_Place.Useful_WA= Mod_Metre.toFixed(2)
             }else{
                 let Mod_Metre = Mod_RAI % 100
                 Obj_Place.Useful_GNAN=0
-                Obj_Place.Useful_WA= Mod_Metre               
+                Obj_Place.Useful_WA= Mod_Metre    .toFixed(2)           
             }
                    
         }
@@ -40,13 +40,13 @@ function UsefulModal(props) {
             let GNAN  = Math.floor(place/100)
             let WA = place % 100
             Obj_Place.Useful_RAI = 0
-            Obj_Place.Useful_GNAN = GNAN
-            Obj_Place.Useful_WA= WA
+            Obj_Place.Useful_GNAN = GNAN.toFixed(2)
+            Obj_Place.Useful_WA= WA.toFixed(2)
         }
         if (place<100) {
             Obj_Place.Useful_RAI =0
             Obj_Place.Useful_GNAN=0
-            Obj_Place.Useful_WA = Number(place)
+            Obj_Place.Useful_WA = Number(place).toFixed(2)
         }
         return Obj_Place
     };
@@ -77,7 +77,7 @@ function UsefulModal(props) {
             
                     setVisible(false);
                     setConfirmLoading(false);
-            }, 2000);
+            }, 1500);
             })
             .catch((info)=>{
                 notification.error({message:"Validate Failed",info})

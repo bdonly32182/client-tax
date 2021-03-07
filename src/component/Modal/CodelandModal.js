@@ -13,13 +13,13 @@ function CodelandModal(props) {
             dispatch(edit_land(props.target,{code_land:value},value))
                 setTimeout(() => {
                     history.push('/land/detial/'+value)
-            }, 2000);
+            }, 1500);
                 setShow(false)
         }else{
             dispatch(create_codeland(value))
                 setTimeout(() => {
                     history.push('/land/detial/'+value)
-            }, 2000);
+            }, 1500);
                 setShow(false)
         }
         

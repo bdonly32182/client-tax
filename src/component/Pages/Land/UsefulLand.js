@@ -16,6 +16,7 @@ function UsefulLand(props) {
     const buildings = useSelector(state=>state.buildings)
     const [menukey,setMenukey] = useState(null);
     const [balancePlace,setBalancePlace] = useState(0);
+    const [warning,setWarning] = useState(false);
     useEffect(() => {
         if (props.usefullands) {
             //sum place is used  for will know totalUsePlace
@@ -25,9 +26,15 @@ function UsefulLand(props) {
             }
             if (props.usefullands.length === 0) {
                 setBalancePlace(props.totalPlace)
-            }       
+            } 
+            if (menukey) {
+            let check = buildings.filter(build=>build.Building.Build_Tax_ID !== buildings[0].Building.Build_Tax_ID)  ;
+           check.length !==0&&setWarning(true);
+           check.length === 0 && setWarning(false);    
+            }
+           
         }
-    }, [props.usefullands,props.totalPlace,buildings])
+    }, [props.usefullands,props.totalPlace,buildings,menukey])
     const onClickMenu =(menu)=>{
         setMenukey(menu.key);
         if (menu.key !== menukey) {
@@ -42,7 +49,6 @@ function UsefulLand(props) {
         };
         
     }
-    console.log(useful);
     return (
         <>
             <Layout style={{height:"100vh" , width:'180vh',margin:'4px 26px 0'}}>
@@ -86,8 +92,9 @@ function UsefulLand(props) {
                             <Divider />
                             <BuildingModal button="สร้างสิ่งปลูกสร้าง" uid_tax={useful.UsefulLand_Tax_ID} TypeName={useful.TypeName} 
                                     useful_id={useful.useful_id} buildings ={buildings}
-                                    code_land={props.code_land}
-                            />
+                                    code_land={props.code_land} isAccross ={useful.isAccross}
+                                />{warning&&<h1 style={{color:'red'}}>{`** มีรหัสผู้เสียภาษีของสิ่งปลูกสร้างที่ไม่ตรงกันกรุณาทำการเปลี่ยนเจ้าของทรัพย์สินให้ตรงกัน ถ้าต้องการที่จะสร้างสิ่งปลูกสร้างและรหัสผู้เสียภาษีนี้ 
+                                              **แนะนำให้ลบสิ่งปลูกสร้างบนการใช้ประโยชน์นี้แล้วไปสร้างที่การใช้ประโยชน์ใหม่`}</h1>}
                             <BuildingTable buildings={buildings} TypeName={useful.TypeName} useful_id={useful.useful_id} code_land={props.code_land}/>
                             </>
                             :

@@ -30,7 +30,7 @@ function CustomerModal(props) {
             setVisible(false);
             setConfirmLoading(false);
             // form.resetFields()
-        }, 2000);
+        }, 1500);
         
     };
     const handleCancel = () => {

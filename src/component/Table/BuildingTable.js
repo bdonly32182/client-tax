@@ -11,6 +11,7 @@ function BuildingTable(props) {
     let uniqueId = 0 ;
     const onConfirm =(id)=>{
         dispatch(delete_building(id));
+        
     }
     return (
         <>

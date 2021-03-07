@@ -19,3 +19,12 @@ export const FETCH_BUILDING = 'fetch_building';
 export const FETCHS_BUILDING = 'fetchs_Building';
 export const FETCHS_BUILD_IN_USEFULLAND = 'fetchs_build_in_usefulland';
 export const DELETE_BUILDING = "DELETE_BUILDING";
+
+export const FETCHS_CONDO = "fetchs_condo";
+export const FETCH_CONDO = "fetch_condo";
+export const DELETE_CONDO ="delete_condo";
+export const EDIT_CONDO = "edit_condo";
+
+export const FETCHS_ROOM = "fetchs_rooms";
+export const DELETE_ROOM ="delete_room";
+export const CREATE_ROOM ="create_room";

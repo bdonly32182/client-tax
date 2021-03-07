@@ -27,7 +27,7 @@ function BuildingModal(props) {
                    
                     //Percen_Age
                     let find_percent = await depreciate.find(obj => obj.Age === +values.Age_Build && obj.category === values.StyleBuilding);
-                    let Percent_Age = find_percent.percent || 0;
+                    let Percent_Age = (find_percent&& find_percent.percent) || 0;
                     let body ={
                         ...values,
                         Percent_Age,
@@ -57,14 +57,14 @@ function BuildingModal(props) {
                 }
                 dispatch(create_building(body,props.useful_id));
             })
-            // .catch((info)=>{
-            //         notification.error({message:"Validate Failed",info})
-            //     })
+            .catch((info)=>{
+                    notification.error({message:"Validate Failed",info})
+                })
         setTimeout(() => {
             
             setVisible(false);
             setConfirmLoading(false);
-        }, 3000);
+        }, 1500);
     }
     const onShow = () => {
         setVisible(true)
@@ -82,7 +82,10 @@ function BuildingModal(props) {
     }
     return (
         <>
-            <Button onClick={()=>onShow()}type="link" style={props.style||{backgroundColor:"green",color:"whitesmoke"}}> {props.button}</Button>
+            <Button onClick={()=>onShow()}type="link" 
+            style={props.style||{backgroundColor:"green",color:"whitesmoke"}}
+            disabled={props.isAccross}
+            > {props.button}</Button>
             <Modal 
             visible={visible}
             onOk={onOk}

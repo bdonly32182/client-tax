@@ -3,7 +3,6 @@ import { Table} from 'antd'
 function PDS3Table({land,uid_tax,loading}) {
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0;
-    console.log(uid_tax);
     return (
         <Table bordered={true} dataSource={land } size="small"
                 rowKey={(record)=>{

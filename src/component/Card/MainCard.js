@@ -1,22 +1,37 @@
 import React from 'react'
-import {Card,Col} from 'antd'
+import {Card ,List} from 'antd'
 import {useHistory} from 'react-router-dom'
-function MainCard(props) {
+function MainCard({card}) {
     const {Meta} = Card
     const history = useHistory()
     return (
-        <div onClick={()=>history.push(props.path)}>
-         <Col className="gutter-row" span={5} style={{padding:20}}>
-            <Card
-            hoverable
-            style={{ width: 240 ,textAlign:'center'}}
-            cover={props.card.icon}
-            bordered={false}
-            >
-            <Meta title={props.card.title} description={props.card.description} />
-            </Card> 
-        </Col>   
-        </div>
+        
+        
+            <List
+                grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 3,
+                lg: 4,
+                xl: 4,
+                xxl: 4,
+                }}
+                dataSource={card}
+                size='large'
+                renderItem={item => (
+                <List.Item
+                >
+                    <div onClick={()=>history.push(item.path)} style={{textAlign:'center',marginTop:'90px'}}>
+                    <Card title={item.icon} hoverable bordered={false}
+                    style={{borderRadius:'15px'}}
+                    >
+                    <Meta title={item.title} description={item.description} /> 
+                    </Card>
+                    </div> 
+                </List.Item>
+                )}
+            />
         
        
         

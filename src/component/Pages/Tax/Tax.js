@@ -22,7 +22,7 @@ function Tax(props) {
     }
     return (
         <div style={{padding:10}}>
-            <Header />
+            {!props.manage&&<Header />}
             <Select onChange={changeSelect} defaultValue="10">
                     <Option value="10">10</Option>
                     <Option value="20">20</Option>
@@ -31,7 +31,7 @@ function Tax(props) {
 
 
             </Select>
-            <TaxTable tax={taxs} HandleChangePage={HandleChangePage} changeSelect={changeSelect} size={size}/>
+            <TaxTable tax={taxs} HandleChangePage={HandleChangePage} changeSelect={changeSelect} size={size} tableSize={props.size}/>
         </div>
     )
 }

@@ -1,5 +1,7 @@
 import React from 'react'
-import {Table} from 'antd'
+import {Space, Table} from 'antd'
+import {EditFilled} from '@ant-design/icons'
+import RoomModal from '../Modal/RoomModal';
 function CondoTable(props) {
     const {Column} = Table
     let uniqueId = 0;
@@ -15,10 +17,21 @@ function CondoTable(props) {
                 return record.__uniqueId;
                 }}
         >
-            <Column title="ชื่ออาคารชุด"/>
-            <Column title="เลขทะเบียนอาคารชุด"/>
-            <Column title="เลขที่ห้องชุด"/>
-            <Column title="ชั้นที่"/>
+            <Column title="ชื่ออาคารชุด" dataIndex="Condo"
+            render={text=>text.Condo_name}
+            />
+            <Column title="เลขทะเบียนอาคารชุด" dataIndex="Condo"
+            render={text=>text.Register_no}
+            />
+            <Column title="เลขที่ห้องชุด" dataIndex="Room_no"/>
+            <Column title="ชั้นที่" dataIndex="Floor"/>
+            <Column 
+            title="manage"
+            render={(text,record)=><RoomModal titleButton={<EditFilled /> }
+            titleModal={`เลขที่ห้องชุด ${record.Room_no} (ชั้นที่ ${record.Floor})`}
+            id_condo={record.Condo_no}
+            room={record}/>}
+            />
         </Table>
         </>
     )

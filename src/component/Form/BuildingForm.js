@@ -70,7 +70,7 @@ function BuildingForm(props) {
                       name="rating_id"
                       rules={[{ required: true, message: 'กรุณาเลือกประเภทสิ่งปลูกสร้าง !' }]}
                     >
-                      <Select onChange={onChangeCategory} placeholder="เลือกประเภทการใช้ประโยชน์ย่อย">
+                      <Select onChange={onChangeCategory} placeholder="เลือกประเภทการใช้ประโยชน์ย่อย" style={{width:280}}>
                         {code_cate_building.map(cate=><Select.Option  value={cate.code} key={cate.code}>{cate.category}</Select.Option >)}
                       </Select>
                     </Form.Item>
@@ -81,7 +81,7 @@ function BuildingForm(props) {
                       name="Sub_Category"
                       rules={[{ required: true, message: 'กรุณาเลือกประเภทสิ่งปลูกสร้างย่อย !' }]}
                     >
-                      <Select placeholder="เลือกประเภทการใช้ประโยชน์ย่อย"  value={secondCate} onChange={onChangeSubCate}>
+                      <Select placeholder="เลือกประเภทการใช้ประโยชน์ย่อย"  value={secondCate} onChange={onChangeSubCate} style={{width:280}}>
                         {category.map(subcate=>(<Select.Option key={subcate} >{subcate}</Select.Option>))}
                       </Select>
                     </Form.Item>
@@ -97,7 +97,7 @@ function BuildingForm(props) {
                       name="StyleBuilding"
                       rules={[{ required: true, message: 'กรุณาเลือกลักษณะสิ่งปลูกสร้าง !' }]}
                       >
-                        <Select placeholder="เสือกลักษณะสิ่งปลูกสร้าง">
+                        <Select placeholder="เสือกลักษณะสิ่งปลูกสร้าง" style={{width:130}}>
                           <Option value="ไม้">ไม้</Option>
                           <Option value="ตึก">ตึก</Option>
                           <Option value="ครึ่งตึกครึ่งไม้">ครึ่งตึกครึ่งไม้</Option>
@@ -154,7 +154,6 @@ function BuildingForm(props) {
             </Form.Item>
         <Divider />
         {props.building&&<>
-        {/* <h2 style={{color:"cadetblue"}}>{`คิดเป็นสัดส่วนการใช้ประโยชน์ได้ :${props.building.UsefulType.totalAVG} %`}</h2> */}
         <Divider />
         </>}
         
@@ -169,11 +168,15 @@ function BuildingForm(props) {
                       
                     </Form.Item>
                     {props.building&&
-                        <Form.Item
-                        name="Percent_Farm"
-                      >
-                        <Input disabled={props.TypeName === "เกษตร"||props.TypeName==="หลายประเภท" ?false:true}/>
-                      </Form.Item>
+                      <div style={{display:'block',paddingRight:'20px'}}>
+                        <p style={{color:'red'}}>*สัดส่วนประเภทเกษตร</p>
+                          <Form.Item
+                            name="Percent_Farm"
+                          >
+                            <Input disabled={props.TypeName === "เกษตร"||props.TypeName==="หลายประเภท" ?false:true}/>
+                          </Form.Item>
+                      </div>
+                       
                     }
                   </Col>
                  <Col>
@@ -184,15 +187,20 @@ function BuildingForm(props) {
                       <Input disabled={props.TypeName === "อยู่อาศัย"||props.TypeName==="หลายประเภท" ?false:true}/>
                     </Form.Item>
                     {props.building&&
-                      <Form.Item
-                        name="Percent_Live"
-                      >
-                        <Input disabled={props.TypeName === "อยู่อาศัย"||props.TypeName==="หลายประเภท" ?false:true}/>
-                      </Form.Item>}
+                      <div style={{display:'block'}}>
+                        <p style={{color:'red'}}>*สัดส่วนประเภทอยู่อาศัย</p>
+                        <Form.Item
+                          name="Percent_Live"
+                        >
+                          <Input disabled={props.TypeName === "อยู่อาศัย"||props.TypeName==="หลายประเภท" ?false:true}/>
+                        </Form.Item> 
+                      </div>
+                      
+                      }
                   </Col>
                   <Col>
                       <Form.Item
-                        label="เลือกที่อยู่หลังหลัก หรือ หลังรอง"
+                        label="กรณีที่อยู่หลังหลัก"
                         name="Live_Status"
                         valuePropName="checked"
                       >
@@ -215,11 +223,15 @@ function BuildingForm(props) {
                       
                     </Form.Item>
                       {props.building&&
-                        <Form.Item
-                          name="Percent_Other"
-                        >
-                          <Input disabled={props.TypeName === "อื่นๆ"||props.TypeName==="หลายประเภท"?false:true}/>
-                        </Form.Item>
+                        <div style={{display:'block',paddingRight:'20px'}}>
+                            <p style={{color:'red'}}>*สัดส่วนประเภทอื่นๆ</p>
+                            <Form.Item
+                              name="Percent_Other"
+                            >
+                              <Input disabled={props.TypeName === "อื่นๆ"||props.TypeName==="หลายประเภท"?false:true}/>
+                            </Form.Item>
+                        </div>
+                        
                       } 
                   </Col>
                   <Col>
@@ -231,11 +243,15 @@ function BuildingForm(props) {
                       
                     </Form.Item>
                     {props.building &&
-                        <Form.Item
-                        name="Percent_Empty"
-                      >
-                        <Input disabled={props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?false:true}/>
-                      </Form.Item>
+                        <div style={{display:'block',paddingRight:'20px'}}>
+                            <p style={{color:'red'}}>*สัดส่วนประเภทว่างเปล่า</p>
+                            <Form.Item
+                                name="Percent_Empty"
+                              >
+                                <Input disabled={props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?false:true}/>
+                              </Form.Item>
+                        </div>
+                       
                       
                       }
                   </Col>

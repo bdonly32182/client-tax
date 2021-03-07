@@ -5,12 +5,14 @@ import TaxReducer from './TaxReducer'
 import LandReducer from './LandReducer'
 import Usefulland from './UsefulLandReducer';
 import Building from './BuildingReducer'
+import Condo from './CondoReducer'
 const rootReducer = combineReducers({
     users:User,
     customers:CustomerReducer,
     taxs:TaxReducer,
     lands:LandReducer,
     usefullands:Usefulland,
-    buildings:Building
+    buildings:Building,
+    condo:Condo
 })
 export default rootReducer

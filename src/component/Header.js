@@ -23,19 +23,21 @@ export default function Header(props) {
           <Menu.Item danger onClick={()=> log_out()}>ออกจากระบบ</Menu.Item>
         </Menu>
       );
+      //F9F99B
     return (
-        <div style={{width:"100%",paddingTop:10}}>
-            <Row gutter={{xs:8,sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row" span={15}/>
-                <Col className="gutter-row" span={9}  >
+        <div style={{width:"100%",paddingTop:5 ,backgroundColor:'whitesmoke',paddingLeft:'20px'}}>
+            <Row >
+                <Col xs={7}sm= {10} md= {12} lg= {15} xl={17} xxl={18} style={{paddingTop:'15px'}}>
+                     <Link to="/main" style={{color:'black'}}><Image src="/home.png" width={20}preview={false}/>  หน้าหลัก</Link>  
+                </Col>
+                <Col xs={17}sm= {14} md= {12} lg= {9} xl={7} xxl={6} style={{paddingTop:'15px'}} >
                     {user?.role ==="leader"&&
-                        <Link to="/manage" style={{backgroundColor:'#EDBE1E',color:'gray'}}><b>ในส่วนของหัวหน้า</b></Link>
+                        <Link to="/manage" style={{backgroundColor:'seashell',color:'steelblue',paddingRight:'10px'}}><b>*ในส่วนของหัวหน้า</b></Link>
                     }
-                    <Link to="/main" style={{padding:20,color:'black'}}><Image src="/home.png" width={20}preview={false}/>  หน้าหลัก</Link>
-                    <Dropdown overlay={menu}>
-                    <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                        <Avatar size={40} icon={<UserOutlined />} style={{ backgroundColor: '#9EC1C4' }}/>
-                                {user&& <b style={{padding:10,color:'black'}}>{`${user.Fname} ${user.Lname}`}</b>}<DownOutlined />               
+                    <Dropdown overlay={menu} >
+                    <a className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{paddingLeft:'25px'}}>
+                        <Avatar size={40} icon={<UserOutlined />} style={{ backgroundColor: '#9FC1E3' }}/>
+                                {user&& <b style={{padding:10,color:'steelblue',fontSize:18}}>{`${user.Fname} ${user.Lname}`}</b>}<DownOutlined />               
                     </a>
                     </Dropdown>
                 </Col>

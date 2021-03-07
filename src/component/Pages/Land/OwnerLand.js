@@ -34,10 +34,8 @@ function OwnerLand(props) {
     } 
     const create_customer = value =>{
         //สร้างประชาชน ส่งให้ CustomerModal เพื่อคลิ๊กสร้าง
-        console.log(value.Cus_No);
         let filterCreated = created.filter(create => create.Cus_No === value.Cus_No)
         let filterCustomer = customer.filter(customer =>customer.Cus_No === value.Cus_No)
-        console.log(filterCreated.length,);
         if (filterCreated.length === 0 && filterCustomer.length === 0) {
             return setCreate([...created,value])
         }
@@ -102,10 +100,11 @@ function OwnerLand(props) {
         }else{
             customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:customer[0].id_customer}));
             if (props.Build_Id) {
-                dispatch(generate_building(customer[0].id_customer,props.code_land,id_cus,customer[0],category,props.Build_Id,props.useful_id));
+                dispatch(generate_building(`${jwt.distict_id}_${customer[0].Cus_No}`,props.code_land,id_cus,customer[0],category,props.Build_Id,props.useful_id));
                 id_cus.length=0 
             }else{
-                dispatch(generate_tax_land(customer[0].id_customer,props.code_land,id_cus,customer[0],category));
+
+                dispatch(generate_tax_land(`${jwt.distict_id}_${customer[0].Cus_No}`,props.code_land,id_cus,customer[0],category));
                 id_cus.length=0 
             }
             
