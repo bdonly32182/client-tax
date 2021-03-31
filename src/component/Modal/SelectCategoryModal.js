@@ -32,6 +32,7 @@ function SelectCategoryModal(props) {
             >
                 <Select defaultValue="บุคคล"
                         onChange={(value)=>setValueSelect(value)}
+                        style={{with:120}}
                 >
                     {category_customer.map(category =><Option value={category} key={category}>{category}</Option>)}
                     

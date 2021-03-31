@@ -18,9 +18,18 @@ export const user_login =(body,setRole)=>{
     
 }
 
-export const user_register =(body) =>{
+export const user_register =({Pers_no,Fname,Lname,password,distict_member_id,role_name,TableNo},picture) =>{
     return dispatch =>{
-        axios.post('/api/registmember',body).then((result) => {
+        const formData = new FormData();
+        formData.append('file',picture);
+        formData.append('Pers_no',Pers_no);
+        formData.append('Fname',Fname);
+        formData.append('Lname',Lname);
+        formData.append('password',password);
+        formData.append('distict_member_id',distict_member_id);
+        formData.append('role_name',role_name);
+        formData.append('TableNo',TableNo);
+        axios.post('/api/registmember',formData).then((result) => {
             //ถ้ารหัสบัตรประชาชนถูกใช้แล้ว ให้เเจ้งเตือน
             if(result.status === 202)return notification.warning({message:result.data.msg})
             notification.success({message:result.data.msg})

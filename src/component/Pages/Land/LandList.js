@@ -80,7 +80,6 @@ function LandList(props) {
                 record.__uniqueId = ++uniqueId;
                 return record.__uniqueId;
                 }}
-                pagination={{pageSize:props.size}}
             />
             
         </div>

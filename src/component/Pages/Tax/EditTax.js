@@ -14,6 +14,7 @@ import PDS7Table from '../../Table/PDS7Table'
 import Header from '../../Header'
 import PDS8Table from '../../Table/PDS8Table'
 import PDS4Table from '../../Table/PDS4Table'
+import NewPDS7 from '../../Table/NewPDS7'
 
 function EditTax(props) {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ function EditTax(props) {
     const tax = useSelector(state => state.taxs);
     const [pds3,setPds3] = useState([]);
     const [pds7,setPds7] = useState([]);
+    const [pds4,setPds4] = useState([]);
     const [pds8,setPds8] = useState([]);
     const [showCol,setShowCol] = useState(true)
     const [loading3,setLoading3] = useState(true);
@@ -49,9 +51,20 @@ function EditTax(props) {
                 notification.error({message:"ร้องขอ ภ.ด.ส. 7 ล้มเหลว"})
             }); 
         }
-        if (value === "6"||value === "5") {
-            pds8.length===0&&
+        if (value === "5"||value === "6") {
+            pds4.length===0&&
             axios.get(`/api/pds4/${tax.uid_tax}`).then((result) => {
+                console.log(result.data);
+                setPds4(result.data)
+                result.data&&setLoading8(false);
+            }).catch((err) => {
+                notification.error({message:'เรียกดู ภ.ด.ส.8 ล้มเหลว'})
+            });
+        }
+        if (value === "6") {
+            pds8.length===0&&
+            axios.get(`/api/pds8/${tax.uid_tax}`).then((result) => {
+                console.log(result.data);
                 setPds8(result.data)
                 result.data&&setLoading8(false);
             }).catch((err) => {
@@ -61,7 +74,6 @@ function EditTax(props) {
        
     }
    
-    console.log(tax);
     return (
         <div>
             <Header />
@@ -116,9 +128,9 @@ function EditTax(props) {
                 
                 </TabPane>
                 <TabPane key="5" tab="ภ.ด.ส.4 ">
-                    {pds8 &&(
+                    {pds4 &&(
                         <>
-                        <PDS4Table condo={pds8} loading={loading8}/>
+                        <PDS4Table condo={pds4} loading={loading8}/>
                            </> 
                     )}
                            
@@ -127,17 +139,21 @@ function EditTax(props) {
                     {pds7 &&(
                         <>
                            <Checkbox onChange={()=>setShowCol(!showCol)} checked={showCol}>แสดงคอลัมน์ทั้งหมด</Checkbox>
-                           <PDS7Table land = {pds7} tax={tax} loading={loading7} show={showCol}/>
+                           <NewPDS7 land = {pds7} tax={tax} loading={loading7} show={showCol}/>
+                           {/* <PDS7Table land = {pds7} tax={tax} loading={loading7} show={showCol}/> */}
                            </> 
                     )}
                            
                 </TabPane>
                 <TabPane key="6" tab="ภ.ด.ส.8 ">
-                    {pds8 &&(
-                        <>
-                           <PDS8Table condo={pds8} loading={loading8}/>
-                           </> 
-                    )}
+                    <div style={{padding:'30px'}}>
+                        {pds8 &&(
+                            <>
+                            <PDS8Table condo={pds8} loading={loading8} tax={tax}/>
+                            </> 
+                        )}
+                    </div>
+                    
                            
                 </TabPane>
             </Tabs>

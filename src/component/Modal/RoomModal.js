@@ -10,12 +10,19 @@ function RoomModal({titleButton,id_condo,titleModal,room}) {
     const [visible,setVisible] = useState(false);
     const onOk = () => {
         form.validateFields().then((values) => {
+            let date =new Date()
+            let nowYear = date.getFullYear() + 543
             if (room) {
-                dispatch(onEdit_room(values,id_condo));
+                dispatch(onEdit_room({...values,
+                    AgeRoom:values.AgeRoom >2400?values.AgeRoom:nowYear - values.AgeRoom,
+                },id_condo));
                 setVisible(false);
                 return ;
             }
-            dispatch(createRoom({...values,Room_ID:`${id_condo}-${values.Room_no}`,Condo_no:id_condo},id_condo));
+            dispatch(createRoom({...values,
+                AgeRoom:values.AgeRoom >2400?values.AgeRoom:nowYear - values.AgeRoom,
+                Room_ID:`${id_condo}-${values.Room_no}`,
+                Condo_no:id_condo},id_condo));
             setVisible(false);
         }).catch((err) => {
             notification.error({message:'สร้างห้องชุดล้มเหลว'})

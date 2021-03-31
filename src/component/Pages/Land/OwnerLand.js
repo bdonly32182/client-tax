@@ -82,29 +82,21 @@ function OwnerLand(props) {
       }
     const generate_tax_id = (category)=>{
         let jwt = jwtDecode(token)
-        console.log(category);
         if (customer.length >1) {
-            // id_tax make format uid_tax
-            customer.sort(compare);//sort ก่อนสร้างรหัสผู้เสียภาษีเพื่อที่จะให้รหัสมันตรงกัน เเม้ว่าตำแหน่งจะสลับกัน
-            const id_tax =  customer.map(cus =>cus.Cus_No.substr(9,13)).reduce((pervious,current)=>pervious+current);
-            
-            customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:`${jwt.distict_id}_${id_tax}`}));//use table customer_has_tax
             if (props.Build_Id) {
-                dispatch(generate_building(`${jwt.distict_id}_${id_tax}`,props.code_land,id_cus,customer[0],category,props.Build_Id,props.useful_id));
-                id_cus.length=0 
+                dispatch(generate_building(undefined,props.code_land,undefined,customer,category,props.Build_Id,props.useful_id));
             }else{
-                dispatch(generate_tax_land(`${jwt.distict_id}_${id_tax}`,props.code_land,id_cus,customer[0],category));
-                id_cus.length=0 
+                dispatch(generate_tax_land(undefined,props.code_land,undefined,customer,category));
             }
             
         }else{
             customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:customer[0].id_customer}));
             if (props.Build_Id) {
-                dispatch(generate_building(`${jwt.distict_id}_${customer[0].Cus_No}`,props.code_land,id_cus,customer[0],category,props.Build_Id,props.useful_id));
+                dispatch(generate_building(`${jwt.distict_id}_${customer[0].Cus_No}`,props.code_land,id_cus,customer,category,props.Build_Id,props.useful_id));
                 id_cus.length=0 
             }else{
 
-                dispatch(generate_tax_land(`${jwt.distict_id}_${customer[0].Cus_No}`,props.code_land,id_cus,customer[0],category));
+                dispatch(generate_tax_land(`${jwt.distict_id}_${customer[0].Cus_No}`,props.code_land,id_cus,customer,category));
                 id_cus.length=0 
             }
             
@@ -126,7 +118,7 @@ function OwnerLand(props) {
             {!props.Build_Id&&<h3>ข้อมูลเจ้าของที่ดิน</h3>}
             <Row >
                 <Col>
-                        <OwnersModal created={created} onSelect={select_customer} onCreated={create_customer} onSearch={search_customer} onPull={pull_customer}/>
+                        <OwnersModal created={created} onSelect={select_customer} onCreated={create_customer} onSearch={search_customer} onPull={pull_customer} build_id={props.Build_Id}/>
                    
                 </Col>
                 <Col >

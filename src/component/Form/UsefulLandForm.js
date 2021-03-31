@@ -1,5 +1,5 @@
-import React,{useEffect} from 'react'
-import { Form, Input,Col,Select } from 'antd';
+import React,{useEffect,useState} from 'react'
+import { Form, Input,Col,Select ,Checkbox} from 'antd';
 const layout = {
     labelCol: {
       span: 3,
@@ -20,9 +20,15 @@ const layout = {
   
 function UsefulLandForm(props) {
     const  {Option} = Select;
+    const [type,setType] = useState("ลักษณะการใช้ประโยชน์")
     useEffect(() => {
         props.formModal.resetFields();
     }, [props.balancePlace,props.formModal])
+
+    const onChange = value => {
+        console.log(value);
+        setType(value)
+    }
     return (
         <div>
             
@@ -77,12 +83,30 @@ function UsefulLandForm(props) {
                                 label="ลักษณะการใช้ประโยชน์"
                                 rules={[{ required: true, message: 'กรุณาเลือกลักษณะการใช้ประโยชน์!' }]}
                             >
-                                <Select placeholder="ลักษณะการใช้ประโยชน์" >
+                                <Select placeholder="ลักษณะการใช้ประโยชน์" onChange={onChange} style={{width:130}}>
                                     {options.map((option,i) =><Option value={option.value} key={i}>{option.label}</Option>)}
                                 </Select>
                             
                             </Form.Item> 
+                           
                         </Col>
+                        {type ==="ว่างเปล่า"||props.useful?.TypeName ==="ว่างเปล่า"?
+                                <Col>
+                                    <Form.Item label="ปีที่เริ่มว่างเปล่า"
+                                    name="StartYears"
+                                    rules={[{ required: true, message: 'กรุกรอกปีที่เริ่มว่างเปล่า!' }]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item label="ว่างเปล่าแท้จริง"
+                                     valuePropName="checked"
+                                    name="EmptyAbsolutes"
+                                    >
+                                    <Checkbox></Checkbox>
+                                    </Form.Item>
+                                </Col>
+                                :null
+                            }
                         <Col>
                         <Form.Item
                             label="ลักษณะพิเศษ"

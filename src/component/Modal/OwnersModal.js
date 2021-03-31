@@ -20,7 +20,7 @@ function OwnersModal(props) {
                 </Row>
                 <Row style={{padding:10}}>
                      <CustomerModal title="สร้างข้อมูลประชาชน" onCreated={props.onCreated}/>
-                     {props.onPull&&<Button onClick={()=>props.onPull()}>ดึงข้อมูลเจ้าของที่ดินจากในระบบ</Button>  
+                     {props.onPull&&!props.build_id&&<Button onClick={()=>props.onPull()}>ดึงข้อมูลเจ้าของที่ดินจากในระบบ</Button>  
                      }
                       
  

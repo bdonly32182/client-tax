@@ -1,7 +1,6 @@
 import React from 'react'
 import { Table,Popover} from 'antd'
-import seperate from '../../Seperate'
-
+import seperate from '../../FuncPDS7/Seperate'
 function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show}) {
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0;
@@ -204,7 +203,9 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
           
              return  <>
              {useful.LiveTypes.length>0&&useful.LiveTypes.map((live,i)=>(<>
-                     <p>{live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?`50ล้าน`:`10ล้าน`:useful.Special_Useful}</p>
+                     <p>{live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?
+                        `${(live.Useful_live.BalanceDiscount/1000000).toFixed(2)}ล้าน`:`${(live.Useful_live.BalanceDiscount/1000000).toFixed(2)}ล้าน`
+                     :useful.Special_Useful}</p>
                      
              </>))}
              {useful.OtherTypes.length>0&&useful.OtherTypes.map((other,i)=>(<>
@@ -235,12 +236,14 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         let TotalPrice =   usefuls.BuildOnUsefulLands.reduce((pre,{Building:{AfterPriceDepreciate}})=>pre + AfterPriceDepreciate,0)
                           TotalNexto = TotalPrice +usefuls.PriceUseful + PriceBuildAnduseful;
 
-                        }else{
-                            TotalNexto += usefuls.PriceUseful
-                        } 
+                        }
+                        if (useful.LiveTypes.length === 0 &&useful.OtherTypes.length === 0&& useful.FarmTypes.length === 0&& useful.EmptyTypes.length === 0) {
+                            TotalNexto = useful.PriceUseful + PriceBuildAnduseful
+                        }
+                        
                     })
-                    return seperate(TotalNexto,useful.TypeName).map(res=><Popover content={()=>contentNexto(useful.Useful)}><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p></Popover>)
+                    return seperate(TotalNexto,useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=><Popover content={()=>contentNexto(useful.Useful)}><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                            maximumFractionDigits: 2})}</p></Popover>)
 
             }else{
                     
@@ -256,15 +259,15 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                                     Building.LiveType.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?seperate((Building.LiveType?.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                                                     "อยู่อาศัย",50000000
                                                     ).map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                        maximumFractionDigits: 2})}</p>)
                                                     :seperate((Building.LiveType?.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                                                     "อยู่อาศัย",10000000).map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                        maximumFractionDigits: 2})}</p>)
                                                     :
                                                     seperate(
                                                         (Building.LiveType?.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                                                     "อยู่อาศัย").map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                        maximumFractionDigits: 2})}</p>)
                                             // :"แปลงติดกัน"
                                             :null
                                         }
@@ -276,7 +279,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                                 (Building.OtherType?.Percent_Other * Number(PriceBuildAnduseful)) / totalPercent,
                                             "อื่นๆ")
                                             .map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                         // :"แปลงติดกัน"
                                         }  
                                         
@@ -284,11 +287,11 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             // !useful.isNexto?
                                                 seperate((Building.FarmType?.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                                 "เกษตร",50000000).map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                                 :
                                                 seperate((Building.FarmType?.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                                 "เกษตร").map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})} </p>)
+                                                    maximumFractionDigits: 2})} </p>)
                                             // :"แปลงติดกัน"
                                         :null
                                         }
@@ -298,7 +301,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
                                             seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
                                             .map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                         // :"แปลงติดกัน"
                                         }
             
@@ -317,13 +320,13 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             Category_Tax ==="บุคคล"?
                                             seperate(PriceBuildAnduseful,
                                             "เกษตร",50000000).map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                             :seperate(PriceBuildAnduseful,
                                             "เกษตร").map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                         :seperate(PriceBuildAnduseful,
                                             useful.TypeName).map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                     // :"แปลงติดกัน"
                                     }
                                 </>
@@ -335,17 +338,17 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         {
                         // !useful.isNexto?
                             live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย",50000000
+                            "อยู่อาศัย",live.Useful_live.BalanceDiscount
                             ).map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}l</p>)
+                                    maximumFractionDigits: 2})}</p>)
                             :seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย",10000000).map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})} l</p>)
+                            "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2})} </p>)
                             :
                             seperate(
                                 (live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                             "อยู่อาศัย").map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})} l</p>)
+                                    maximumFractionDigits: 2})} </p>)
                         // :"แปลงติดกัน"
                         }
                         
@@ -356,7 +359,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                             seperate((other.Percent_Other * Number(PriceBuildAnduseful)) / totalPercent,
                             "อื่นๆ")
                             .map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})} o</p>)
+                                 maximumFractionDigits: 2})} </p>)
                         // :"แปลงติดกัน"
                         }              
                             
@@ -366,11 +369,11 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                             // !useful.isNexto?
                                 Category_Tax ==="บุคคล"?seperate((farm.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                             "เกษตร",50000000).map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}s</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                             :
                                             seperate((farm.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                             "เกษตร").map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})} f</p>)
+                                                    maximumFractionDigits: 2})} </p>)
                             // :"แปลงติดกัน"              
                             }
                         </>))}    
@@ -379,7 +382,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                             //  !useful.isNexto?
                                         seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
                                         .map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}e</p>)
+                                                maximumFractionDigits: 2})}</p>)
                                 // :"แปลงติดกัน"
                             }
                                 
@@ -400,11 +403,13 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         let TotalPrice =   usefuls.BuildOnUsefulLands.reduce((pre,{Building:{AfterPriceDepreciate}})=>pre + AfterPriceDepreciate,0)
                           TotalNexto = TotalPrice +usefuls.PriceUseful + PriceBuildAnduseful;
 
-                        }else{
-                            TotalNexto += usefuls.PriceUseful
-                        } 
+                        }if (useful.LiveTypes.length === 0 &&useful.OtherTypes.length === 0&& useful.FarmTypes.length === 0&& useful.EmptyTypes.length === 0) {
+                            TotalNexto = useful.PriceUseful + PriceBuildAnduseful
+                        }
+                        
                     })
-                    return seperate(TotalNexto,useful.TypeName).map(res=><p>{res.percent}</p>)
+                    return seperate(TotalNexto,useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=><Popover content={()=>contentNexto(useful.Useful)}><p>{res.percent.toLocaleString(undefined,{minimumFractionDigits: 2,
+                            maximumFractionDigits: 2})}</p></Popover>)
 
             }else{
                     
@@ -447,8 +452,10 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
 
                                         {
                                             Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
-                                            seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
-                                            .map(res=><p>{res.percent}</p>)
+                                            seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า',
+                                                   0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute
+                                            )
+                                            .map(res=><p>{res.percent} </p>)
                                         }
             
                                             
@@ -468,7 +475,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             :seperate(PriceBuildAnduseful,
                                             "เกษตร").map(res=><p>{res.percent}</p>)
                                         :seperate(PriceBuildAnduseful,
-                                            useful.TypeName).map(res=><p>{res.percent}</p>)
+                                            useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=><p>{res.percent}</p>)
                                     }
                                 </>
                     }else{
@@ -478,14 +485,14 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         {useful.LiveTypes.length>0&&useful.LiveTypes.map((live,i)=>(<>
                         {
                             live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย",50000000
-                            ).map(res =><p>{res.percent}l</p>)
+                            "อยู่อาศัย",live.Useful_live.BalanceDiscount
+                            ).map(res =><p>{res.percent}</p>)
                             :seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย",10000000).map(res =><p>{res.percent}l</p>)
+                            "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res =><p>{res.percent}</p>)
                             :
                             seperate(
                                 (live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย").map(res =><p>{res.percent}l</p>)
+                            "อยู่อาศัย").map(res =><p>{res.percent}</p>)
                         }
                         
                         </>))}
@@ -493,23 +500,25 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         {
                             seperate((other.Percent_Other * Number(PriceBuildAnduseful)) / totalPercent,
                             "อื่นๆ")
-                            .map(res =><p>{res.percent}o</p>)
+                            .map(res =><p>{res.percent}</p>)
                         }              
                             
                         </>))}    
                         {useful.FarmTypes.length>0&&useful.FarmTypes.map((farm,i)=>(<>  
                             {
                                 Category_Tax ==="บุคคล"?seperate((farm.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
-                                            "เกษตร",50000000).map(res=><p>{res.percent}s</p>)
+                                            "เกษตร",50000000).map(res=><p>{res.percent}</p>)
                                             :
                                             seperate((farm.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
-                                            "เกษตร").map(res=><p>{res.percent} f</p>)
+                                            "เกษตร").map(res=><p>{res.percent} </p>)
                             }
                         </>))}    
                         {useful.EmptyTypes.length>0&&useful.EmptyTypes.map((empty,i)=><>
                             {  
-                                        seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
-                                        .map(res=><p>{res.percent}e</p>)
+                                        seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า',
+                                        0, empty.StartYear,empty.EmptyAbsolute
+                                        )
+                                        .map(res=><p>{res.percent}</p>)
                             }
                                 
                         </>)}
@@ -528,18 +537,19 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         if (usefuls.BuildOnUsefulLands.length >0) {
                         let TotalPrice =   usefuls.BuildOnUsefulLands.reduce((pre,{Building:{AfterPriceDepreciate}})=>pre + AfterPriceDepreciate,0)
                           TotalNexto = TotalPrice +usefuls.PriceUseful + PriceBuildAnduseful;
-
-                        }else{
-                            TotalNexto += usefuls.PriceUseful
-                        } 
+        
+                        }if (useful.LiveTypes.length === 0 &&useful.OtherTypes.length === 0&& useful.FarmTypes.length === 0&& useful.EmptyTypes.length === 0) {
+                            TotalNexto = useful.PriceUseful + PriceBuildAnduseful
+                        }
+                        
                     })
-                    return seperate(TotalNexto,useful.TypeName).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
+                    return seperate(TotalNexto,useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                         <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                    maximumFractionDigits: 2})}</p>
                     :
                         <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
-
+                                maximumFractionDigits: 2})}</p>)
+        
             }else{
                     
                 if (useful.isNexto) {
@@ -555,26 +565,26 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                                     "อยู่อาศัย",50000000
                                                     ).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                         <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                            maximumFractionDigits: 2})}</p>
                                                         :
                                                         <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                            maximumFractionDigits: 2})}</p>)
                                                     :seperate((Building.LiveType?.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                                                     "อยู่อาศัย",10000000).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                         <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                            maximumFractionDigits: 2})}</p>
                                                         :
                                                         <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                            maximumFractionDigits: 2})}</p>)
                                                     :
                                                     seperate(
                                                         (Building.LiveType?.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                                                     "อยู่อาศัย").map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                         <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                            maximumFractionDigits: 2})}</p>
                                                         :
                                                         <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                        maximumFractionDigits: 2})}</p>)
                                             // :"แปลงติดกัน"
                                             :null
                                         }
@@ -587,10 +597,10 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             "อื่นๆ")
                                             .map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                    maximumFractionDigits: 2})}</p>
                                                 :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                         // :"แปลงติดกัน"
                                         }  
                                         
@@ -599,32 +609,33 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                                 seperate((Building.FarmType?.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                                 "เกษตร",50000000).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                     <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                        maximumFractionDigits: 2})}</p>
                                                     :
                                                     <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                        maximumFractionDigits: 2})}</p>)
                                                 :
                                                 seperate((Building.FarmType?.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                                 "เกษตร").map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                     <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                        maximumFractionDigits: 2})}</p>
                                                     :
                                                     <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                        maximumFractionDigits: 2})}</p>)
                                             // :"แปลงติดกัน"
                                         :null
                                         }
-
+        
                                         {
                                         // !useful.isNexto?
                                             Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
-                                            seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
+                                            seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า',
+                                            0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
                                             .map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                    maximumFractionDigits: 2})}</p>
                                                 :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                         // :"แปลงติดกัน"
                                         }
             
@@ -643,25 +654,25 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             Category_Tax ==="บุคคล"?
                                             seperate(PriceBuildAnduseful,
                                             "เกษตร",50000000).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
-                                                <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                <p>{((res.price * res.percent) *(useful.Special_Useful/100)).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2})} </p>
                                             :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})} </p>)
                                             :seperate(PriceBuildAnduseful,
                                             "เกษตร").map(res=>useful.Special_Useful>0&&exceptEmergency===0?
-                                                <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                <p>{((res.price * res.percent) *(useful.Special_Useful/100)).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2})} </p>
                                             :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})} </p>)
                                         :seperate(PriceBuildAnduseful,
-                                            useful.TypeName).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
-                                                <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                            useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
+                                                <p>{((res.price * res.percent) *(useful.Special_Useful/100)).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2})} </p>
                                             :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})} </p>)
                                     // :"แปลงติดกัน"
                                     }
                                 </>
@@ -673,29 +684,29 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         {
                         // !useful.isNexto?
                             live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย",50000000
+                            "อยู่อาศัย",live.Useful_live.BalanceDiscount
                             ).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                    maximumFractionDigits: 2})}</p>
                                 :
                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                    maximumFractionDigits: 2})}</p>)
                             :seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                            "อยู่อาศัย",10000000).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
+                            "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                    maximumFractionDigits: 2})}</p>
                                 :
                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                    maximumFractionDigits: 2})}</p>)
                             :
                             seperate(
                                 (live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
                             "อยู่อาศัย").map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                    maximumFractionDigits: 2})}</p>
                                 :
                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                    maximumFractionDigits: 2})}</p>)
                         // :"แปลงติดกัน"
                         }
                         
@@ -707,10 +718,10 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                             "อื่นๆ")
                             .map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                maximumFractionDigits: 2})} </p>
                             :
                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                maximumFractionDigits: 2})} </p>)
                         // :"แปลงติดกัน"
                         }              
                             
@@ -721,31 +732,33 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                 Category_Tax ==="บุคคล"?seperate((farm.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                             "เกษตร",50000000).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                    maximumFractionDigits: 2})}</p>
                                                 :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                                             :
                                             seperate((farm.Percent_Farm * Number(PriceBuildAnduseful)) / totalPercent,
                                             "เกษตร").map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                 <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                    maximumFractionDigits: 2})}</p>
                                                 :
                                                 <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                    maximumFractionDigits: 2})}</p>)
                             // :"แปลงติดกัน"              
                             }
                         </>))}    
                         {useful.EmptyTypes.length>0&&useful.EmptyTypes.map((empty,i)=><>
                             {  
                             //  !useful.isNexto?
-                                        seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
+                                        seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า',
+                                            0, empty.StartYear,empty.EmptyAbsolute
+                                        )
                                         .map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                             <p>{(res.price * res.percent) *(useful.Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>
+                                                maximumFractionDigits: 2})}</p>
                                         :
                                             <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>)
+                                                maximumFractionDigits: 2})}</p>)
                                 // :"แปลงติดกัน"
                             }
                                 
@@ -760,6 +773,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
         Summary:({useful,PriceBuildAnduseful})=>{
             let sumArray = [];
             let totalPercent = useful.BuildOnUsefulLands.length * 100||100
+           
             if (useful.Useful.length > 0) {
                 let TotalNexto =0;
                       useful.Useful.map(usefuls=>{ 
@@ -767,11 +781,12 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         let TotalPrice =   usefuls.BuildOnUsefulLands.reduce((pre,{Building:{AfterPriceDepreciate}})=>pre + AfterPriceDepreciate,0)
                           TotalNexto = TotalPrice +usefuls.PriceUseful + PriceBuildAnduseful;
 
-                        }else{
-                            TotalNexto += usefuls.PriceUseful
-                        } 
+                        }if (useful.LiveTypes.length === 0 &&useful.OtherTypes.length === 0&& useful.FarmTypes.length === 0&& useful.EmptyTypes.length === 0) {
+                            TotalNexto = useful.PriceUseful + PriceBuildAnduseful
+                        }
+                       
                     })
-                    seperate(TotalNexto,useful.TypeName).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
+                    seperate(TotalNexto,useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                         sumArray.push((res.price * res.percent) *(useful.Special_Useful/100))
                     :
                         sumArray.push(res.price * res.percent)
@@ -842,7 +857,8 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
 
                                         {
                                             Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
-                                            seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
+                                            seperate((Building.EmptyType?.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า',
+                                            0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
                                             .map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                 sumArray.push((res.price * res.percent) *(useful.Special_Useful/100))
                                                 :
@@ -873,7 +889,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                             sumArray.push(res.price * res.percent)
                                             )
                                     :seperate(PriceBuildAnduseful,
-                                        useful.TypeName).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
+                                        useful.TypeName,0,useful.StartYears,useful.EmptyAbsolutes).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                             sumArray.push((res.price * res.percent) *(useful.Special_Useful/100))
                                             :
                                             sumArray.push(res.price * res.percent)
@@ -889,14 +905,14 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                             {
                             // !useful.isNexto?
                                 live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && useful.UsefulLand_Tax_ID=== uid_tax?seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                                "อยู่อาศัย",50000000
+                                "อยู่อาศัย",live.Useful_live.BalanceDiscount
                                 ).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                     sumArray.push((res.price * res.percent) *(useful.Special_Useful/100))
                                     :
                                     sumArray.push(res.price * res.percent)
                                     )
                                 :seperate((live.Percent_Live * Number(PriceBuildAnduseful)) / totalPercent,
-                                "อยู่อาศัย",10000000).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
+                                "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                     sumArray.push((res.price * res.percent) *(useful.Special_Useful/100))
                                     :
                                      sumArray.push(res.price * res.percent)
@@ -949,7 +965,8 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                             useful.EmptyTypes.length>0&&useful.EmptyTypes.map((empty,i)=><>
                                 {  
                                 //  !useful.isNexto?
-                                            seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า')
+                                            seperate((empty.Percent_Empty * Number(PriceBuildAnduseful)) / totalPercent,'ว่างเปล่า',
+                                            0, empty.StartYear,empty.EmptyAbsolute)
                                             .map(res=>useful.Special_Useful>0&&exceptEmergency===0?
                                                 sumArray.push((res.price * res.percent) *(useful.Special_Useful/100))
                                             :
@@ -970,7 +987,6 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
         
         }
     }
-
     return (
         <Table bordered={true} dataSource={land } size="small"
                 rowKey={(record)=>{
@@ -994,15 +1010,30 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                         total += reducerResult
                     })                    
                     return <>
-                        <Table.Summary.Row>
-                        <Table.Summary.Cell colSpan={22}>ยอดรวมทั้งหมด</Table.Summary.Cell>
+                    <Table.Summary.Row>
+                        <Table.Summary.Cell colSpan={20}></Table.Summary.Cell>
+
+                        <Table.Summary.Cell colSpan={3}><b style={{textAlign:'center'}}>ยอดรวมทั้งหมด</b></Table.Summary.Cell>
                         
-                        <Table.Summary.Cell colSpan={3}>
-                            <b style={{color:'red'}}>{`${exceptEmergency>0?((total * exceptEmergency) / 100).toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2}):total.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})} บาท`}</b>
+                        <Table.Summary.Cell colSpan={2}>
+                            <b style={{color:'red'}}>{`${total.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                maximumFractionDigits: 2})} บาท `}</b>
                         </Table.Summary.Cell>
                         </Table.Summary.Row>
+                        {exceptEmergency>0&&
+                        <Table.Summary.Row>
+                        <Table.Summary.Cell colSpan={20}></Table.Summary.Cell>
+
+                        <Table.Summary.Cell colSpan={3}><b style={{textAlign:'center'}}>{`(ได้รับส่วนลดกรณีฉุกเฉิน ${exceptEmergency>0&&exceptEmergency} %)`}</b></Table.Summary.Cell>
+                       
+                        <Table.Summary.Cell colSpan={2}>
+                            <b style={{color:'red'}}>{`${exceptEmergency>0?((total * exceptEmergency) / 100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                maximumFractionDigits: 2}):total.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                maximumFractionDigits: 2})} บาท `}</b>
+                        </Table.Summary.Cell>
+                        
+                        </Table.Summary.Row>
+                        }
                     </>
                 }}
                 
@@ -1037,16 +1068,16 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                 </ColumnGroup>
                 <Column title="คำนวณเป็น ตรว." key="Useful_WA"
                     render={(text,record)=><p>{record.useful.UsefulLand_Tax_ID===uid_tax&&record.useful.Place.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>}
+                            maximumFractionDigits: 2})}</p>}
                 />
                 <Column  title="ราคาประเมินต่อ ตรว." key="Useful_WA"
                     render={(text,record)=><p>{record.useful.UsefulLand_Tax_ID===uid_tax&&record.useful.Land.Price.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>}
+                            maximumFractionDigits: 2})}</p>}
                 />
                 <Column title="รวมราคาประเมิณของที่ดิ" key="Useful_WA"
                 // width={100}  
                     render={(text,record)=><p>{record.useful.UsefulLand_Tax_ID===uid_tax&&record.useful.PriceUseful.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>}
+                            maximumFractionDigits: 2})}</p>}
                 />
             </ColumnGroup>
             <ColumnGroup title="คำนวณประเมินทุนทรัพย์และสิ่งปลูกสร้าง" >
@@ -1102,7 +1133,7 @@ function PDS7Table({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show
                                 dataIndex="PriceBuildAnduseful"
                                 width={110}
                                 render={(text,record)=><p>{text.toLocaleString(undefined,{minimumFractionDigits: 2,
-  maximumFractionDigits: 2})}</p>}
+                                        maximumFractionDigits: 2})}</p>}
                                 /> 
                                 {show&&<>
                                        

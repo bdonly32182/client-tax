@@ -19,16 +19,19 @@ function BuildingForm(props) {
             labelCol={{offset:10}}
             initialValues={props.onEdit?{
               ...props.building,
-              Farm_Size:props.building.FarmType&&props.building.FarmType.Farm_Size ,
-              Live_Size:props.building.LiveType&&props.building.LiveType.Live_Size ,
-              Empty_Size:props.building.EmptyType&&props.building.EmptyType.Empty_Size ,
-              Other_Size:props.building.OtherType&&props.building.OtherType.Other_Size ,
+              Farm_Size:props.building.FarmType?props.building.FarmType.Farm_Size:0 ,
+              Live_Size:props.building.LiveType?props.building.LiveType.Live_Size :0,
+              Empty_Size:props.building.EmptyType?props.building.EmptyType.Empty_Size:0 ,
+              Other_Size:props.building.OtherType?props.building.OtherType.Other_Size:0 ,
               rating_id:props.building.RateOfBuilding.Code,
-              Percent_Farm:props.building.FarmType&&props.building.FarmType.Percent_Farm,
-              Percent_Live:props.building.LiveType&&props.building.LiveType.Percent_Live,
-              Percent_Other:props.building.OtherType&&props.building.OtherType.Percent_Other,
-              Percent_Empty:props.building.EmptyType&&props.building.EmptyType.Percent_Empty,
-              Live_Status:props.building.LiveType&&props.building.LiveType.Live_Status
+              Percent_Farm:props.building.FarmType?props.building.FarmType.Percent_Farm:0,
+              Percent_Live:props.building.LiveType?props.building.LiveType.Percent_Live:0,
+              Percent_Other:props.building.OtherType?props.building.OtherType.Percent_Other:0,
+              Percent_Empty:props.building.EmptyType?props.building.EmptyType.Percent_Empty:0,
+              Live_Status:props.building.LiveType?props.building.LiveType.Live_Status:0,
+              StartYear:props.building.EmptyType?props.building.EmptyType.StartYear:0,
+              EmptyAbsolute:props.building.EmptyType?props.building.EmptyType.EmptyAbsolute:0
+              // StartYear EmptyAbsolute
             }:{
               rating_id:code_cate_building[0].code,
               Sub_Category:secondCate,
@@ -131,6 +134,7 @@ function BuildingForm(props) {
             </Form.Item>
 
             <Form.Item>
+       
               <Input.Group compact>
                   <Col>
                     <Form.Item
@@ -138,7 +142,7 @@ function BuildingForm(props) {
                       name="Width"
                       rules={[{ required: true, message: 'กรุณากรอกความกว้าง!' }]}
                     >
-                      <Input />
+                      <Input placeholder="ความกว้างของชั้นที่หนึ่ง"/>
                     </Form.Item>
                   </Col>
                   <Col>
@@ -147,9 +151,10 @@ function BuildingForm(props) {
                       name="Length"
                       rules={[{ required: true, message: 'กรุณากรอกความยาว !' }]}
                     >
-                      <Input />
+                      <Input placeholder="ความยาวของชั้นที่หนึ่ง"/>
                     </Form.Item>
                   </Col>
+                  
               </Input.Group>
             </Form.Item>
         <Divider />
@@ -242,6 +247,7 @@ function BuildingForm(props) {
                       <Input disabled={props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?false:true}/>
                       
                     </Form.Item>
+                    
                     {props.building &&
                         <div style={{display:'block',paddingRight:'20px'}}>
                             <p style={{color:'red'}}>*สัดส่วนประเภทว่างเปล่า</p>
@@ -259,7 +265,32 @@ function BuildingForm(props) {
                       
               </Input.Group>
             </Form.Item>
+            
+            {props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?
+                        <Form.Item>
+                          <Input.Group compact>
+                            <Col>
+                              <Form.Item label="ปีที่เริ่มว่างเปล่า"
+                              name="StartYear"
+                              >
+                                  <Input />
+                              </Form.Item>
+                            </Col>
+                            <Col>
+                              <Form.Item label="ว่างเปล่าแท้จริง"
+                                name="EmptyAbsolute"
+                                valuePropName="checked"
 
+                                >
+                                <Checkbox></Checkbox>
+                                </Form.Item> 
+                            </Col>
+                            
+                            </Input.Group>
+                        </Form.Item> 
+                          
+                          
+                    :null}
               
         <Divider />
             <Form.Item>

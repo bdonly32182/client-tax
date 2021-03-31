@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {Modal,Button,Input,notification} from 'antd';
 import axios from '../../config/axios';
 import LandTable from '../Table/LandTable';
-function BuildAccrossModal({titleButton,building}) {
+function BuildAccrossModal({titleButton,building,PriceUseful,buildings,UsefulLand_Tax_ID}) {
     const [visible , setVisible] = useState(false);
     const [lands,setLand] = useState([]);
     const onSearchLand = (value) => {
@@ -16,7 +16,7 @@ function BuildAccrossModal({titleButton,building}) {
     const onSelectLandCros=({UsefulLands,code_land,Price,Tax_Group})=>{
         let arrUseful = [];
         let useful_id = SetID(UsefulLands,code_land);
-        let seperate = Split_place(building.Build_Total_Place);
+        let seperate = Split_place(building.Build_Total_Place/4);
         building.FarmType&&arrUseful.push({Build_farm_ID:building.FarmType.Build_farm_ID,
             Farm_Size:building.FarmType.Farm_Size,
             Percent_Farm:building.FarmType.Percent_Farm,
@@ -45,9 +45,9 @@ function BuildAccrossModal({titleButton,building}) {
         let obj_useful ={
             useful_id,
             Land_id:code_land,
-            Place:building.Build_Total_Place,
+            Place:building.Build_Total_Place /4,
             PriceUseful:Price,
-            Special_Useful:"1",
+            Special_Useful:"0",
             
             ...seperate,
             Usage:false,
@@ -56,7 +56,12 @@ function BuildAccrossModal({titleButton,building}) {
         }  
         let body ={
             obj_useful,
-            ArrType:arrUseful
+            ArrType:arrUseful,
+            PriceUseful,
+            buildings,
+            building,
+            buildTax:building.Build_Tax_ID,
+            UsefulLand_Tax_ID
         }      
         axios.post('/api/acrossland',body).then(result=>{
             result.status === 203 && notification.warning({message:result.data.msg})
@@ -75,12 +80,12 @@ function BuildAccrossModal({titleButton,building}) {
             if (Mod_RAI >= 100) {
                 let GNAN = Math.floor(Mod_RAI/100)
                 let Mod_Metre = Mod_RAI % 100
-                Obj_Place.Useful_GNAN=GNAN
-                Obj_Place.Useful_WA= Mod_Metre
+                Obj_Place.Useful_GNAN=GNAN.toFixed(2)
+                Obj_Place.Useful_WA= Mod_Metre.toFixed(2)
             }else{
                 let Mod_Metre = Mod_RAI % 100
                 Obj_Place.Useful_GNAN=0
-                Obj_Place.Useful_WA= Mod_Metre               
+                Obj_Place.Useful_WA= Mod_Metre.toFixed(2)           
             }
                    
         }
@@ -88,13 +93,13 @@ function BuildAccrossModal({titleButton,building}) {
             let GNAN  = Math.floor(place/100)
             let WA = place % 100
             Obj_Place.Useful_RAI = 0
-            Obj_Place.Useful_GNAN = GNAN
-            Obj_Place.Useful_WA= WA
+            Obj_Place.Useful_GNAN = GNAN.toFixed(2)
+            Obj_Place.Useful_WA= WA.toFixed(2)
         }
         if (place<100) {
             Obj_Place.Useful_RAI =0
             Obj_Place.Useful_GNAN=0
-            Obj_Place.Useful_WA = Number(place)
+            Obj_Place.Useful_WA = Number(place).toFixed(2)
         }
         return Obj_Place
     };

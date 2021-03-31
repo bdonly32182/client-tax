@@ -1,18 +1,31 @@
 import React,{useState,useEffect} from 'react'
-import { Form, Input, Button, Col,Select ,Divider} from 'antd';
+import { Form, Input, Button, Col,Select ,Divider, notification} from 'antd';
 import CodeLandModal from '../Modal/CodelandModal'
 import {category_doc,districtname,Tambolname} from '../Select/data'
 import {edit_land,delete_land} from '../../store/action/LandAction'
 import {useDispatch} from 'react-redux'
 import ConfirmModal from '../Modal/ConfirmModal';
+import axios from '../../config/axios';
 function LandForm(props) {
-    const [tambol,setTambol] = useState(Tambolname[districtname[0].no]);
-    const [secondTambol,setSecondTambol] = useState(Tambolname[districtname[0].no][0])
+    const [tambol,setTambol] = useState([]);
+    const [secondTambol,setSecondTambol] = useState([]);
     const [form] = Form.useForm();
     const {Option} = Select
     const dispatch = useDispatch();
-    useEffect(() => form.resetFields(), [props.land,form]);
-
+    const [employee,setEmployee] = useState([]);
+    useEffect(() => {
+        axios.get('/api/employee').then((result) => {
+            setEmployee(result.data)
+        }).catch((err) => {
+            notification.error({message:'เรียกดูพนักงานล้มเหลว'})
+        });
+        form.resetFields();
+        if (props.land.distict_id) {
+         setTambol(Tambolname[districtname[props.land?.distict_id -1]?.no])
+         setSecondTambol(Tambolname[districtname[props.land?.distict_id -1]?.no][0]);    
+        }
+       
+    }, [props.land,form]);
     const onChangeSelect = value=>{
         setTambol(Tambolname[value]);
         setSecondTambol(Tambolname[value][0])
@@ -214,17 +227,22 @@ function LandForm(props) {
                           <Input.Group compact>
                               <Col>
                                 <Form.Item
-                                        label="ราคาประเมินจากกรมธนารักษ์"
-                                        name="Price_tanaruk"
+                                        label="เจ้าหน้าที่ที่รับผิดชอบ"
+                                        name="employee_land"
                                         style={{font:'red'}}
                                         >
-                                    <Input style={{width:200}} disabled={true}/>
+                                            <Select style={{ width: 200 }}>
+                                                {employee.map(emp=>
+                                                <Select.Option key={emp.Pers_no} value={emp.Pers_no}>{`${emp.Fname} ${emp.Lname}`}</Select.Option>
+                                                )}    
+                                            </Select>
+                                   
                                 </Form.Item>
                                 
                               </Col>
                               <Col>
                                     <Form.Item
-                                            label="ราคาประเมินที่ระบุด้วยตัวเอง"
+                                            label="ราคาประเมินจากกรมธนารักษ์"
                                             name="Price"
                                             >
                                         <Input style={{width:200}} type="number"/>

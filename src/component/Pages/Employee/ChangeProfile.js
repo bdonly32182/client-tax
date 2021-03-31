@@ -1,5 +1,6 @@
 import React,{useEffect} from 'react'
 import {Row,Col,Form, Button,Image,Input,Select} from 'antd'
+import {districtname} from '../../Select/data'
 function ChangeProfile(props) {
     const [form] =Form.useForm();
     const layout = {
@@ -23,20 +24,19 @@ function ChangeProfile(props) {
       const onFinish = (values) => {
           props.onSubmit(values)
         };
+        console.log(props.user);
     return (
         <div style={{padding:80}}>
          <Row gutter={{xs:8,sm: 16, md: 24, lg: 32 }}>
             <Col className="gutter-row" span={6}>
-                <Image src="/profile.png" width={300}/>
+                <Image style={{borderRadius:' 50%'}}
+                 src={props.user?.picture?'http://localhost:3001/Image/Profile/'+props.user?.picture:"/profile.png"} width={300}/>
             </Col>
             <Col className="gutter-row" span={12}>
                 <Form
                     form={form}
                     {...layout}
-                    // initialValues={{ 
-                    //    ...props.user,
-                       
-                    // }}
+                   
                     onFinish={onFinish}
                   >
                     <Form.Item
@@ -67,12 +67,11 @@ function ChangeProfile(props) {
                         <Select
                          style={{ width: 200 }}
                          placeholder="เลือกเขตที่ท่านบรรจุ"
-                         optionFilterProp="children"
-                         filterOption={(input, option) =>
-                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                         }>
-                             <Select.Option value="503" >จอมทอง</Select.Option>
-                            <Select.Option value="504" >บางขุนเทียน</Select.Option>
+                         >
+                           {districtname.map(district=>
+                           <Select.Option value={district.no} key={district.no}>{district.name}</Select.Option>
+                            )}
+                             
                         </Select>
                     </Form.Item>
                     <Form.Item label="ตำแหน่ง" name="role">
@@ -83,6 +82,7 @@ function ChangeProfile(props) {
                          filterOption={(input, option) =>
                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                          }
+                         disabled={props.user?true:false}
                         >
                             <Select.Option value="leader" >หัวหน้าฝ่ายรายได้</Select.Option>
                             <Select.Option value="employee" >พนักงานฝ่ายรายได้</Select.Option>

@@ -1,10 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import {Button, Layout, Menu,notification, Row,Modal,Select} from 'antd'
-import {ProfileOutlined,AlertOutlined,MenuUnfoldOutlined,MenuFoldOutlined,NotificationOutlined} from '@ant-design/icons'
+import {ProfileOutlined,AlertOutlined,MenuUnfoldOutlined,MenuFoldOutlined,NotificationOutlined,FileExcelOutlined
+    ,FileTextOutlined,VideoCameraOutlined} from '@ant-design/icons'
 import Header from '../../Header';
 import MemberTable from '../../Table/MemberTable';
 import axios from '../../../config/axios'
 import Tax from '../Tax/Tax';
+import ImportExcel from './ImportExcel';
 function Manage(props) {
     const {  Content, Footer,Sider } = Layout;
     const [collapsed,setCollapsed] = useState(false)
@@ -77,18 +79,27 @@ function Manage(props) {
                 <Menu.Item key="3" icon={<AlertOutlined />}>
                 ฉุกเฉิน
                 </Menu.Item>
+                <Menu.Item key="4" icon={<FileExcelOutlined />}>
+                การนำข้อมูลเข้าสู่ระบบ
+                </Menu.Item>
+                <Menu.Item key="5" icon={<FileTextOutlined />}>
+                การนำข้อมูลออกจากระบบ
+                </Menu.Item>
+                <Menu.Item key="6" icon={<VideoCameraOutlined />}>
+                ตัวอย่างการทำข้อมูลเข้าสู่ระบบ
+                </Menu.Item>
                 
             </Menu>
             </Sider>
-            <Layout>
+            <Layout style={{height:"100vh"}}>
             <Header className="site-layout-background" style={{ padding: 0 }}>
             {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
               className: 'trigger',
               onClick: toggle,
             })}
             </Header>
-            <Content style={{ margin: '24px 16px 0' }}>
-                <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+            <Content style={{ margin: '20px 16px 0' }}>
+                <div style={{ padding: 24, minHeight: 360 }} >
                     {keys === "1"&&employee&&<MemberTable employee={employee} onConfirm ={confirmEmployee} onDelete={deleteEmployee}/>
                     }
                     {keys === "3"&&<>
@@ -109,6 +120,9 @@ function Manage(props) {
                     </Row>
                     <Tax  manage={true} size="small"/>
                     </>
+                    }
+                    {keys==="4"&&
+                    <ImportExcel />
                     }
                 </div>
             </Content>

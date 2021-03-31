@@ -45,7 +45,9 @@ function CustomerForm(props) {
                                 name="category_Cus"
                                 rules={[{ required: true, message: 'กรุณากรอกรหัสเขต !' }]}
                                 >
-                                <Select placeholder="เลือกประเภทเจ้าของทรัพย์สิน" onChange={onChangeCate}>
+                                <Select placeholder="เลือกประเภทเจ้าของทรัพย์สิน" onChange={onChangeCate}
+                                style={{width:120}}
+                                >
                                             {category_customer.map(category=>(
                                                 <Select.Option value={category} key={category}>{category}</Select.Option>
                                             ))}
@@ -63,7 +65,9 @@ function CustomerForm(props) {
                               name="title"
                               rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
                             >
-                              <Select placeholder="เลือกคำนำหน้า" value={secondTitle} onChange={onChangeTitle}>
+                              <Select placeholder="เลือกคำนำหน้า" value={secondTitle} onChange={onChangeTitle}
+                              style={{width:300}}
+                              >
                                             {title.map(title=>(
                                                 <Select.Option value={title} key={title}>{title}</Select.Option>
                                             ))}

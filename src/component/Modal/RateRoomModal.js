@@ -74,6 +74,7 @@ function RateRoomModal({titleButton,Mark,selectRows}) {
                 {titleButton==="อัพเดทการใช้ประโยชน์ห้องชุดที่เลือก"&&
                     <Select placeholder="เลือกประเภทการใช้"
                     defaultValue="อยู่อาศัย" onChange={(value)=>setCategory(value)}
+                    style={{width:'100%'}}
                     >
                     <Option value="อยู่อาศัย">อยู่อาศัย</Option>
                     <Option value="อื่นๆ">อื่นๆ</Option>

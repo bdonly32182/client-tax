@@ -16,7 +16,7 @@ function TaxTable(props) {
                 return record.__uniqueId;
                 }}
                 bordered={true}
-                size={props.tableSize||"large"}
+                size={props.tableSize||"middle"}
                 pagination={{pageSize:props.size}}
                 onChange={props.HandleChangePage}
                 >
@@ -26,13 +26,13 @@ function TaxTable(props) {
                 key="uid_tax"
                 render={text=><p>{text}</p>}
                 />
-                <Column 
+                {/* <Column 
                 
                     title="รหัสผู้เสียภาษี"
                     dataIndex="Tax_ID"
                     key="Tax_ID"
                     render={text=><p>{text}</p>}
-                />
+                /> */}
                 <Column
                 title="ประเภท"
                 dataIndex="Category_Tax"

@@ -22,7 +22,7 @@ function Condo(props) {
             </Col>
             <Col span={12}/>
             <Col xs={7} sm	={5} md={4} lg={3} xl={2} xxl={1}>
-                <CondoModal titleButton="สร้างอาคารชุดใหม่"/>
+                <CondoModal titleButton="สร้างอาคารชุดใหม่" color="#37B889"/>
             </Col>
             </Row>
             <Row style={{padding:'20px'}}>

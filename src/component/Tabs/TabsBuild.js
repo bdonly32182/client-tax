@@ -26,13 +26,20 @@ function TabsBuild(props) {
                         </Col>
                         <Col span={15}></Col>
                         <Col>
-                            <BuildAccrossModal titleButton="เลือกที่ดินคร่อมแปลง" building={props.building}/>
+                            <BuildAccrossModal titleButton="เลือกที่ดินคร่อมแปลง" building={props.building} 
+                            PriceUseful={props.PriceUseful}  buildings={props.buildings} UsefulLand_Tax_ID={props.UsefulLand_Tax_ID}/>
                         </Col>
                     </Row>
                 
                    
                     <UsefulTable ListUseful={props.building.BuildOnUsefulLands[0].UsefulLand}/>
-                  
+                  <Row style={{padding:'30px',display:'block'}}>
+                      <u style={{fontSize:20}}>หมายเหตุ</u>
+                      <p style={{padding:'10px',color:'red'}}>* กรณีสิ่งปลูกสร้างที่เป็นอยู่อาศัยหลักหลังและคร่อมแปลง ต้องใส่ข้อมูลสิ่งปลูกสร้างทั้งหมดบนการใช้ประโยชน์นี้แล้ว</p>
+                      <p style={{padding:'10px',color:'blueviolet'}}>* กรณีที่ทำการคร่อมแปลงไปแล้ว แล้วจะสร้างสิ่งปลูกสร้างบนการใช้ประโยชน์นี้เพิ่มให้ไปลบการใช้ประโยชน์ที่ถูกคร่อมไปก่อนแล้วค่อยทำการคร่อมแปลงใหม่</p>
+                      <p style={{padding:'10px',color:'red'}}>* แก้ไขสัดส่วนให้เรียบร้อยก่อนที่จะทำการคร่อมแปลง</p>
+                      <p style={{padding:'10px',color:'red'}}>* กรณีมีการเปลี่ยนแปลงกับสิ่งปลูกสร้างแปลงนี้ให้ทำการลบการใช้ประโยชน์ที่ถูกคร่อมทิ้งก่อน แล้วค่อยทำการคร่อมแปลงใหม่</p>
+                  </Row>
                 </TabPane>
             </Tabs>
         </>

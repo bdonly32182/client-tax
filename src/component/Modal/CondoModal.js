@@ -3,7 +3,7 @@ import {Form,Modal,Button,notification} from 'antd'
 import CondoForm from '../Form/CondoForm';
 import {useDispatch} from 'react-redux';
 import {create_condo,onEdit_condo} from '../../store/action/CondoAction'
-function CondoModal({titleButton,condo}) {
+function CondoModal({titleButton,condo,color}) {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [visible,setVisible] = useState(false);
@@ -23,7 +23,7 @@ function CondoModal({titleButton,condo}) {
     }
     return (
         <div>
-            <Button onClick={()=>setVisible(true)} style={{borderRadius:'5px'}}>{titleButton}</Button>
+            <Button onClick={()=>setVisible(true)} style={{borderRadius:'5px',backgroundColor:color}}>{titleButton}</Button>
             <Modal
             visible={visible}
             onCancel={()=>setVisible(false)}

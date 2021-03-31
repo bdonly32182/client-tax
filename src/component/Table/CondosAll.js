@@ -62,7 +62,7 @@ function CondosAll({condo}) {
             title="จัดการข้อมูลอาคารชุด"
             dataIndex="actionCondo"
             key="actionCondo"
-            render={(text,record)=><CondoModal titleButton="แก้ไขข้อมูลอาคารชุด" condo={record}/>}
+            render={(text,record)=><CondoModal titleButton="แก้ไขข้อมูลอาคารชุด" condo={record} color="#DDBB0F"/>}
             />
             <Column 
             title="จัดการรายและห้องชุด"

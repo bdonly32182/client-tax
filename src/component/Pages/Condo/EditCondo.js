@@ -19,7 +19,8 @@ function EditCondo(props) {
     const dispatch = useDispatch();
     const condo= useSelector(state => state.condo)
     const [selectRows,setSelectRows] = useState([]);
-    
+    const [keys,setKeys] = useState("");
+    const [pds2,setPds2] = useState([]);
     useEffect(() => {
        dispatch(fetch_condo(id))
     }, [dispatch,id]);
@@ -34,6 +35,17 @@ function EditCondo(props) {
     const onDeleteCondo = () => {
         dispatch(ondelete_condo(id))
     }
+    const onTabsClick =(value)=>{
+        setKeys(value)
+        if (value === "2") {
+           pds2.length===0&& axios.get('/api/usefultype'+id).then((result) => {
+                console.log(result.data);
+                setPds2(result.data)
+            }).catch((err) => {
+                
+            });
+        }
+    }
     return (
         <div >
            <div>
@@ -43,7 +55,7 @@ function EditCondo(props) {
                <ConfirmModal titleButton={<DeleteFilled />} confrimDelete={onDeleteCondo}/>
               
            </div>
-          <Tabs type="card">
+          <Tabs type="card" onTabClick={onTabsClick}>
               <TabPane tab="การจัดการข้อมูล" key="1">
                 <div style={{padding:'30px'}}>
                         <Row style={{display:'block'}}>
@@ -52,8 +64,8 @@ function EditCondo(props) {
                                 <div style={{display:'inline-block'}}>
                                     <Space >
                                         {/* <Button icon={<EditFilled />} style={{borderRadius:'5px'}}>แก้ไขข้อมูลอาคารชุด</Button> */}
-                                        <CondoModal titleButton={'แก้ไขข้อมูลอาคารชุด'} condo={condo}/>
-                                        <Button icon={<HighlightOutlined />} style={{borderRadius:'5px'}}>การอัพเดทการใช้ประโยชน์ของห้องชุดในอาคารชุด</Button>   
+                                        <CondoModal titleButton={'แก้ไขข้อมูลอาคารชุด'} condo={condo} color="#F5F5E7"/>
+                                        {/* <Button icon={<HighlightOutlined />} style={{borderRadius:'5px'}}>การอัพเดทการใช้ประโยชน์ของห้องชุดในอาคารชุด</Button>    */}
                                     </Space>
                                     
                                 </div>
@@ -113,7 +125,6 @@ function EditCondo(props) {
                                                     content="ห้องชุดที่ถูกเลือกทั้งหมดจะถูกลบอย่างถาวรคุณแน่ใจหรือไม่ที่จะลบ"
 
                                     />
-                                    {/* <Button style={{borderRadius:'5px'}}>ลบห้องชุดที่เลือก</Button>      */}
                                 </Space>
                                 
                             </Row>
@@ -127,7 +138,13 @@ function EditCondo(props) {
                     </div>
               </TabPane>
               <TabPane tab={`ภดส.2( ${condo.Condo_name} )`} key="2">
-                <PDS2Table condo={condo}/>
+                  {keys === "2" &&
+                    <div style={{padding:'20px'}}>
+                        <PDS2Table condo={condo} type={pds2}/>      
+                    </div>
+                  }
+                  
+               
               </TabPane>
           </Tabs>
           

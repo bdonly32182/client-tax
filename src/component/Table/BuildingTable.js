@@ -104,7 +104,8 @@ function BuildingTable(props) {
             render={(text,record)=>(
                 <Space>
                     <BuildingModal button ={<EditFilled />} onEdit={true} building ={record.Building} TypeName={props.TypeName} 
-                    useful_id={props.useful_id} code_land={props.code_land}
+                    useful_id={props.useful_id} code_land={props.code_land} PriceUseful={props.PriceUseful} buildings={props.buildings}
+                    UsefulLand_Tax_ID={props.UsefulLand_Tax_ID}
                     style={{color:'#008BFF' ,fontSize:18}}
                     />
                    

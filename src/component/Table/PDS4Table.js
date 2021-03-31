@@ -29,17 +29,17 @@ function PDS4Table({condo,loading}) {
             render={(rooms)=>rooms.map(room=><p>{room.Room_no}</p>)} 
             />
             <Column title="ขนาดพื้นที่รวม (ตร.ม)" dataIndex="Rooms"
-            render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=><p>{type.Amount_Place}</p>))}/>
+            render={(rooms)=>rooms.map(room=><p>{room.Useful_rooms.reduce((pre,{Amount_Place})=>pre + Amount_Place,0)}</p>)}/>
            
             <ColumnGroup title="ลักษณะการทำประโยชน์(ตร.ม)">
                 <Column title="อยู่อาศัย"  dataIndex="Rooms"
-                render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=>type.Category_use ==="อยู่อาศัย"?<p>{type.Amount_Place}</p>:<p>{``}</p>))}
+                render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=>type.Category_use ==="อยู่อาศัย"&&<p>{type.Amount_Place}</p>))}
                 />
                 <Column title="อื่นๆ"  dataIndex="Rooms"
-                render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=>type.Category_use ==="อื่นๆ"?<p>{type.Amount_Place}</p>:<p>{``}</p>))}
+                render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=>type.Category_use ==="อื่นๆ"&&<p>{type.Amount_Place}</p>))}
                 />
                 <Column title="ว่างเปล่า"  dataIndex="Rooms"
-                render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=>type.Category_use ==="ว่างเปล่า"?<p>{type.Amount_Place}</p>:<p>{``}</p>))}
+                render={(rooms)=>rooms.map(room=>room.Useful_rooms.map(type=>type.Category_use ==="ว่างเปล่า"&&<p>{type.Amount_Place}</p>))}
                 />
             </ColumnGroup>
             <Column title="หมายเหตุ" dataIndex="Mark"/>

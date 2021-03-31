@@ -60,7 +60,6 @@ export const generate_building =(uid_tax,land_id,id_customer,customer,Category_T
             Category_Tax,
             Build_Id
         }
-        console.log(useful_id);
         axios.post(`/api/build/tax`,body).then((result) => {
             notification.success({message:'สร้างรหัสผู้เสียภาษีสิ่งปลูกสร้างเรียบร้อยแล้ว'})
             

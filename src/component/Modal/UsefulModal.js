@@ -32,7 +32,7 @@ function UsefulModal(props) {
             }else{
                 let Mod_Metre = Mod_RAI % 100
                 Obj_Place.Useful_GNAN=0
-                Obj_Place.Useful_WA= Mod_Metre    .toFixed(2)           
+                Obj_Place.Useful_WA= Mod_Metre.toFixed(2)           
             }
                    
         }

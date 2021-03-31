@@ -56,8 +56,7 @@ function FirstPage(props) {
         }
         
 
-    ]
-   //EBD9AD
+    ]  
     return (
         <div style={{backgroundColor:'whitesmoke',height:"100vh"}}>
             

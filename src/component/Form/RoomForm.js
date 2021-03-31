@@ -1,9 +1,13 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Form, Input, Button, Space, Divider,Checkbox,Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined ,DeleteFilled } from '@ant-design/icons';
 function RoomForm({formModal,room,onDelteUseful}) {
   const {Option} = Select;
-
+  const [category,setCategory ] = useState("")
+  const onChange =(value)=>{
+    setCategory(value)
+  }
+  console.log(category);
     return (
         <Form 
         name="dynamic_form_nest_item" autoComplete="off"
@@ -49,7 +53,8 @@ function RoomForm({formModal,room,onDelteUseful}) {
                     fieldKey={[field.fieldKey, 'Category_use']}
                   >
                     <Select placeholder="เลือกประเภทการใช้"
-                    // defaultValue="อยู่อาศัย"
+                    style={{width:100}}
+                    onChange={onChange}
                     >
                       <Option value="อยู่อาศัย">อยู่อาศัย</Option>
                       <Option value="อื่นๆ">อื่นๆ</Option>
@@ -64,6 +69,26 @@ function RoomForm({formModal,room,onDelteUseful}) {
                   >
                     <Input placeholder="ประเภทการใช้พื้นที่" />
                   </Form.Item>
+                  {category ==="ว่างเปล่า"||room.Useful_rooms[field.name]?.Category_use ==="ว่างเปล่า"?
+                      <Form.Item
+                      {...field}
+                      name={[field.name, 'StartYearEmpty']}
+                      fieldKey={[field.fieldKey, 'StartYearEmpty']}
+                      rules={[{ required: true, message: 'กรุณากรอกปีที่เริ่มว่างเปล่า' },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || value>2400) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('กรุณากรอกเป็นปี พ.ศ.'));
+                        },
+                      })
+                    ]}
+                    >
+                      <Input placeholder="ปีที่เริ่มว่างเปล่า" />
+                    </Form.Item>
+                    :null
+                  }
                   <Form.Item
                     {...field}
                     name={[field.name, 'Price_Room']}
