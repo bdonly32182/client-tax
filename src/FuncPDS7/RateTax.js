@@ -45,14 +45,19 @@ export const RateTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                 {
                                     Building.LiveType?
                                             Building.LiveType.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
-                                            Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                            //ได้รับ ห้าสิบล้าน เพราะเป็นเจ้าของที่และบ้านดังนั้นจึงจับ ที่ละบ้านบวกกันได้เลย
+                                            Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                            ,
                                             "อยู่อาศัย",50000000
                                             ).map(res =><p>{res.percent}</p>)
-                                            :Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
-                                            "อยู่อาศัย",10000000).map(res =><p>{res.percent}</p>)
+                                            :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
+                                            "อยู่อาศัย",10000000).map(res =><p>{res.percent}</p>)//เป็นบ้านหลังหลักอย่างเดียว
                                             :
                                             Seperate(
-                                                Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                                UsefulLand_Tax_ID=== uid_tax?
+                                                Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                                :                                          
+                                                Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                             "อยู่อาศัย").map(res =><p>{res.percent}</p>)
                                     :null
                                 }
@@ -60,23 +65,36 @@ export const RateTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                 {
                                     Building.OtherType&&
                                     Seperate(
-                                        Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        UsefulLand_Tax_ID=== uid_tax?
+                                        Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                        :Building.OtherType?.Percent_Other *  Building.AfterPriceDepreciate/100,
                                     "อื่นๆ")
                                     .map(res =><p>{res.percent}</p>)
-                                }  
+                                }    
                                 
                                 {Building.FarmType?Category_Tax ==="บุคคล"?
-                                        Seperate(Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
-                                        "เกษตร",50000000).map(res=><p>{res.percent}</p>)
+                                        Seperate(
+                                            UsefulLand_Tax_ID=== uid_tax?
+                                            Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                            :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
+                                        "เกษตร",50000000).map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2})}</p>)
                                         :
-                                        Seperate(Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
-                                        "เกษตร").map(res=><p>{res.percent} </p>)
+                                        Seperate(
+                                            UsefulLand_Tax_ID=== uid_tax?
+                                                Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                                :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
+                                        "เกษตร").map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2})} </p>)
                                 :null
                                 }
 
                                 {
                                     Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
-                                    Seperate(Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                    Seperate(
+                                        UsefulLand_Tax_ID=== uid_tax?
+                                        Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                        :Building.EmptyType?.Percent_Empty *  Building.AfterPriceDepreciate/100,
                                     'ว่างเปล่า',0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
                                     .map(res=><p>{res.percent}</p>)
                                 }

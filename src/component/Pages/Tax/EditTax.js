@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import {Tabs,Col,Row,Divider ,notification,Layout,Checkbox} from 'antd'
+import {Tabs,Col,Row,Divider ,notification,Layout,Checkbox,Image, Popover} from 'antd'
 import axios from '../../../config/axios'
 import {useDispatch,useSelector} from 'react-redux'
 import {fetch_tax} from '../../../store/action/TaxAction'
@@ -15,6 +15,7 @@ import Header from '../../Header'
 import PDS8Table from '../../Table/PDS8Table'
 import PDS4Table from '../../Table/PDS4Table'
 import NewPDS7 from '../../Table/NewPDS7'
+import PDS6 from './PDS6'
 
 function EditTax(props) {
     const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function EditTax(props) {
     const [pds7,setPds7] = useState([]);
     const [pds4,setPds4] = useState([]);
     const [pds8,setPds8] = useState([]);
+    const [leader,setLeader] = useState([]);
     const [showCol,setShowCol] = useState(true)
     const [loading3,setLoading3] = useState(true);
     const [loading7,setLoading7] = useState(true);
@@ -44,7 +46,6 @@ function EditTax(props) {
         }
         if (value === "4") {
             pds7.length===0&& axios.get('/api/pds7/'+tax.uid_tax).then((result) => {
-                console.log(result.data);
                 setPds7(result.data)
                 result.data&&setLoading7(false)
             }).catch((err) => {
@@ -71,9 +72,34 @@ function EditTax(props) {
                 notification.error({message:'เรียกดู ภ.ด.ส.8 ล้มเหลว'})
             });
         }
+        if (value === "7") {
+            pds8.length===0&&
+            axios.get(`/api/pds8/${tax.uid_tax}`).then((result) => {
+                setPds8(result.data)
+                result.data&&setLoading8(false);
+            }).catch((err) => {
+                notification.error({message:'เรียกดู ภ.ด.ส.8 ล้มเหลว'})
+            });
+            pds7.length===0&& axios.get('/api/pds7/'+tax.uid_tax).then((result) => {
+                setPds7(result.data)
+                result.data&&setLoading7(false)
+            }).catch((err) => {
+                notification.error({message:"ร้องขอ ภ.ด.ส. 7 ล้มเหลว"})
+            }); 
+            leader.length===0&&axios.get(`/api/pds6/${tax.uid_tax}`).then((result) => {
+                setLeader(result.data)
+            }).catch((err) => {
+                notification.error({message:'ERROR DISTRICT'})
+            });
+        }
        
     }
-   
+   const content = (customers=[]) => {
+       return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+           <p>เลขบัตรประชาชน :{Cus_No}</p>
+           <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
+       </div>)
+   }
     return (
         <div>
             <Header />
@@ -137,11 +163,22 @@ function EditTax(props) {
                 </TabPane>
                 <TabPane key="4" tab="ภ.ด.ส.7 ">
                     {pds7 &&(
-                        <>
-                           <Checkbox onChange={()=>setShowCol(!showCol)} checked={showCol}>แสดงคอลัมน์ทั้งหมด</Checkbox>
+                        <div style={{margin:'15px'}}>
+                            <div style={{textAlign:'right'}}>
+                                <Checkbox onChange={()=>setShowCol(!showCol)} checked={showCol}>แสดงคอลัมน์ทั้งหมด</Checkbox>
+
+                            </div>
+                            <div style={{display:'block',paddingLeft:'750px'}}>
+                                <Image src="/logobkk.jpeg" width={90} alt="logo"  preview={false}/>
+                                
+                            </div>
+                            <div style={{padding:'20px'}}>
+                            <Popover content={content(tax.Customers)}>
+                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${tax?.uid_tax} (${tax?.Category_Tax})`}</b></p>
+                            </Popover>
+                            </div>
                            <NewPDS7 land = {pds7} tax={tax} loading={loading7} show={showCol}/>
-                           {/* <PDS7Table land = {pds7} tax={tax} loading={loading7} show={showCol}/> */}
-                           </> 
+                           </div> 
                     )}
                            
                 </TabPane>
@@ -149,6 +186,39 @@ function EditTax(props) {
                     <div style={{padding:'30px'}}>
                         {pds8 &&(
                             <>
+                            <PDS8Table condo={pds8} loading={loading8} tax={tax}/>
+                            </> 
+                        )}
+                    </div>
+                    
+                           
+                </TabPane>
+                <TabPane key="7" tab="ภ.ด.ส.6,7,8 ">
+                    <div style={{padding:'30px'}}>
+                        <PDS6 land = {pds7} tax={tax} leader={leader} condo={pds8} amountCustomer={tax?.Customers?.length} tax={tax}/>
+                        
+                        {pds7.length>0 &&(
+                        <div style={{margin:'15px'}}>
+                            <Divider />
+                            <div style={{textAlign:'right',paddingRight:'60px'}}>
+                                <p>ภ.ด.ส.๗</p>
+
+                            </div>
+                            <div style={{display:'block',paddingLeft:'650px'}}>
+                                <Image src="/logobkk.jpeg" width={90} alt="logo"  preview={false}/>
+                                
+                            </div>
+                            <div style={{padding:'20px'}}>
+                            <Popover content={content(tax.Customers)}>
+                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${tax?.uid_tax} (${tax?.Category_Tax})`}</b></p>
+                            </Popover>
+                            </div>
+                           <NewPDS7 land = {pds7} tax={tax} loading={loading7} show={showCol}/>
+                           </div> 
+                    )}
+                        {pds8.length>0 &&(
+                            <>
+                            <Divider />
                             <PDS8Table condo={pds8} loading={loading8} tax={tax}/>
                             </> 
                         )}

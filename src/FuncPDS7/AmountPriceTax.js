@@ -40,7 +40,7 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
     }else{
             
         if (isNexto) {
-            return <p>0</p>
+            return <p>0.00</p>
         }else{
             if (BuildOnUsefulLands.length >0) {      
                 let totalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
@@ -58,7 +58,7 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                             :
                                             <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2})}</p>)
-                                            :Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                            :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                             "อยู่อาศัย",10000000).map(res=>Special_Useful>0&&exceptEmergency===0?
                                                 (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2})
@@ -67,7 +67,10 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                                     maximumFractionDigits: 2})}</p>)
                                             :
                                             Seperate(
-                                                Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                                UsefulLand_Tax_ID=== uid_tax?
+                                                Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                                :                                          
+                                                Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                             "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
                                                 (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2})
@@ -80,7 +83,9 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                 {
                                     Building.OtherType&&
                                     Seperate(
-                                        Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        UsefulLand_Tax_ID=== uid_tax?
+                                        Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                        :Building.OtherType?.Percent_Other *  Building.AfterPriceDepreciate/100,
                                     "อื่นๆ")
                                     .map(res=>Special_Useful>0&&exceptEmergency===0?
                                         (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -91,7 +96,10 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                 }  
                                 
                                 {Building.FarmType?Category_Tax ==="บุคคล"?
-                                        Seperate(Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        Seperate(
+                                            UsefulLand_Tax_ID=== uid_tax?
+                                                Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                                :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                         "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
                                             (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2})
@@ -99,7 +107,10 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                             <p>{(res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2})}</p>)
                                         :
-                                        Seperate(Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        Seperate(
+                                            UsefulLand_Tax_ID=== uid_tax?
+                                                Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                                :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                         "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
                                             (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2})
@@ -111,7 +122,10 @@ export const AmountPriceTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
 
                                 {
                                     Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
-                                    Seperate(Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                    Seperate(
+                                        UsefulLand_Tax_ID=== uid_tax?
+                                        Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                        :Building.EmptyType?.Percent_Empty *  Building.AfterPriceDepreciate/100,
                                     'ว่างเปล่า',0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
                                     .map(res=>Special_Useful>0&&exceptEmergency===0?
                                         (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,

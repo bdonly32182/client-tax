@@ -52,7 +52,6 @@ export const exceptBalance=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                     return <>
                                 {
                                     Building.LiveType?
-                                    // !isNexto?
                                             Building.LiveType.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
                                             //ได้รับ ห้าสิบล้าน เพราะเป็นเจ้าของที่และบ้านดังนั้นจึงจับ ที่ละบ้านบวกกันได้เลย
                                             Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
@@ -62,7 +61,7 @@ export const exceptBalance=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                                 maximumFractionDigits: 2})}</p>)
                                             :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                             "อยู่อาศัย",10000000).map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-                                                maximumFractionDigits: 2})}test</p>)//เป็นบ้านหลังหลักอย่างเดียว
+                                                maximumFractionDigits: 2})}</p>)//เป็นบ้านหลังหลักอย่างเดียว
                                             :
                                             Seperate(
                                                 UsefulLand_Tax_ID=== uid_tax?
@@ -77,18 +76,26 @@ export const exceptBalance=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                                 {
                                     Building.OtherType&&
                                     Seperate(
-                                        Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        UsefulLand_Tax_ID=== uid_tax?
+                                        Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                        :Building.OtherType?.Percent_Other *  Building.AfterPriceDepreciate/100,
                                     "อื่นๆ")
                                     .map(res =><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})}</p>)
                                 }  
                                 
                                 {Building.FarmType?Category_Tax ==="บุคคล"?
-                                        Seperate(Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        Seperate(
+                                            UsefulLand_Tax_ID=== uid_tax?
+                                            Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                            :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                         "เกษตร",50000000).map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})}</p>)
                                         :
-                                        Seperate(Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                        Seperate(
+                                            UsefulLand_Tax_ID=== uid_tax?
+                                                Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                                :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                         "เกษตร").map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})} </p>)
                                 :null
@@ -96,7 +103,10 @@ export const exceptBalance=({BuildOnUsefulLands,LiveTypes,OtherTypes,
 
                                 {
                                     Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
-                                    Seperate(Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
+                                    Seperate(
+                                        UsefulLand_Tax_ID=== uid_tax?
+                                        Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
+                                        :Building.EmptyType?.Percent_Empty *  Building.AfterPriceDepreciate/100,
                                     'ว่างเปล่า')
                                     .map(res=><p>{res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})}</p>)

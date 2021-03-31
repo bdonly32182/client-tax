@@ -49,9 +49,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show})
                         return total += array2D
                         }
                         let reducerResult = result.reduce((pre,cur)=>pre+cur,0)
-                        console.log(reducerResult);
                         total += reducerResult
-                        console.log(total);
                     })                    
                     return <>
                     <Table.Summary.Row>
@@ -100,10 +98,13 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show})
                 />
                 <ColumnGroup title="จำนวนเนื้อที่ดิน">
                     <Column dataIndex="Useful_RAI" title="ไร่" key="Useful_RAI" 
+                    render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text}
                     />
                     <Column dataIndex="Useful_GNAN" title="งาน" key="Useful_GNAN"
+                    render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text}
                     />
                     <Column dataIndex="Useful_WA" title="ตร.วา" key="Useful_WA"
+                    render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text}
                     />
                 </ColumnGroup>
                 <Column title="คำนวณเป็น ตรว." key="Place" dataIndex="Place"
