@@ -1,10 +1,30 @@
 import React from 'react'
-import {Table} from 'antd'
+import {Table,Image,Popover} from 'antd'
 import seperate from '../../FuncPDS7/Seperate'
-function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency}}) {
+function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Customers}}) {
     let uniqueId = 0 ;
     const {Column} = Table;
+    const content = (customers=[]) => {
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+            <p>เลขบัตรประชาชน :{Cus_No}</p>
+            <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
+        </div>)
+    }
     return (
+        <div>
+                            <div style={{textAlign:'right',paddingRight:'60px'}}>
+                                <p>ภ.ด.ส.๘</p>
+
+                            </div>
+                            <div style={{display:'block',paddingLeft:'650px'}}>
+                                <Image src="/logobkk.jpeg" width={90} alt="logo"  preview={false}/>
+                                
+                            </div>
+                            <div style={{padding:'20px'}}>
+                            <Popover content={content(Customers)}>
+                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${uid_tax} (${Category_Tax})`}</b></p>
+                            </Popover>
+                            </div>
         <Table 
         dataSource={condo}
         pagination={false}
@@ -50,7 +70,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency}}) {
         </>
         }}
         >
-            <Column title="ที่" render={(text,record)=>text}
+            <Column title="ที่" 
             dataIndex="Room"
             render={(text)=><p>{text.Condo.id}</p>}/>
             <Column title="ชื่ออาคารชุด" 
@@ -61,7 +81,6 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency}}) {
             dataIndex="Room"
             render={(text)=><p>{text.Condo.Register_no}</p>}
             />
-            {/* Condo.District_name */}
             <Column title="ที่ตั้งอาคารชุด" dataIndex="Room"
             render={(text)=><p>{text.Condo.District_name}</p>}
             />
@@ -111,6 +130,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency}}) {
               }}
             />
         </Table>
+        </div>
     )
 }
 

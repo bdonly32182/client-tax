@@ -21,3 +21,17 @@ export const fetchs_taxs =(size,currentPage)=>{
         });
     }
 }
+export const updateAddress =(body)=>{
+    return dispatch=>{
+        axios.post(`/api/address`,body).then((result) => {
+            notification.success({message:'แก้ไขที่อยู่เรียบร้อยแล้ว'})
+            axios.get('/api/tax/'+body.Address_Tax_ID).then((result) => {
+                dispatch({type:FETCH_TAX,payload:result.data})
+            }).catch((err) => {
+                notification.error({message:'การร้องขอข้อมูลล้มเหลว'})
+            });
+        }).catch((err) => {
+            notification.error({message:'แก้ไขที่อยู่ล้มเหลว'})
+        });
+    }
+}

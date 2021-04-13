@@ -94,10 +94,13 @@ function UsefulLand(props) {
                             <BuildingModal button="สร้างสิ่งปลูกสร้าง" uid_tax={useful.UsefulLand_Tax_ID} TypeName={useful.TypeName} 
                                     useful_id={useful.useful_id} buildings ={buildings} Special_Useful={useful.Special_Useful}
                                     code_land={props.code_land} isAccross ={useful.isAccross}
+                                    employee_land={props.employee_land}
                                 />{warning&&<h1 style={{color:'red'}}>{`** มีรหัสผู้เสียภาษีของสิ่งปลูกสร้างที่ไม่ตรงกันกรุณาทำการเปลี่ยนเจ้าของทรัพย์สินให้ตรงกัน ถ้าต้องการที่จะสร้างสิ่งปลูกสร้างและรหัสผู้เสียภาษีนี้ 
                                               **แนะนำให้ลบสิ่งปลูกสร้างบนการใช้ประโยชน์นี้แล้วไปสร้างที่การใช้ประโยชน์ใหม่`}</h1>}
                             <BuildingTable buildings={buildings} TypeName={useful.TypeName} useful_id={useful.useful_id} 
-                            code_land={props.code_land} PriceUseful={useful.PriceUseful} UsefulLand_Tax_ID={useful.UsefulLand_Tax_ID}/>
+                            code_land={props.code_land} PriceUseful={useful.PriceUseful} UsefulLand_Tax_ID={useful.UsefulLand_Tax_ID}
+                            employee_land={props.employee_land}
+                            />
                             </>
                             :
                             <>

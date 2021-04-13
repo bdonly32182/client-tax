@@ -1,10 +1,30 @@
 import React from 'react'
-import { Table} from 'antd'
-function PDS3Table({land,uid_tax,loading}) {
+import { Table,Image,Popover} from 'antd'
+function PDS3Table({land,tax,loading}) {
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0;
+    const content = (customers=[]) => {
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+            <p>เลขบัตรประชาชน :{Cus_No}</p>
+            <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
+        </div>)
+    }
     return (
-        <Table bordered={true} dataSource={land } size="small"
+        <div>
+                 <div style={{display:'block',paddingLeft:'650px'}}>
+                                <Image src="/logobkk.jpeg" width={90} alt="logo"  preview={false}/>
+                            </div>
+                            <div style={{textAlign:'center'}}>
+                                <p>แบบแจ้งข้อมูลรายการที่ดินและสิ่งปลูกสร้าง</p>
+                                <p>ตามประกาศกรุงเทพมหานคร ลงวันที่   29 ธันวาคม 2563</p>
+                                <p>เรื่อง บัญชีรายการที่ดินและสิ่งปลูกสร้าง ตามพระราชบัญญัติภาษีที่ดินและสิ่งปลูกสร้าง พ.ศ.๒๕๖๒</p>
+                            </div>
+                            <div style={{padding:'20px'}}>
+                            <Popover content={content(tax?.Customers)}>
+                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${tax?.uid_tax} (${tax?.Category_Tax})`}</b></p>
+                            </Popover>
+                </div>
+                            <Table bordered={true} dataSource={land } size="small"
                 rowKey={(record)=>{
                     if (!record.__uniqueId)
                 record.__uniqueId = ++uniqueId;
@@ -17,69 +37,67 @@ function PDS3Table({land,uid_tax,loading}) {
                 title="ที่"
                 dataIndex="Serial_code_land"
                 key="Serial_code_land"
-                render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Land.Serial_code_land}</p>}
+                render={(text,record)=><p>{record.Land.Serial_code_land}</p>}
 
                 />
                 <Column 
                 title="ประเภทที่ดิน"
                 dataIndex="Category_doc"
                 key="Category_doc"
-                render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Land.Category_doc}</p>}
+                render={(text,record)=><p>{record.Land.Category_doc}</p>}
                 />
                 <Column 
                 title="เลขที่เอกสารสิทธิ์"
                 dataIndex="Parcel_No"
                 key="Parcel_No"
-                render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Land.Parcel_No}</p>}
+                render={(text,record)=><p>{record.Land.Parcel_No}</p>}
                 />
-                <ColumnGroup>
-                    <Column 
+                <Column 
                     title="เลขที่ดิน"
                     dataIndex="Land_No"
                     key="Land_No"
-                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Land.Land_No}</p>}
-                    />
-                    <Column 
+                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Land.Land_No}</p>}
+                />
+                <Column 
                     title='หน้าสำรวจ'
                     dataIndex="Survey_No"
                     key="Survey_No"
-                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Land.Survey_No}</p>}
+                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Land.Survey_No}</p>}
                    
-                    />
-                </ColumnGroup>
+                />
                 <Column title="สถานที่ตั้ง"
                 dataIndex="Tambol_name"
                 key="Tambol_name"
-                render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Land.Tambol_name}</p>}
+                render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Land.Tambol_name}</p>}
 
                 />
                 <ColumnGroup title="จำนวนเนื้อที่ดิน">
                     <Column dataIndex="Useful_RAI" title="ไร่" key="Useful_RAI"
-                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Useful_RAI}</p>}
+                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Useful_RAI}</p>}
                     />
                     <Column dataIndex="Useful_GNAN" title="งาน" key="Useful_GNAN"
-                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Useful_GNAN}</p>}                   
+                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Useful_GNAN}</p>}                   
                     />
                     <Column dataIndex="Useful_WA" title="ตร.วา" key="Useful_WA"
-                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===uid_tax&&record.Useful_WA}</p>}
+                    render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Useful_WA}</p>}
                     />
                 </ColumnGroup>
                 <ColumnGroup title="ลักษณะการใช้ประโยชน์ (ตร.ว)">
                     <Column title="ประกอบการเกษตร" dataIndex="UsefulLands"
-                    render={(text,record) =>record.UsefulLand_Tax_ID===uid_tax&&record.TypeName==="ประกอบการเกษตร"&&<p>{record.Place}</p>}
+                    render={(text,record) =>record.UsefulLand_Tax_ID===tax?.uid_tax&&record.TypeName==="เกษตร"&&<p>{record.Place}</p>}
                     />
                     
                     <Column title="อยู่อาศัย" dataIndex="UsefulLands"
-                    render={(text,record) =>record.UsefulLand_Tax_ID===uid_tax&&record.TypeName==="อยู่อาศัย"&&<p>{record.Place}</p>}
+                    render={(text,record) =>record.UsefulLand_Tax_ID===tax?.uid_tax&&record.TypeName==="อยู่อาศัย"&&<p>{record.Place}</p>}
                     />
                     <Column title="อื่นๆ" dataIndex="UsefulLands"
-                    render={(text,record) =>record.UsefulLand_Tax_ID===uid_tax&&record.TypeName==="อื่นๆ"&&<p>{record.Place}</p>}
+                    render={(text,record) =>record.UsefulLand_Tax_ID===tax?.uid_tax&&record.TypeName==="อื่นๆ"&&<p>{record.Place}</p>}
                     />
                     <Column title="ว่างเปล่า" dataIndex="UsefulLands"
-                    render={(text,record) =>record.UsefulLand_Tax_ID===uid_tax&&record.TypeName==="ว่างเปล่า"&&<p>{record.Place}</p>}
+                    render={(text,record) =>record.UsefulLand_Tax_ID===tax?.uid_tax&&record.TypeName==="ว่างเปล่า"&&<p>{record.Place}</p>}
                     />
                     <Column title="หลายประเภท" dataIndex="UsefulLands"
-                    render={(text,record) =>record.UsefulLand_Tax_ID===uid_tax&&record.TypeName==="หลายประเภท"&&<p>{record.Place}</p>}
+                    render={(text,record) =>record.UsefulLand_Tax_ID===tax?.uid_tax&&record.TypeName==="หลายประเภท"&&<p>{record.Place}</p>}
                     />
                 </ColumnGroup>
             </ColumnGroup>
@@ -125,7 +143,9 @@ function PDS3Table({land,uid_tax,loading}) {
                                  /> 
             </ColumnGroup>
             
-        </Table>
+        </Table>       
+        </div>
+       
     )
 }
 

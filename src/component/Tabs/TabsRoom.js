@@ -21,7 +21,7 @@ function TabsRoom({formModal,room}) {
                 </TabPane>
                 <TabPane tab="จัดการเจ้าของทรัพย์สิน" key="2">
                         <Row> 
-                            <OwnerRoom Room_ID={room.Room_ID} customers={room.Tax_Group?.Customers}/>
+                            <OwnerRoom Room_ID={room.id} customers={room.Tax_Group?.Customers}/>
                         </Row> 
                 </TabPane>
                

@@ -1,3 +1,4 @@
+export const SEVER_LOCALHOST = 'http://localhost:3001/'
 export const USER_LOGIN = 'user_login'
 export const EDIT_CUSTOMER = 'edit_customer'
 export const FETCHS_CUSTOMER = 'fetchs_customer'
@@ -28,3 +29,9 @@ export const EDIT_CONDO = "edit_condo";
 export const FETCHS_ROOM = "fetchs_rooms";
 export const DELETE_ROOM ="delete_room";
 export const CREATE_ROOM ="create_room";
+export const DELETE_SELECT = "delete_select"
+
+export const FETCHS_COSTDOCUMENT = 'fetchscostDocument';
+export const FETCH_COSTDOCUMENT = 'fetchcostDocument';
+export const FETCHS_CHECKDOCUMENT = 'fetchscheckDocument';
+export const FETCH_CHECKDOCUMENT = 'fetchcheckDocument';

@@ -91,7 +91,7 @@ function UsefulModal(props) {
         }
       let thelastIndex =  useful.slice(-1).pop()
       let id = thelastIndex.useful_id.split("-")
-      return `${props.code_land}-0${Number(id[1])+1}`;
+      return `${props.code_land}-0${Number(id[3])+1}`;
     };
 
     const handleCancel = () => {

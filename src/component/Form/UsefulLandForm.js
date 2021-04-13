@@ -23,7 +23,7 @@ function UsefulLandForm(props) {
     const [type,setType] = useState("ลักษณะการใช้ประโยชน์")
     useEffect(() => {
         props.formModal.resetFields();
-    }, [props.balancePlace,props.formModal])
+    }, [props.balancePlace,props.formModal,props.useful])
 
     const onChange = value => {
         console.log(value);

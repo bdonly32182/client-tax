@@ -1,11 +1,11 @@
-import React,{useState} from 'react'
+import React from 'react'
 import {Table,Space} from 'antd'
 import ConfirmModal from '../Modal/ConfirmModal';
 import {DeleteFilled,EditFilled,CheckOutlined} from '@ant-design/icons'
 import {useDispatch} from 'react-redux'
-import {onDelete_room} from '../../store/action/CondoAction'
+import {onDelete_room} from '../../store/action/RoomAction'
 import RoomModal from '../Modal/RoomModal';
-function RoomTable({rooms,id_condo,setSelectRows}) {
+function RoomTable({rooms,id_condo,setSelectRows,Floor,Condo_no,Price,Useful}) {
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0 ;
@@ -23,6 +23,7 @@ function RoomTable({rooms,id_condo,setSelectRows}) {
             ...rowSelection,
           }}
           dataSource={rooms}
+          pagination={{pageSize:20}}
           rowKey={(record)=>{
             if (!record.__uniqueId)
             record.__uniqueId = ++uniqueId;
@@ -65,11 +66,11 @@ function RoomTable({rooms,id_condo,setSelectRows}) {
                       <Space >
                         <RoomModal titleButton={<EditFilled /> }
                         titleModal={`เลขที่ห้องชุด ${record.Room_no} (ชั้นที่ ${record.Floor})`}
-                        id_condo={record.Condo_no}
+                        id_condo={id_condo}  Floor={Floor}Condo_no={Condo_no}Price={Price} Useful={Useful}
                         room={record}/>
                         <ConfirmModal titleButton={<DeleteFilled />}
                         ConfirmRoom={onDeleteRoom}
-                        Room_ID={record.Room_ID}
+                        Room_ID={record.id}
                         content="ห้องชุดจะถูกลบอย่างถาวรคุณแน่ใจหรือไม่ที่จะลบ"
                         />
                       </Space>

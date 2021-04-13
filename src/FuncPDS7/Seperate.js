@@ -1,6 +1,6 @@
 function Percent (year,percent){
     let lastIndex = parseInt(year/3);
-    for (let index = 1; index <= lastIndex; index++) {
+    for (let index = 1; index < lastIndex; index++) {
         percent += 0.3
         
       };

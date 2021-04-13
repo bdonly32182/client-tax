@@ -10,16 +10,16 @@ function CodelandModal(props) {
     const [value,setValue] = useState('');
     const onClickOk =()=>{
         if (props.onEdit) {
-            dispatch(edit_land(props.target,{code_land:value},value))
+            dispatch(edit_land(props.target,{code_land:value,RAI:props.bodyLand.RAI,GNAN:props.bodyLand.GNAN,WA:props.bodyLand.WA},value))
                 setTimeout(() => {
                     history.push('/land/detial/'+value)
-            }, 1500);
+            }, 1000);
                 setShow(false)
         }else{
             dispatch(create_codeland(value))
                 setTimeout(() => {
                     history.push('/land/detial/'+value)
-            }, 1500);
+            }, 1000);
                 setShow(false)
         }
         

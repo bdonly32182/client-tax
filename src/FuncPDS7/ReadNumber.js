@@ -35,7 +35,10 @@ export const readNumber =(number)=>{
     read = read.replace("สิบหนึ่ง","สิบเอ็ด");
     read = read.replace("สองสิบเอ็ดสตางค์","ยี่สิบเอ็ดสตางค์");
     read = read.replace("หนึ่งสิบเอ็ดสตางค์","สิบเอ็ดสตางค์");
-    read = read.replace("บาทสตางค์","ศูนย์บาท");
+    
+    if (seperateSatang[1][0]==="0" &&seperateSatang[1][1]==="0") {
+       read = read.replace("บาทสตางค์","บาท");
+    }
     if (read ==="เอ็ด") {
        read = "หนึ่ง"
     }

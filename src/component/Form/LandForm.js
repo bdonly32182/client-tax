@@ -34,7 +34,6 @@ function LandForm(props) {
         setSecondTambol(value)
     }
     const onFinish = (values) => { 
-        console.log(values);
          dispatch(edit_land(values.code_land,values,values.code_land));
     };
    const onDelete = () => {
@@ -55,43 +54,59 @@ function LandForm(props) {
                             <Form.Item
                                         label="รหัสแปลงที่ดิน"
                                         name="code_land"
-                                            
                                         >
                                         <Input disabled={true} style={{width:140}} />
                                 </Form.Item>
                             </Col>
+                            <Col  >
+                            <Form.Item
+                                        label="ลำดับที่ดิน"
+                                        name="Serial_code_land"
+                                        rules={[{ required: true, message: 'กรุณากรอกลำดับที่ดิน!' }]}
+                                        >
+                                        <Input  style={{width:100}} />
+                                </Form.Item>
+                            </Col>
+                                
+                        </Input.Group>
+                  </Form.Item>
+
+                  <Form.Item >
+                        <Input.Group compact>
                             <Col >
                              <Form.Item
                                         label="ประเภทเอกสาร"
                                         name="Category_doc"
-                                        rules={[{ required: true, message: 'กรุณากรอกเลือกประเภทเอกสาร!' }]}
+                                        rules={[{ required: true, message: 'กรุณาเลือกประเภทเอกสาร!' }]}
                                         >
-                                        <Select placeholder="เลือกประเภทเอกสาร">
+                                        <Select placeholder="เลือกประเภทเอกสาร" style={{ width: 120 }}>
                                             {category_doc.map(category=>(
                                                 <Select.Option value={category} key={category}>{category}</Select.Option>
                                             ))}
                                             
                                         </Select>
                                 </Form.Item>
-                            </Col>       
-                        </Input.Group>
-                  </Form.Item>
-                    <Form.Item >
-                        <Input.Group compact>
+                            </Col>   
                             <Col>
                                     <Form.Item
                                         label="เลขที่เอกสาร"
                                         name="Parcel_No"
-                                        rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                        rules={[{ required: true, message: 'กรุณากรอกเลขเอกสารสิทธิ์!' }]}
                                         >
                                         <Input />
                                     </Form.Item>
                             </Col>
+                                    
+                        </Input.Group>
+                    </Form.Item>
+
+                    <Form.Item >
+                        <Input.Group compact>
                             <Col>
                                     <Form.Item
                                     label="ระวาง"
                                     name="UTM_Code"
-                                    rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                    rules={[{ required: true, message: 'กรุณากรอกเลขระวาง!' }]}
                                     >
                                     <Input style={{width:100}}/>
                                     </Form.Item>
@@ -99,7 +114,7 @@ function LandForm(props) {
                             <Col>
                                     <Form.Item
                                         name="UTM_No"
-                                        rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                        rules={[{ required: true, message: 'กรุณากรอกเลขระวาง!' }]}
                                         >
                                         <Input style={{width:100}}/>
                                     </Form.Item>
@@ -107,7 +122,7 @@ function LandForm(props) {
                             <Col>
                                     <Form.Item
                                         name="UTM_Map"
-                                        rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                        rules={[{ required: true, message: 'กรุณากรอกเลขระวาง!' }]}
                                         >
                                         <Input style={{width:100}}/>
                                     </Form.Item>
@@ -121,7 +136,7 @@ function LandForm(props) {
                                  <Form.Item
                                     label="เลขที่ดิน"
                                     name="Land_No"
-                                    rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                    rules={[{ required: true, message: 'กรุณากรอกเลขที่ดิน!' }]}
                                     >
                                     <Input style={{width:120}}/>
                                 </Form.Item>
@@ -130,7 +145,7 @@ function LandForm(props) {
                                     <Form.Item
                                         label="หน้าสำรวจ"
                                         name="Survey_No"
-                                        rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                        rules={[{ required: true, message: 'กรุณากรอกหน้าสำรวจ!' }]}
                                         >
                                         <Input style={{width:120}}/>
                                     </Form.Item>
@@ -165,7 +180,7 @@ function LandForm(props) {
                                 <Form.Item
                                     label="แขวง/ตำบล"
                                     name="Tambol_name"
-                                    rules={[{ required: true, message: 'กรุณาเลือกอำเภอ!' }]}
+                                    rules={[{ required: true, message: 'กรุณาเลือกแขวง/ตำบล!' }]}
                                     >
                                     <Select placeholder="เลือกแขวงหรือตำบล" value={secondTambol}  onSelect={onChageTambol} style={{ width: 120 }} >
                                             {tambol.map(tam =>(
@@ -183,7 +198,7 @@ function LandForm(props) {
                                 <Form.Item
                                     label="ไร่"
                                     name="RAI"
-                                    rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                    rules={[{ required: true, message: 'กรุณากรอกจำนวน ไร่!' }]}
                                     >
                                     <Input type="number"/>
                                 </Form.Item>
@@ -192,7 +207,7 @@ function LandForm(props) {
                                 <Form.Item
                                     label="งาน"
                                     name="GNAN"
-                                    rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                    rules={[{ required: true, message: 'กรุณากรอกจำนวน งาน!' }]}
                                     >
                                     <Input type="number"/>
                                  </Form.Item>   
@@ -201,7 +216,7 @@ function LandForm(props) {
                                  <Form.Item
                                     label="ตร.ว"
                                     name="WA"
-                                    rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                                    rules={[{ required: true, message: 'กรุณากรอกจำนวน ตร.ว!' }]}
                                     >
                                     <Input type="number"/>
                                 </Form.Item>
@@ -230,6 +245,7 @@ function LandForm(props) {
                                         label="เจ้าหน้าที่ที่รับผิดชอบ"
                                         name="employee_land"
                                         style={{font:'red'}}
+                                        rules={[{ required: true, message: 'กรุณาเลือกเจ้าหน้าที่ที่รับผิดชอบ!' }]}
                                         >
                                             <Select style={{ width: 200 }}>
                                                 {employee.map(emp=>
@@ -260,7 +276,7 @@ function LandForm(props) {
                                 </Button>
                             </Col>
                             <Col span={8}>
-                            <CodeLandModal onEdit ={true} title ="แก้ไขรหัสแปลงที่ดิน" target={props.land.code_land} />
+                            <CodeLandModal onEdit ={true} title ="แก้ไขรหัสแปลงที่ดิน" target={props.land.code_land} bodyLand={props.land}/>
                             </Col>
                             <Col span={8}>
                                 <ConfirmModal titleButton ="ลบที่ดินแปลงนี้"

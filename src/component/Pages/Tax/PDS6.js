@@ -4,7 +4,8 @@ import jwtDecode from 'jwt-decode'
 import LocalStorageService from '../../../LocalStorage/LocalStorageSevice'
 import {Summary} from '../../../FuncPDS7/Summary'
 import  { readNumber } from  '../../../FuncPDS7/ReadNumber'
-function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amountCustomer,tax}) {
+import {SummaryCondo,TotalPrice} from '../Pdf/FuncPdf'
+function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amountCustomer,tax,invit,customers}) {
     let NowDate = new Date() 
     let DateThai = NowDate.toDateString().split(" ")
     let token  = LocalStorageService.getToken();
@@ -25,6 +26,7 @@ function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amou
         monthThai = monthThai.replace("Dec","ธันวาคม")
         return monthThai
     }
+  
     const sumPDS7 = (land = []) => {
         let total = 0;
         land.forEach((record)=>{
@@ -39,7 +41,8 @@ function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amou
         return total
     }
     let PricePds7 = sumPDS7(land);
-    console.log(leader);
+    let PricePds8 = SummaryCondo(condo);
+    let {BriefTotal} = TotalPrice(PricePds7,PricePds8,exceptEmergency,customers);
     return (
         <div style={{margin:'40px'}}>
             <Divider />
@@ -75,14 +78,13 @@ function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amou
                 </div>
                 <p style={{paddingTop:'15px',paddingLeft:'580px'}}>{`วันที่ .......... เดือน ${ReplaceMonth(DateThai[1])} ปี ${+DateThai[3] + 543}`}</p>
                 <p>เรื่อง แจ้งการประเมินเพื่อเสียภาษีที่ดินและสิ่งปลูกสร้าง</p>
-                <p>เรียน <b>{`${tax.Address.ReceiveName} ${amountCustomer>1&&"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม"}` }</b></p>
-                tax.Address
+                <p>เรียน <b>{`${invit.title}${invit.Cus_Fname} ${invit.Cus_Lname} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}` }</b></p>
                 <p style={{paddingLeft:'100px'}}>ตามที่ท่านเป็นเจ้าของทรัพย์สิน ประกอบด้วย</p>
-                <p style={{paddingLeft:'100px'}}>๑.ที่ดิน จำนวน <b>{`${leader.Land?.length>0?leader.Land[0]?.totalLand:0}`}</b>  แปลง</p>
-                <p style={{paddingLeft:'100px'}}>๒.สิ่งปลูกสร้าง จำนวน <b>{`${leader.Building?.length>0?leader.Building[0]?.totalBuild:0}`}</b> หลัง</p>
-                <p style={{paddingLeft:'100px'}}>๓.อาคารชุด/ห้องชุด จำนวน <b>{condo.length}</b> หลัง</p>
-                <p style={{paddingLeft:'100px'}}>{`พนักงานประเมินได้ทําการประเมินภาษีที่ดินและสิ่งปลูกสร้างแล้ว เป็นจํานวนเงิน `}<b>{`${PricePds7.toLocaleString(undefined,{minimumFractionDigits: 2,
-            maximumFractionDigits: 2})} บาท (${readNumber(`${PricePds7.toFixed(2)}`)})`}</b></p>
+                <p style={{paddingLeft:'100px'}}>1.ที่ดิน จำนวน <b>{`${leader.Land?.length>0?leader.Land[0]?.totalLand:0}`}</b>  แปลง</p>
+                <p style={{paddingLeft:'100px'}}>2.สิ่งปลูกสร้าง จำนวน <b>{`${leader.Building?.length>0?leader.Building[0]?.totalBuild:0}`}</b> หลัง</p>
+                <p style={{paddingLeft:'100px'}}>3.อาคารชุด/ห้องชุด จำนวน <b>{leader.Room?.length>0?leader.Room[0]?.totalRoom:0}</b> หลัง</p>
+                <p style={{paddingLeft:'100px'}}>{`พนักงานประเมินได้ทําการประเมินภาษีที่ดินและสิ่งปลูกสร้างแล้ว เป็นจํานวนเงิน `}<b>{`${BriefTotal.toLocaleString(undefined,{minimumFractionDigits: 2,
+                maximumFractionDigits: 2})} บาท (${readNumber(`${BriefTotal.toFixed(2)}`)})`}</b></p>
                 <p>ตามรายการที่ปรากฏในแบบแสดงรายการคํานวณภาษีที่ดิน และสิ่งปลูกสร้าง แนบท้ายหนังสือฉบับนี้</p>
                 <p style={{paddingLeft:'100px'}}>{`ฉะนั้น ขอให้ท่านนําเงินภาษีที่ดินและสิ่งปลูกสร้างไปชําระ ณ สํานักงานเขตจอมทอง
 ภายในเดือน มิถุนายน ${+DateThai[3] + 543}`}</p>

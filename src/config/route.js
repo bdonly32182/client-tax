@@ -8,12 +8,17 @@ import Tax from '../component/Pages/Tax/Tax'
 import Land from '../component/Pages/Land/Land'
 import Build from '../component/Pages/Build/Build'
 import FirstPage from '../component/Pages/FirstPage'
-import Folder from '../component/Pages/Folder/Folder'
 import Manage from '../component/Pages/Manage/Manage'
 import EditTax from '../component/Pages/Tax/EditTax'
 import DetialLand from '../component/Pages/Land/DetialLand'
 import RateBuild from '../component/Pages/Build/RateBuild'
 import EditCondo from '../component/Pages/Condo/EditCondo'
+import Document from '../component/Pages/Document/Document'
+import CheckDoc from '../component/Pages/Document/CheckDoc/CheckDoc';
+import EditCheckDoc from '../component/Pages/Document/CheckDoc/EditCheckDoc';
+import CostDoc from '../component/Pages/Document/CostDoc/CostDoc';
+import EditCostDoc from '../component/Pages/Document/CostDoc/EditCostDoc';
+import OverView from '../component/Pages/OverView/OverView'
 const components ={
     login:{
         url:"/login",
@@ -58,9 +63,10 @@ const components ={
         component:Build
     },
     folder:{
-        url:'/folder',
-        component:Folder
+        url:'/document',
+        component:Document
     },
+    
     manage:{
         url:'/manage',
         component:Manage
@@ -80,6 +86,26 @@ const components ={
     editCondo:{
         url:'/condo/:id',
         component:EditCondo
+    },
+    CheckDoc:{
+        url:'/checkdocument/:year',
+        component:CheckDoc
+    },
+    EditCheckDoc:{
+        url:'/edit/checkdocument/:id',
+        component:EditCheckDoc
+    },
+    CostDoc:{
+        url:'/costdocument/:year',
+        component:CostDoc
+    },
+    EditCostDoc:{
+        url:'/edit/costdocument/:id',
+        component:EditCostDoc
+    },
+    OverView:{
+        url:`/overview`,
+        component:OverView
     }
     
 }
@@ -116,7 +142,12 @@ const userRole ={
             components.editTax,
             components.detialLand,
             components.rate,
-            components.editCondo
+            components.editCondo,
+            components.CheckDoc,
+            components.CostDoc,
+            components.EditCheckDoc,
+            components.EditCostDoc,
+            components.OverView
         ],
         redirectRoutes:"/main"
      },
@@ -135,7 +166,12 @@ const userRole ={
             components.editTax,
             components.detialLand,
             components.rate,
-            components.editCondo
+            components.editCondo,
+            components.CheckDoc,
+            components.CostDoc,
+            components.EditCheckDoc,
+            components.EditCostDoc,
+            components.OverView
         ],
         redirectRoutes:"/main"
      }

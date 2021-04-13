@@ -1,6 +1,15 @@
-import React from 'react'
-import { Form, Input, Button, Space, Divider } from 'antd';
+import React,{useEffect,useState} from 'react';
+import { Form, Input, Space, Divider, Select ,notification} from 'antd';
+import axios from '../../config/axios';
 function CondoForm({formModal,condo}) {
+    const [employee,setEmployee] = useState([]);
+    useEffect(() => {
+        axios.get('/api/employee').then((result) => {
+            setEmployee(result.data)
+        }).catch((err) => {
+            notification.error({message:'เรียกดูพนักงานล้มเหลว'})
+        });
+    }, [])
     return (
         <Form  form={formModal}
         layout={{
@@ -40,7 +49,7 @@ function CondoForm({formModal,condo}) {
 
          <Space style={{ display: 'flex', marginBottom: 8 }} align="baseline">
           <Form.Item label="ที่ตั้งเลขที่" name="Condo_no"
-          rules={[{ required: true, message: 'Missing ปีที่สร้าง' }]}
+        //   rules={[{ required: true, message: 'Missing ปีที่สร้าง' }]}
           >
               <Input placeholder="ที่ตั้งเลขที่"/>
           </Form.Item>  
@@ -89,15 +98,22 @@ function CondoForm({formModal,condo}) {
           >
               <Input placeholder="กรอก พ.ศ.ที่สร้างห้อง"/>
           </Form.Item>  
-          
+          <Form.Item
+                label="เจ้าหน้าที่ที่รับผิดชอบ"
+                name="employee_condo"
+                rules={[{ required: true, message: 'กรุณาเลือกเจ้าหน้าที่ที่รับผิดชอบ!' }]}
+          >
+                  <Select style={{width:200}}>
+                    {employee.map(emp => 
+                        <Select.Option key={emp.Pers_no} value={emp.Pers_no}>{`${emp.Fname} ${emp.Lname}`}</Select.Option>
+                    )}
+                  </Select>                      
+            </Form.Item>
+         
           <Form.Item label="หมายเหตุ" name="Mark">
               <Input />
           </Form.Item>    
-        {/* <Form.Item>
-          <Button type="primary" htmlType="submit">
-            บันทึก
-          </Button>
-        </Form.Item> */}
+      
       </Form>
     )
 }

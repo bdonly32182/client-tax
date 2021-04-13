@@ -6,7 +6,7 @@ import CustomerList from '../Land/CustomerList';
 import OwnersModal from '../../Modal/OwnersModal'
 import axios from '../../../config/axios'
 import {Select_customer} from '../../../store/action/LandAction'
-import {generate_tax_room} from '../../../store/action/CondoAction'
+import {generate_tax_room} from '../../../store/action/RoomAction'
 import LocalStorageService from '../../../LocalStorage/LocalStorageSevice'
 import SelectCategoryModal from '../../Modal/SelectCategoryModal';
 import {RedoOutlined} from '@ant-design/icons'

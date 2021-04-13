@@ -1,10 +1,12 @@
 import React,{useState} from 'react'
 import {Modal,Button, Divider, Input,Select,Space,Form,notification} from 'antd'
 import {PlusOutlined,MinusCircleOutlined} from '@ant-design/icons'
-import axios from '../../config/axios';
-function RateRoomModal({titleButton,Mark,selectRows}) {
+import {useDispatch} from 'react-redux'
+import {UpgrateSelect} from '../../store/action/RoomAction'
+function RateRoomModal({titleButton,Mark,selectRows,condoID}) {
+    let dispatch = useDispatch();
     const [visible,setVisible] = useState(false);
-    const [category,setCategory] = useState('');
+    const [category,setCategory] = useState('อยู่อาศัย');
     const [price, setPrice] = useState('');
     const {Option} = Select ;
     const [form] = Form.useForm();
@@ -15,42 +17,32 @@ function RateRoomModal({titleButton,Mark,selectRows}) {
         setVisible(false);
     }
     const upgradePrice = () => {
-        let mapRoomID = selectRows.map(room=>room.Room_ID)
-        console.log(mapRoomID);
+        let mapRoomID = selectRows.map(room=>room.id)
         let body ={
             Price_Room:price,
             rooms:mapRoomID
         }
-        axios.post(`/api/rows/usefuls/`,body).then((result) => {
-            notification.success({message:'อัพเดทเรียบร้อย'})
-        }).catch((err) => {
-            notification.error({message:'อัพเดทล้มเหลว'})
-        });
+        dispatch(UpgrateSelect(body,condoID))
+        
     }
     const upgradeCategory =()=>{
-        let mapRoomID = selectRows.map(room=>room.Room_ID)
+        let mapRoomID = selectRows.map(room=>room.id)
         let body ={
-            Category_place:category,
+            Category_use:category,
             rooms:mapRoomID
         }
-        axios.post(`/api/rows/usefuls/`,body).then((result) => {
-            notification.success({message:'อัพเดทเรียบร้อย'})
-        }).catch((err) => {
-            notification.error({message:'อัพเดทล้มเหลว'})
-        });
+        dispatch(UpgrateSelect(body,condoID))
+
     }
     const upgradeAll = () => {
         form.validateFields().then((values) => {
-            let mapRoomID = selectRows.map(room=>room.Room_ID)
+            let mapRoomID = selectRows.map(room=>room.id)
             let body ={
                 ...values.Useful_rooms[0],
                 rooms:mapRoomID
             }
-            axios.post(`/api/rows/usefuls/`,body).then((result) => {
-                notification.success({message:'อัพเดทเรียบร้อย'})
-            }).catch((err) => {
-                notification.error({message:'อัพเดทล้มเหลว'})
-            });
+            dispatch(UpgrateSelect(body,condoID))
+
         }).catch((err) => {
             notification.error({message:''})
         });

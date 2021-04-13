@@ -1,10 +1,13 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { Form, Input, Col,Select ,Divider,Checkbox} from 'antd';
 import {code_cate_building,sub_Cate} from '../Select/data'
 function BuildingForm(props) {
   const [category,setCategory] = useState(sub_Cate[code_cate_building[0].code]);//เอาไปเป็นตัวเลือก
   const [secondCate,setSecondCate] = useState(sub_Cate[code_cate_building[0].code][0]);//เก็บค่าไว้เมื่อกด select
   const {Option} = Select;
+  useEffect(() => {
+    props.formModal.resetFields()
+  }, [props.formModal,props.building])
   const onChangeCategory =(value) =>{
     setCategory(sub_Cate[value]);
     setSecondCate(sub_Cate[value][0]);

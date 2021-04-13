@@ -5,6 +5,7 @@ import CondoModal from '../../Modal/CondoModal';
 import CondosAll from '../../Table/CondosAll';
 import Header from '../../Header'
 import {fetchs_condo} from '../../../store/action/CondoAction'
+import FilterCondo from '../../SearchFilter/FilterCondo';
 function Condo(props) {
     const dispatch = useDispatch();
     const condo = useSelector(state=>state.condo)
@@ -24,6 +25,12 @@ function Condo(props) {
             <Col xs={7} sm	={5} md={4} lg={3} xl={2} xxl={1}>
                 <CondoModal titleButton="สร้างอาคารชุดใหม่" color="#37B889"/>
             </Col>
+            </Row>
+            <Row style={{padding:'20px'}}>
+            <Col xs={24} sm	={24} md={24} lg={24} xl={24} xxl={24}>
+                 <FilterCondo />
+            </Col>
+               
             </Row>
             <Row style={{padding:'20px'}}>
                 <Col xs={24} sm	={24} md={24} lg={24} xl={24} xxl={24}>

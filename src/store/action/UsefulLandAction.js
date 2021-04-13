@@ -3,6 +3,7 @@ import {FETCHS_USEFUL_IN_LAND,FETCH_LAND,FETCH_USEFUL_LAND,FETCHS_BUILD_IN_USEFU
 import {notification} from 'antd'
 export const create_useful_land = (body,id_land) => {
     return dispatch => {
+        console.log(body);
         axios.post('/api/create/useful',body).then((result) => {
             axios.get(`/api/land/${id_land}`).then((result) => {
                 dispatch({type:FETCH_LAND,payload:result.data})

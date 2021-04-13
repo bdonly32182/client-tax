@@ -1,17 +1,36 @@
 import React from 'react'
 import {Form,Input,Col,Button} from 'antd'
+import {useDispatch} from 'react-redux'
+import {updateAddress} from '../../store/action/TaxAction'
 function AddressForm(props) {
+  const dispatch = useDispatch();
     const tailLayout = {
         wrapperCol: {
           offset: 3,
           span: 16,
         },
       };
+    const onFinish =({num_House,moo,road_Name,soi,tambol,District_name,changwat,post_No,phone_no})=>{
+      let body ={
+        Num_House:num_House,
+        Moo:moo,
+        Road_Name:road_Name,
+        Soi:soi,
+        Tambol:tambol,
+        district_name:District_name,
+        Changwat:changwat,
+        Post_No:post_No,
+        Phone_no:phone_no,
+        Address_Tax_ID:props.uid_tax
+      }
+     dispatch(updateAddress(body))
+    }
+    console.log(props.uid_tax);
     return (
         <Form     
         form={props.form}   
         wrapperCol={{offset:3}}
-        
+        onFinish={onFinish}
         >
              <Form.Item>
                       <Input.Group compact>
@@ -99,7 +118,6 @@ function AddressForm(props) {
                               <Form.Item
                                 label="เบอร์ติดต่อ"
                                 name="phone_no"
-                                rules={[{ required: true, message: 'กรุณากรอกเบอร์ติดต่อ!' }]}
                               >
                                 <Input />
                               </Form.Item>

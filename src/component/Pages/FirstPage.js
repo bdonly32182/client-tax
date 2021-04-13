@@ -8,9 +8,14 @@ import AdminPage from './AdminPage'
 function FirstPage(props) {
     const card =[
         {icon:<Avatar size={70} icon={<FolderOpenFilled/>} style={{ backgroundColor: '#9FC1E3' }}/>,
+        title:'ภารวม',
+        description:'ภาพรวมและสถิติของทั้งเขต',
+        path:`/overview`
+        },
+        {icon:<Avatar size={70} icon={<FolderOpenFilled/>} style={{ backgroundColor: '#9FC1E3' }}/>,
         title:'เอกสาร',
         description:'จัดการเกี่ยวกับเอกสาร',
-        path:'/folder'
+        path:'/document'
         },
         {icon:<Avatar size={70} icon={<Image src="/treee.png" width={35}preview={false}/>} style={{ backgroundColor: '#9FC1E3' }}/>,
         title:'ทะเบียนที่ดิน',

@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import {Input,Button,Select,Radio, Row, Col} from 'antd';
 import {useDispatch} from 'react-redux'
-import {onSearch} from '../../store/action/LandAction'
+import {onSearch,onSearchSpecial} from '../../store/action/LandAction'
 import jwtDecode from 'jwt-decode'
 import LocalStorageService from '../../LocalStorage/LocalStorageSevice'
 function FilterLand() {
@@ -18,7 +18,8 @@ function FilterLand() {
     const [Operator, setOperator] = useState('or')
     const [special,setSpecial] = useState(null);
     const SearchLand = () => {
-        dispatch(onSearch(ParcelNo,SurveyNo,LandNo,CodeLand,TaxId,Operator,special));
+        dispatch(onSearch(ParcelNo,SurveyNo,LandNo,CodeLand,TaxId,Operator));
+        special!==null&&dispatch(onSearchSpecial(special));
     }
     return (
         <div style={{backgroundColor:'#9ddfd3',padding:'60px',paddingLeft:'200px',margin:'10px'}}>
@@ -61,7 +62,7 @@ function FilterLand() {
                <div style={{paddingLeft:'40px',textAlign:'center'}}>
                     <p>ตัวเลือกพิเศษ</p>
                     <Select onChange={(value)=>setSpecial(value)} style={{ width: 300 }}>
-                        <Option value={null}></Option>
+                        <Option value={``}></Option>
                         <Option value={`L left join  usefulLand UL on L.code_land = UL.Land_id
                                         where distict_id =${jwt.distict_id}
                                         group by L.code_land

@@ -44,7 +44,7 @@ export const fetchs_land = () =>{
 export const edit_land = (target_id,body,current_id) => {
     return dispatch => {
         axios.put(`/api/editLand/${target_id}`,{...body,totalPlace:0,Rate_Price_land:0}).then((result) => {
-            axios.get(`/api/land/${current_id}`).then((result) => {
+           result.status===200&& axios.get(`/api/land/${current_id}`).then((result) => {
                 notification.success({message:'แก้ไขข้อมูลแปลงที่ดินเรียบร้อยแล้ว'})
                 dispatch({type:FETCH_LAND,payload:result.data})
             }).catch((err) => {
@@ -87,13 +87,23 @@ export const Select_customer = (body) =>{
         });
     }
 }
-export const onSearch = (ParcelNo,SurveyNo,LandNo,CodeLand,TaxId,Operator,special) =>{
+export const onSearch = (ParcelNo,SurveyNo,LandNo,CodeLand,TaxId,Operator) =>{
     return dispatch => {
-        axios.get(`/api/filter/land?ParcelNo=${ParcelNo}&SurveyNo=${SurveyNo}&LandNo=${LandNo}&CodeLand=${CodeLand}&TaxId=${TaxId}&Operator=${Operator}&special=${special}`)
+        axios.get(`/api/filter/land?ParcelNo=${ParcelNo}&SurveyNo=${SurveyNo}&LandNo=${LandNo}&CodeLand=${CodeLand}&TaxId=${TaxId}&Operator=${Operator}`)
         .then((result) => {
             dispatch({type:FETCHS_LAND,payload:result.data})
         }).catch((err) => {
             notification.error({message:'ค้นหาล้มเหลว'})
+        });
+    }
+}
+export const onSearchSpecial =(special)=>{
+    return dispatch=>{
+        axios.get(`/api/filter/landspecial?special=${special}`).then((result) => {
+            dispatch({type:FETCHS_LAND,payload:result.data})
+        }).catch((err) => {
+            notification.error({message:'ค้นหาล้มเหลว'})
+
         });
     }
 }

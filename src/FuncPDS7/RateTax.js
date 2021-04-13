@@ -159,7 +159,7 @@ export const RateTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                 {EmptyTypes.length>0&&EmptyTypes.map((empty,i)=><>
                     {  
                                 Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
-                                empty.StartYear,empty.EmptyAbsolute
+                                0, empty.StartYear,empty.EmptyAbsolute
                                 )
                                 .map(res=><p>{res.percent}</p>)
                     }

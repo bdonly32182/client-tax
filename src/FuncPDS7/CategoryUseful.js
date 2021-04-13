@@ -1,5 +1,5 @@
 
-export const CategoryUseful =({BuildOnUsefulLands,PriceUseful,EmptyTypes,FarmTypes,OtherTypes,LiveTypes,TypeName}) => {
+export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherTypes,LiveTypes,TypeName}) => {
     
     if (BuildOnUsefulLands.length >0) {//กรณีมีสิ่งปลุกสร้าง
     

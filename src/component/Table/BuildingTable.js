@@ -7,11 +7,9 @@ import {delete_building} from '../../store/action/BuildingAction'
 function BuildingTable(props) {
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
-    const [modal,contextHolder] = Modal.useModal();
     let uniqueId = 0 ;
     const onConfirm =(id)=>{
         dispatch(delete_building(id));
-        
     }
     return (
         <>
@@ -105,7 +103,7 @@ function BuildingTable(props) {
                 <Space>
                     <BuildingModal button ={<EditFilled />} onEdit={true} building ={record.Building} TypeName={props.TypeName} 
                     useful_id={props.useful_id} code_land={props.code_land} PriceUseful={props.PriceUseful} buildings={props.buildings}
-                    UsefulLand_Tax_ID={props.UsefulLand_Tax_ID}
+                    UsefulLand_Tax_ID={props.UsefulLand_Tax_ID} employee_land={props.employee_land}
                     style={{color:'#008BFF' ,fontSize:18}}
                     />
                    

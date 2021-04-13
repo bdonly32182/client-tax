@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table} from 'antd'
+import { Table,Image,Popover} from 'antd'
 import {ProportionType} from '../../FuncPDS7/ProportionType'
 import { CategoryUseful } from '../../FuncPDS7/CategoryUseful';
 import { SizeType } from '../../FuncPDS7/SizeType';
@@ -9,7 +9,7 @@ import { exceptBalance } from '../../FuncPDS7/ExceptBalance';
 import {RateTax} from '../../FuncPDS7/RateTax'
 import { AmountPriceTax } from '../../FuncPDS7/AmountPriceTax';
 import {Summary} from '../../FuncPDS7/Summary'
-function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show}) {
+function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},loading}) {
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0;
     const formatColHaveBuild = (builds =[],ColName) => {
@@ -27,8 +27,27 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show})
                 }
         )
     }
-    
+    const content = (customers=[]) => {
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+            <p>เลขบัตรประชาชน :{Cus_No}</p>
+            <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
+        </div>)
+    }
     return (
+        <div>
+                            <div style={{textAlign:'right',paddingRight:'60px'}}>
+                                <p>ภ.ด.ส.๗</p>
+
+                            </div>
+                            <div style={{display:'block',paddingLeft:'650px'}}>
+                                <Image src="/logobkk.jpeg" width={90} alt="logo"  preview={false}/>
+                                
+                            </div>
+                            <div style={{padding:'20px'}}>
+                            <Popover content={content(Customers)}>
+                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${uid_tax} (${Category_Tax})`}</b></p>
+                            </Popover>
+                            </div>
         <Table bordered={true} dataSource={land } size="small"
                 rowKey={(record)=>{
                     if (!record.__uniqueId)
@@ -115,7 +134,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show})
                      render={(Land,record)=>record.UsefulLand_Tax_ID===uid_tax&&Land.Price.toLocaleString(undefined,{minimumFractionDigits: 2,
                         maximumFractionDigits: 2})}
                 />
-                <Column title="รวมราคาประเมิณของที่ดิ" dataIndex="PriceUseful"
+                <Column title="รวมราคาประเมิณของที่ดิน" dataIndex="PriceUseful"
                 width={100}  
                 render={(text,record)=>{
                   return  record.UsefulLand_Tax_ID===uid_tax&&text.toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -172,12 +191,11 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show})
                                     dataIndex="BuildOnUsefulLands"
                                     render={(text)=>formatColHaveBuild(text,"อายูสิ่งปลูกสร้าง")}                            
                                     /> 
-                                    {show &&
                                     <Column title="เปอร์เซ็นต์"   
                                     width={63}   
                                     dataIndex="BuildOnUsefulLands"
                                     render={(text)=>formatColHaveBuild(text,"เปอร์เซ็นต์")}                                 
-                                    /> }
+                                    /> 
                                     <Column title="คิดเป็นค่าเสื่อม(บาท)"         
                                     width={100}     
                                     dataIndex="BuildOnUsefulLands"
@@ -243,6 +261,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency},loading,show})
                                 
                                
         </Table>
+     </div>
     )
 }
 

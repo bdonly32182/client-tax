@@ -31,10 +31,12 @@ function BuildingModal(props) {
                     let Percent_Age = (find_percent&& find_percent.percent) || 0;
                     let body ={
                         ...values,
-                        Age_Build:values.Age_Build>2000?nowYear-values.Age_Build:values.Age_Build,
+                        YearBuild:values.Age_Build>2400?values.Age_Build:nowYear - values.Age_Build,
+                        Age_Build:findAge,
                         Percent_Age,
                         Build_Total_Place,
                         usefulTypeAll:usefulTypeAll,
+                        employee_build:props.employee_land
                     };
                   return  dispatch(edit_building(body,props.useful_id,props.code_land));
                }
@@ -52,13 +54,15 @@ function BuildingModal(props) {
                 let Percent_Age = (find_percent&& find_percent.percent) || 0;
                 let body ={
                     ...values,
-                    Age_Build:values.Age_Build>2000?nowYear-values.Age_Build:values.Age_Build,
+                    YearBuild:values.Age_Build>2400?values.Age_Build:nowYear - values.Age_Build,
+                    Age_Build:findAge,
                     Percent_Age,
                     Build_Total_Place,
                     Build_Tax_ID:props.uid_tax,
                     Build_Id,
                     usefulTypeAll:usefulTypeAll,
-                    useful_id:props.useful_id
+                    useful_id:props.useful_id,
+                    employee_build:props.employee_land
                 }
                 dispatch(create_building(body,props.useful_id));
             })

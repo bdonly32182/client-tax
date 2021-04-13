@@ -28,7 +28,6 @@ function DetialLand(props) {
             })}</ul>
         </div>)
     }
-    console.log(land);
     return (
         <div >
             <Header /> 
@@ -65,6 +64,7 @@ function DetialLand(props) {
                      usefullands={land.UsefulLands}
                      PriceLand ={land.Price}
                      categoryTax={land.Tax_Group}
+                     employee_land ={land.employee_land}
                      />
                 </Col>
                 

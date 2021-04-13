@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { Form, Input, Button, Space, Divider,Checkbox,Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined ,DeleteFilled } from '@ant-design/icons';
 function RoomForm({formModal,room,onDelteUseful}) {
@@ -7,16 +7,18 @@ function RoomForm({formModal,room,onDelteUseful}) {
   const onChange =(value)=>{
     setCategory(value)
   }
-  console.log(category);
+  useEffect(() => {
+    formModal.resetFields()
+  }, [formModal,room])
     return (
+ 
         <Form 
         name="dynamic_form_nest_item" autoComplete="off"
         form ={formModal}
         initialValues={room?{...room}:{"LiveStatus":false,"UsageRoom":true}}
         >
          <Space style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-          <Form.Item label="รหัสห้องชุด" name="Room_ID"
-            // rules={[{ required: true, message: 'Missing รหัสห้องชุด' }]}
+          <Form.Item label="รหัสห้องชุด" name="id"
           >
               <Input placeholder="รหัสห้องชุด" disabled/>
           </Form.Item>  
@@ -69,7 +71,7 @@ function RoomForm({formModal,room,onDelteUseful}) {
                   >
                     <Input placeholder="ประเภทการใช้พื้นที่" />
                   </Form.Item>
-                  {category ==="ว่างเปล่า"||room.Useful_rooms[field.name]?.Category_use ==="ว่างเปล่า"?
+                  {category ==="ว่างเปล่า"||room?.Useful_rooms[field.name]?.Category_use ==="ว่างเปล่า"?
                       <Form.Item
                       {...field}
                       name={[field.name, 'StartYearEmpty']}
