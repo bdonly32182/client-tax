@@ -18,11 +18,12 @@ export const user_login =(body,setRole)=>{
     
 }
 
-export const user_register =({Pers_no,Fname,Lname,password,distict_member_id,role_name,TableNo},picture) =>{
+export const user_register =({Pers_no,Fname,Lname,password,distict_member_id,role_name,TableNo,TitleEmp},picture) =>{
     return dispatch =>{
         const formData = new FormData();
         formData.append('file',picture);
         formData.append('Pers_no',Pers_no);
+        formData.append('TitleEmp',TitleEmp);
         formData.append('Fname',Fname);
         formData.append('Lname',Lname);
         formData.append('password',password);

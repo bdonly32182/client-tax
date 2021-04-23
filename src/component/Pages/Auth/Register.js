@@ -84,6 +84,13 @@ function Register(props) {
                         <Input />
                       </Form.Item>
                       <Form.Item
+                      label="คำนำหน้า"      
+                      name="TitleEmp"
+                      rules={[{required:true,message:"กรุณากรอกคำนำหน้าของท่าน"}]}
+                      >
+                          <Input />
+                      </Form.Item>
+                      <Form.Item
                       label="ชื่อ"      
                       name="Fname"
                       rules={[{required:true,message:"กรุณากรอกชื่อของท่าน"}]}
@@ -158,7 +165,7 @@ function Register(props) {
                           </Select>    
                       </Form.Item>
                       
-                      <Form.Item label="หมายเลขโต๊ะ" name="TableNo"
+                      <Form.Item label="รหัสประจำตำแหน่ง" name="TableNo"
                        rules={[{ required: true, message: 'กรุณากรอกรหัสประจำโต๊ะ!' }]}
                       >
                              <Input type="number"/>

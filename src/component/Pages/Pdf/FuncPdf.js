@@ -944,7 +944,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
  export const SummaryCondo =(condo=[])=>{
     let total = 0;
     condo.forEach((record)=>{
-        let Price =   record.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
+        let Price =   record.Room.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
         (record.Price_Room * record.Amount_Place)- 50000000:
         record.Price_Room * record.Amount_Place
       let totalPrice = Seperate(Price,record.Category_use,0,record.StartYearEmpty).map(res=>res.percent * res.price)
@@ -980,8 +980,8 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
      let date = new Date();
      let Year = date.toDateString().split(" ");;
      let dateThai = +Year[3]+543
-     let YearStart = 2563;
-     let totalYears = [2563]
+     let YearStart = 2564;
+     let totalYears = [2564]
      for (let index = 0; index < dateThai - YearStart; index++) {
          totalYears.push(YearStart + index +1)
      }
@@ -995,13 +995,14 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
     if (NowDateThai === YearSave) {
             for (const data of land) {
             let buildNewYear = data.BuildOnUsefulLands.map(({Building:{Age_Build,StyleBuilding,Build_Id,Percent_Age,YearBuild}})=>{
-                let findPercent = depreciate.find(element=>element.Age === Age_Build+1 && element.category === StyleBuilding)
+                let nowAge =   YearSave - YearBuild
+                let findPercent = depreciate.find(element=>element.Age === nowAge && element.category === StyleBuilding)
                 let FindPercent_Age = (findPercent&& findPercent?.percent) || 0;
                 
                 return {
                     Build_Id,
-                    Age_Build:YearBuild - YearSave === Age_Build?Age_Build:Age_Build+1,
-                    Percent_Age:YearBuild - YearSave === Age_Build?Percent_Age:FindPercent_Age
+                    Age_Build:nowAge,
+                    Percent_Age:nowAge === Age_Build?Percent_Age:FindPercent_Age
                     }
             });
             buildUpdate = [...buildUpdate,...buildNewYear]

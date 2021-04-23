@@ -38,7 +38,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
         summary={pageData=>{
             let total = 0;
             pageData.forEach((record)=>{
-                let Price =   record.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
+                let Price =   record.Room.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
                 (record.Price_Room * record.Amount_Place)- 50000000:
                 record.Price_Room * record.Amount_Place
               let totalPrice = seperate(Price,record.Category_use,0,record.StartYearEmpty).map(res=>res.percent * res.price)
@@ -63,7 +63,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
                 <Table.Summary.Cell colSpan={1}><b style={{textAlign:'center'}}>{`(ได้รับส่วนลดกรณีฉุกเฉิน ${exceptEmergency>0&&exceptEmergency} %)`}</b></Table.Summary.Cell>
                 
                 <Table.Summary.Cell colSpan={4}>
-                    <b style={{color:'red'}}>{`${(total*(exceptEmergency/100)).toLocaleString()} ฿`}</b>
+                    <b style={{color:'red'}}>{`${(total*((100-exceptEmergency)/100)).toLocaleString()} ฿`}</b>
                 </Table.Summary.Cell>
                 </Table.Summary.Row>
             }
@@ -102,7 +102,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
             />
             <Column title="หักมูลค่าที่ได้รับยกเว้น" 
              dataIndex="Room"
-            render={(text)=>text.LiveStatus?<p>50</p>:<p>0</p>}
+            render={(text)=>text.LiveStatus?<p>50ล้าน</p>:<p>0</p>}
             />
             <Column title="คงเหลือทรัพย์ที่ต้องเสียภาษี"  dataIndex="Room"
             render={(text,record)=>{

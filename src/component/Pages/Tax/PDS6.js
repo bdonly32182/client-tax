@@ -56,8 +56,7 @@ function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amou
                 <Col>
                 <div style={{paddingLeft:'500px'}}>
                   <p>ภ.ด.ส.๖</p>  
-                </div>
-                
+                </div>    
                 </Col>
             </Row>
             <Row>
@@ -66,14 +65,11 @@ function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amou
                     <p><b>หนังสือเเจ้งการประเมินที่ดินและสิ่งปลูกสร้าง</b></p>
                     <p> <b>{`ประจำปี พ.ศ.${+DateThai[3] + 543}`}</b></p>
                 </div>
-                
-                   
-                
                 </Col>
             </Row>
             <Row style={{display:'block',paddingLeft:'100px'}}>
                 <div style={{display:'inline-block'}}>
-                  <b>{`ที่ ${jwt.Abbreviations}.........`}</b>  
+                  <b>{`ที่ ${jwt.distict_id}.........`}</b>  
                   <b style={{paddingLeft:'650px'}}>{`สำนักงานเขต${jwt?.District_name}`}</b>
                 </div>
                 <p style={{paddingTop:'15px',paddingLeft:'580px'}}>{`วันที่ .......... เดือน ${ReplaceMonth(DateThai[1])} ปี ${+DateThai[3] + 543}`}</p>
@@ -100,7 +96,7 @@ function PDS6({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,leader,amou
 สร้าง พ.ศ. ๒๕๖๒`}</p>
             <div style={{textAlign:'center'}}>
                 <p >ขอแสดงความนับถือ</p>
-                <p style={{paddingTop:'70px'}}>{`( ${leader.leader?.TitleEmp}${leader?.leader?.Fname} ${leader?.leader?.Lname} )`}</p>
+                <p style={{paddingTop:'70px'}}>{`( ${jwt?.district_leader} )`}</p>
                 <p>นักวิชาการจัดเก็บรายได้ชำนาญการพิเศษ</p>
                 <p>{`หัวหน้าฝ่ายรายได้ สำนักงานเขต${jwt?.District_name}`}</p>
                 <p>พนักงานประเมิน</p>

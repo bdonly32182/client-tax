@@ -1,11 +1,14 @@
 import React from 'react';
-import {Form, Input,Col,Select} from 'antd';
+import {Form, Input,Col,Select, DatePicker} from 'antd';
 import {districtname} from '../Select/data';
+import moment from 'moment'
 function DistrictForm({formModal,district}) {
     return (
         <Form
         form={formModal}
-        initialValues={district}
+        initialValues={{...district,
+                "MonthPay":district?.MonthPay?moment(district?.MonthPay):moment(new Date())
+        }}
       >
           <Form.Item>
               <Input.Group compact>
@@ -86,6 +89,35 @@ function DistrictForm({formModal,district}) {
                         <Form.Item
                             label="รหัสไปรษณีย์"
                             name="Address_PostNo"
+                            >
+                                <Input />
+                        </Form.Item>
+                  </Col>
+              </Input.Group>
+            </Form.Item>
+           
+            <Form.Item>
+              <Input.Group compact>
+                    <Col>
+                        <Form.Item
+                            label="เลขหนังสือส่งออก"
+                            name="ExportBookNo"
+                            >
+                               <Input />
+                        </Form.Item>
+                  </Col>
+                  <Col>
+                        <Form.Item
+                            label="เดือนที่ชำระภาษี"
+                            name="MonthPay"
+                            >
+                              <DatePicker picker="date"/>
+                        </Form.Item>
+                  </Col>
+                  <Col>
+                        <Form.Item
+                            label="หัวหน้าฝ่ายรายได้"
+                            name="LeaderOfDistrict"
                             >
                                 <Input />
                         </Form.Item>

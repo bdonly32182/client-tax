@@ -8,7 +8,6 @@ function DistrictModal({district}) {
     const [form] = Form.useForm();
     const onOk =()=>{
         form.validateFields().then((values) => {
-            console.log(values);
             axios.put(`/api/update/${values.District_no}`,values).then((result) => {
                 notification.success({message:'แก้ไขข้อมูลเขตเรียบร้อย'})
             }).catch((err) => {

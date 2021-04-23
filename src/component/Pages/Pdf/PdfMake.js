@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { Button, notification, Select } from 'antd';
+import { Button, notification, Select,Affix } from 'antd';
 import jwtDecode from 'jwt-decode';
 import LocalStorageService from '../../../LocalStorage/LocalStorageSevice'
 import {readNumber} from '../../../FuncPDS7/ReadNumber'
@@ -10,7 +10,6 @@ import {CategoryUseful,SizeType,ProportionType,PercentType,Except,ExceptBalance,
          RateTax,AmountPriceTax,AmountPriceTaxCate,SummaryCondo,TotalPrice,YearsDoc,BuildUpdateYear} from './FuncPdf'
 import Seperate from '../../../FuncPDS7/Seperate';
 import axios from '../../../config/axios';
-
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
  function PdfMake({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,
     leader,amountCustomer,customers
@@ -26,19 +25,20 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     const {Option} = Select;
     const [imageKrut,setImageKrut] = useState(null);
     const [logoBkk,setLogoBkk] = useState(null);
-    const [amountDoc , setAmountDoc] = useState(0);
     let NowDate = new Date() ;
     let DateThai = NowDate.toDateString().split(" ");
     const [yearDoc,setYearDoc] = useState(+DateThai[3]+543);
+    let Sendto = `${customers[0].title}${customers[0].Cus_Fname} ${customers[0].Cus_Lname} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}`
     let token  = LocalStorageService.getToken();
     let jwt = jwtDecode(token);
+    let employeeTable = land[0]?.Land?.Employee?.TableNo||condo[0]?.Room?.Condo?.Employee?.TableNo||jwt?.TableNo;
     let live =[];
     let other = [];
     let farm = [];
     let empty =[];
      useEffect(() => {
        fetch_image();
-        fetch_AmountDoc();
+        // fetch_AmountDoc();
      }, [land,condo])
     
      const fetch_image =()=>{
@@ -65,34 +65,10 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
            setLogoBkk(imageLogo);
        }).catch(e=>console.log(e))
      }
-     const ReplaceMonth = (monthNA) =>{
-        let monthThai = monthNA;
-        monthThai = monthThai.replace("Jan","มกราคม")
-        monthThai = monthThai.replace("Feb","กุมภาพันธ์")
-        monthThai = monthThai.replace("Mar","มีนาคม")
-        monthThai = monthThai.replace("Apr","เมษายน")
-        monthThai = monthThai.replace("May","พฤษภาคม")
-        monthThai = monthThai.replace("Jun","มิถุนายน")
-        monthThai = monthThai.replace("Jul","กรกฎาคม")
-        monthThai = monthThai.replace("Aug","สิงหาคม")
-        monthThai = monthThai.replace("Sep","กันยายน")
-        monthThai = monthThai.replace("Oct","ตุลาคม")
-        monthThai = monthThai.replace("Nov","พฤศจิกายน")
-        monthThai = monthThai.replace("Dec","ธันวาคม")
-        return monthThai
-    }
+   
     const EmployeeTakeCare = (land =[],condo =[]) => {
         if(land.length !== 0) return land[0]?.Land?.employee_land
         return condo[0]?.Room.Condo.employee_condo
-    }
-    const fetch_AmountDoc =()=>{
-        let EmpTakeCare =  EmployeeTakeCare(land,condo)
-        
-        EmpTakeCare&& axios.get(`/api/numberDoc/${EmpTakeCare}`).then((result) => {
-            setAmountDoc(result.data.numberRun[0]?.amountBook);
-        }).catch((err) => {
-            notification.error({message:'เรียกหมายเลขหนังสือของพนักงานล้มเหลว'})
-        });
     }
     const onChangeYear = value => {
         setYearDoc(value)
@@ -122,26 +98,36 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
        let docDifinition ={
             pageSize:'A3',
             info: {
-                title: `${uid_tax}/${+DateThai[3] + 543}`
+                title: `${uid_tax}-${yearDoc}`
             },
            content:[
+                // {text:[
+                //     {image:imageKrut,width: 50,height: 40},
+                //     '                                      ',
+                //     {text:`สํานักงานเขต${jwt?.District_name}`}
+                // ]},
+                // {text:`แขวงบางมด เขตจอมทอง กรุงเทพมหานคร ๑๐๑๕๐` , margin:[20,0,0,0]},
+                // {text:`กรุณาส่ง` , alignment:'center'},
+                // {text:`ชื่อผู้รับ` , alignment:'center'},
+                // {text:`ที่อยู่ผู้รับ` , alignment:'center'},
+               //
                {text:'ภ.ด.ส.๖',fontSize:12,alignment:'right'},
                {image:imageKrut,width: 80,height: 60,alignment: 'center'},
                {text:'หนังสือเเจ้งการประเมินที่ดินและสิ่งปลูกสร้าง',style:'boldStyle',alignment:'center'},
                {text:`ประจำปี พ.ศ.${+DateThai[3] + 543}`,style:'boldStyle',alignment:'center'},
-               {text:`ที่ ${jwt.Abbreviations}.........`,style:'boldStyle',alignment:'left'},
-               {text:`สำนักงานเขต${jwt?.District_name}`,style:['boldStyle','alignItemDistrict']},     
-               {text:`วันที่ .......... เดือน ${ReplaceMonth(DateThai[1])} ปี ${+DateThai[3] + 543}`,margin: [300, 5, 20, 5]},
+               {text:`ที่ ${jwt.distict_id}.........`,style:'boldStyle',alignment:'left'},
+               {text:`สำนักงานเขต${jwt?.District_name}`,style:['boldStyle','alignItemDistrict']},   
+               {text:`วันที่ .......... ${NowDate?.toLocaleDateString('th-TH', { year: 'numeric',month: 'long'})}`,margin: [300, 5, 20, 5]},  
                'เรื่อง แจ้งการประเมินเพื่อเสียภาษีที่ดินและสิ่งปลูกสร้าง',
-               {text:`เรียน ${customers[0].title}${customers[0].Cus_Fname} ${customers[0].Cus_Lname} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}`},
+               {text:`เรียน ${Sendto}`},
                {text:'ตามที่ท่านเป็นเจ้าของทรัพย์สิน ประกอบด้วย',style:'marginText'},
                {text: `1.ที่ดิน จำนวน ${leader.Land?.length>0?leader.Land[0]?.totalLand:0} แปลง`,style:'marginText' },
                {text:`2.สิ่งปลูกสร้าง จำนวน ${leader.Building?.length>0?leader.Building[0]?.totalBuild:0} หลัง`,style:'marginText'},
                {text:`3.อาคารชุด/ห้องชุด จำนวน ${leader.Room?.length>0?leader.Room[0]?.totalRoom:0} หลัง`,style:'marginText'},
-               {text:`พนักงานประเมินได้ทําการประเมินภาษีที่ดินและสิ่งปลูกสร้างแล้ว เป็นจํานวนเงิน ${BriefTotal.toLocaleString(undefined,{minimumFractionDigits: 2,
+              {text:`พนักงานประเมินได้ทําการประเมินภาษีที่ดินและสิ่งปลูกสร้างแล้ว เป็นจํานวนเงิน ${BriefTotal.toLocaleString(undefined,{minimumFractionDigits: 2,
                 maximumFractionDigits: 2})} บาท (${readNumber(`${BriefTotal.toFixed(2)}`)})`,style:'marginText'} ,
-               {text:`ตามรายการที่ปรากฏในแบบแสดงรายการคํานวณภาษีที่ดิน และสิ่งปลูกสร้าง แนบท้ายหนังสือฉบับนี้`},
-              {text:`ฉะนั้น ขอให้ท่านนําเงินภาษีที่ดินและสิ่งปลูกสร้างไปชําระ ณ สํานักงานเขต${jwt?.District_name} ภายในเดือน มิถุนายน ${+DateThai[3] + 543}`,style:['sizeFonts','marginText']},
+              {text:`ตามรายการที่ปรากฏในแบบแสดงรายการคํานวณภาษีที่ดิน และสิ่งปลูกสร้าง แนบท้ายหนังสือฉบับนี้`},
+              {text:`ฉะนั้น ขอให้ท่านนําเงินภาษีที่ดินและสิ่งปลูกสร้างไปชําระ ณ สํานักงานเขต${jwt?.District_name} ภายในเดือน ${new Date(jwt?.MonthPay)?.toLocaleDateString('th-TH', { year: 'numeric',month: 'long'})}`,style:['sizeFonts','marginText']},
               {text:`ถ้าไม่ชําระภาษีภายในกําหนดจะต้องเสียเบี้ยปรับและเงินเพิ่มตามมาตรา ๖๘ มาตรา ๖๙ และ มาตรา ๗๐ แห่งพระราชบัญญัติ`,style:['sizeFonts','marginText']},
               {text:`ภาษีที่ดินและสิ่งปลูกสร้าง พ.ศ. ๒๕๖๒`,style:'sizeFonts'},
               {text:`อนึ่ง หากท่านได้รับแจ้งการประเมินภาษีที่ดินและสิ่งปลูกสร้างแล้ว เห็นว่าการประเมินไม่ถูกต้องมีสิทธิยื่นคําร้องคัดค้านต่อผู้บริหารท้องถิ่น`,style:['sizeFonts','marginText']},
@@ -150,7 +136,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
               {text:` และกรณีไม่เห็นด้วยกับคําวินิจฉัยอุทธรณ์ มีสิทธิฟ้องเป็นคดีต่อศาลในสามสิบวันนับแต่วันที่ได้รับแจ้งคําวินิจฉัยอุทธรณ์ทั้งนี้ ตาม มาตรา ๗๓ และ `,style:'sizeFonts'},
               {text:` มาตรา ๘๒ แห่งพระราชบัญญัติภาษีที่ดินและสิ่งปลูกสร้าง พ.ศ. ๒๕๖๒`,style:'sizeFonts'},
                {text:`ขอแสดงความนับถือ`,style:['alignCenter','marginTopText']},
-               {text:`( ${leader.leader?.TitleEmp}${leader?.leader?.Fname} ${leader?.leader?.Lname} )`,style:['alignCenter','MarginNameLeader']},
+               {text:`( ${jwt?.district_leader} )`,style:['alignCenter','MarginNameLeader']},
                {text:`นักวิชาการจัดเก็บรายได้ชำนาญการพิเศษ`,style:'alignCenter'},
                {text:`หัวหน้าฝ่ายรายได้ สำนักงานเขต${jwt?.District_name}`,style:'alignCenter'},
                {text:`พนักงานประเมิน`,style:'alignCenter'},
@@ -464,24 +450,14 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             EmptyRoom:EmptyType
         }
     }
-    const runNumber = () => {
-        let Soon = "";
-        let nextNumber = amountDoc + 1;
-        for (let index = 0; index < 6 - nextNumber.toString().length; index++) {
-            Soon += "0"
-        }
-        return Soon
-    }
+ 
     const savePdf =()=>{
-        let positionSoon = runNumber();
         let result = land.map(record=>{
             let amountPriceTax = AmountPriceTaxCate(record,Category_Tax,uid_tax,exceptEmergency)
             return amountPriceTax
         })
-        Array.isArray(...result[0])? FuncSpreadMap(...result[0]):FuncSpreadMap([...result[0]])
-        Array.isArray(...result[1])? FuncSpreadMap(...result[1]):FuncSpreadMap([...result[1]])
-        Array.isArray(...result[2])? FuncSpreadMap(...result[2]):FuncSpreadMap([...result[2]])
-        Array.isArray(...result[3])? FuncSpreadMap(...result[3]):FuncSpreadMap([...result[3]])
+        result.map(type=>Array.isArray(type[0])? FuncSpreadMap(type[0]):FuncSpreadMap([type[0]]))
+       
         let {EmptyRoom,LiveRoom,OtherRoom} = FilterRoomPrice(condo)
 
         let PriceLive = live.reduce((pre,{text})=>pre + parseFloat(text[0]),0)
@@ -492,6 +468,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                         farm.length=0;
         let PriceEmpty = empty.reduce((pre,{text})=>pre +parseFloat(text[0]),0)
                          empty.length=0; 
+           
         let SaveDoc = DocDifinition();
         const GeneratePDF = pdfMake.createPdf(SaveDoc);
         let EmpTakeCare =  EmployeeTakeCare(land,condo)
@@ -510,7 +487,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             formData.append('totalPricePds7',PricePds7);
             formData.append('totalPricePds8',PricePds8);
             formData.append('BriefTotal',BriefTotal);
-            formData.append('CostBookNo',`${jwt.distict_id}_${jwt.TableNo}${positionSoon}${amountDoc+1}-${yearDoc}`);
+            formData.append('employeeTable',employeeTable);
+            // formData.append('CostBookNo',`${jwt.distict_id}_${employeeTable}${amountDoc.toString().padStart(6,0)}-${yearDoc}`);
             formData.append('Year',yearDoc);
             formData.append('TaxCostBook',uid_tax);
             formData.append('PathPDF',`/Document/${uid_tax}-${yearDoc}`);
@@ -521,7 +499,11 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             formData.append('Relive',Relive);
             formData.append('totalPriceOfTax',totalPriceOfTax);
             formData.append('totalBuilaAndLandYear',totalBuilaAndLandYear);
-            formData.append('buildUpdate',JSON.stringify(buildUpdate))
+            formData.append('SendTo',Sendto);
+            formData.append('FinishMonth',jwt?.MonthPay);
+            buildUpdate.map(build =>formData.append(`buildUpdateID`,build.Build_Id))
+            buildUpdate.map(build =>formData.append(`buildUpdateAge_Build`,build.Age_Build))
+            buildUpdate.map(build =>formData.append(`buildUpdatePercent_Age`,build.Percent_Age))
             axios.post(`/api/generatePdf`,formData).then((result) => {
                 notification.success({message:'บันทึกไฟล์เรียบร้อยแล้ว'})
             }).catch((err) => {
@@ -535,9 +517,12 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             <Select style={{width:200}} defaultValue={+DateThai[3]+543} onChange={onChangeYear}>
                 {years.map(year=><Option value={year} key={year} >{year}</Option>)}
             </Select>
-            <Button onClick={OpenPDF}>Open PDF</Button>
-            <Button onClick={savePdf}>Save container</Button>
            
+            <Button onClick={savePdf}>Save container</Button>
+            
+            <Affix offsetTop={10} style={{paddingLeft:'80%' }} onChange={(affixed) => console.log(affixed)}>
+                <Button onClick={OpenPDF}>Open PDF</Button>    
+            </Affix>
         </div>
     )
 }

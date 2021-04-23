@@ -17,7 +17,7 @@ function BuildingModal(props) {
             .then(async(values)=>{
                 let date =new Date()
                 let nowYear = date.getFullYear() + 543
-                let findAge =values.Age_Build>2000?nowYear-values.Age_Build:values.Age_Build
+                let findAge =values.Age_Build>2000?nowYear-values.Age_Build+1:values.Age_Build
                 let Build_Total_Place = +values.Farm_Size+  + values.Live_Size+ + values.Other_Size+ + values.Empty_Size;
                if (props.onEdit&&props.building) {
                    let {FarmType,LiveType,OtherType,EmptyType,Build_Id} = props.building
@@ -85,9 +85,9 @@ function BuildingModal(props) {
         if (arrBuild.length === 0) {
             return `${props.useful_id}-${arrBuild.length + 1}`
         }
-       let LastIndex = arrBuild.pop();
+       let LastIndex = arrBuild[arrBuild.length -1];
        let buildSeparate = LastIndex.Build_id_in_Useful.split("-")
-       return `${props.useful_id}-${Number(buildSeparate[2]) + 1}`
+       return `${props.useful_id}-${Number(buildSeparate[buildSeparate?.length - 1]) + 1}`
     }
     return (
         <>

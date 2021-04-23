@@ -1,13 +1,12 @@
 import React from 'react'
 import Header from '../Header'
 import {Row,Avatar,Image} from 'antd'
-import {FolderOpenFilled,BarChartOutlined,
-}from '@ant-design/icons'
+import {FolderOpenFilled,BarChartOutlined,AreaChartOutlined}from '@ant-design/icons'
 import MainCard from '../Card/MainCard'
 import AdminPage from './AdminPage'
 function FirstPage(props) {
     const card =[
-        {icon:<Avatar size={70} icon={<FolderOpenFilled/>} style={{ backgroundColor: '#9FC1E3' }}/>,
+        {icon:<Avatar size={70} icon={<AreaChartOutlined />} style={{ backgroundColor: '#9FC1E3' }}/>,
         title:'ภารวม',
         description:'ภาพรวมและสถิติของทั้งเขต',
         path:`/overview`

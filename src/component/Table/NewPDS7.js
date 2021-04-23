@@ -88,7 +88,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                         <Table.Summary.Cell colSpan={5}><b style={{textAlign:'center'}}>{`(ได้รับส่วนลดกรณีฉุกเฉิน ${exceptEmergency>0&&exceptEmergency} %)`}</b></Table.Summary.Cell>
                        
                         <Table.Summary.Cell colSpan={4}>
-                            <b style={{color:'red'}}>{`${exceptEmergency>0?((total * exceptEmergency) / 100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                            <b style={{color:'red'}}>{`${exceptEmergency>0?((total * (100-exceptEmergency)) / 100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2}):total.toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2})} บาท `}</b>
                         </Table.Summary.Cell>

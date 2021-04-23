@@ -17,8 +17,7 @@ function CostDoc() {
     const ChangeSwitch = value => {
         setSwitch(value)
     }
-    console.log('CostDoc',year);
-    console.log('CostDoc',onSwitch);
+ 
     return (
         <div>
             <Header />

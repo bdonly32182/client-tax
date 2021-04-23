@@ -17,6 +17,7 @@ import NewPDS7 from '../../Table/NewPDS7'
 import PDS6 from './PDS6'
 import PdfMake from '../Pdf/PdfMake'
 import PdfSurvey from '../Pdf/PdfSurvey'
+import CartSaveCost from '../../Modal/CartSaveCost'
 
 function EditTax(props) {
     const dispatch = useDispatch();
@@ -206,6 +207,8 @@ function EditTax(props) {
                         <PdfMake land = {pds7} tax={tax} leader={leader} condo={pds8} amountCustomer={tax?.Customers?.length}
                         customers={tax?.Customers} 
                         />
+                        {/* <CartSaveCost land = {pds7} tax={tax} leader={leader} condo={pds8} amountCustomer={tax?.Customers?.length}
+                        customers={tax?.Customers}/> */}
                         <PDS6 land = {pds7} tax={tax} leader={leader} condo={pds8} customers={tax?.Customers}
                         amountCustomer={tax?.Customers?.length} tax={tax} invit={tax?.Customers&&tax?.Customers[0]}
                         />

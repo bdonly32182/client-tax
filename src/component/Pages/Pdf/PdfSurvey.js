@@ -98,9 +98,9 @@ function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,custome
                 title: `${uid_tax}/${+DateThai[3] + 543}`
             },
            content:[
-               {text:'ภ.ด.ส.๖',fontSize:12,alignment:'right'},
+               {text:'ภ.ด.ส.๓',fontSize:12,alignment:'right'},
                {image:imageKrut,width: 80,height: 60,alignment: 'center'},
-               {text:`ที่ ${jwt.Abbreviations}.........`,style:'boldStyle',alignment:'left'},
+               {text:`ที่ ${jwt.distict_id}.........`,style:'boldStyle',alignment:'left'},
                {text:`สำนักงานเขต${jwt?.District_name}`,style:['alignItemDistrict']},     
                {text:`วันที่ ${DateThai[2]} เดือน ${ReplaceMonth(DateThai[1])} ปี ${+DateThai[3] + 543}`,margin: [300, 5, 20, 5]},
                'เรื่อง แจ้งให้ตรวจสอบรายการที่ดินและสิ่งปลูกสร้าง',, 

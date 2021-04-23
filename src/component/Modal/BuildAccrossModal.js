@@ -107,9 +107,9 @@ function BuildAccrossModal({titleButton,building,PriceUseful,buildings,UsefulLan
         if (useful.length ===0) {
           return `${land_id}-0${useful.length + 1}`;
         }
-      let thelastIndex =  useful.slice(-1).pop()
+      let thelastIndex =  useful[useful.length - 1]
       let id = thelastIndex.useful_id.split("-")
-      return `${land_id}-0${Number(id[1])+1}`;
+      return `${land_id}-0${Number(id[id.length - 1])+1}`;
     };
     return (
         <div>

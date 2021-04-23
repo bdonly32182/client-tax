@@ -65,7 +65,6 @@ function UsefulModal(props) {
                    dispatch(edit_useful(values.useful_id,{...values,...separatePlace,PriceUseful:props.PriceLand},props.usefulTable.Land_id));
               }else{
                     let useful_id =SetID(props.useful);
-                    // props.PriceLand
                   dispatch(create_useful_land({
                       ...values,...separatePlace,useful_id,Land_id:props.code_land 
                     ,UsefulLand_Tax_ID:taxID,
@@ -89,9 +88,9 @@ function UsefulModal(props) {
         if (useful.length ===0) {
           return `${props.code_land}-0${useful.length + 1}`;
         }
-      let thelastIndex =  useful.slice(-1).pop()
+      let thelastIndex =  useful[useful.length - 1]
       let id = thelastIndex.useful_id.split("-")
-      return `${props.code_land}-0${Number(id[3])+1}`;
+      return `${props.code_land}-0${Number(id[id.length - 1])+1}`;
     };
 
     const handleCancel = () => {

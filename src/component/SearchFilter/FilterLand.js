@@ -30,7 +30,7 @@ function FilterLand() {
                </Col>
                <Col>
                <div style={{paddingLeft:'30px',textAlign:'center'}}>
-                    <p>คำค้นหาเลขที่หนังสือกรรมสิทธิ์</p>
+                    <p>คำค้นหาเลขที่เอกสารสิทธิ์</p>
                     <Input onChange={(e)=>setParcelNo(e.target.value)}/> 
                </div>
 
@@ -64,16 +64,20 @@ function FilterLand() {
                     <Select onChange={(value)=>setSpecial(value)} style={{ width: 300 }}>
                         <Option value={``}></Option>
                         <Option value={`L left join  usefulLand UL on L.code_land = UL.Land_id
-                                        where distict_id =${jwt.distict_id}
+                                        where L.distict_id =${jwt.distict_id}
                                         group by L.code_land
                                         having count(UL.useful_id) >0`}>
                                             เฉพาะ "มีการลงการใช้ประโยชน์ที่ดินแล้ว"
                         </Option>
                         <Option value={`L left join  usefulLand UL on L.code_land = UL.Land_id
-                                        where distict_id =${jwt.distict_id}
+                                        where L.distict_id =${jwt.distict_id}
                                         group by L.code_land
                                         having count(UL.useful_id) =0`}>
                                         เฉพาะ "ยังไม่มีการลงการใช้ประโยชน์ที่ดินแล้ว"
+                        </Option>
+                        <Option value={`L inner join ownerLand OL  on L.code_land = OL.Land_own_id
+                                        where L.distict_id = "${jwt.distict_id}"`}>
+                                        เฉพาะ "มีเจ้าของแต่ยังไม่ผูกไอดีแท็ก"
                         </Option>
                         <Option value={`where Price = 0 and distict_id =${jwt.distict_id}`}>เฉพาะ ที่ดิน "ที่ยังไม่มี" ราคาประเมิน</Option>
                         <Option value={`where Price != 0 and distict_id =${jwt.distict_id}`}>เฉพาะ "ที่ดิน "ที่มี" ราคาประเมิน"</Option>

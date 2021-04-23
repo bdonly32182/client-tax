@@ -145,7 +145,7 @@ function CustomerForm(props) {
                              <Form.Item
                               label="หมู่"
                               name="Moo"
-                              rules={[{ required: true, message: 'กรุณากรอกหมู่!' }]}
+                              // rules={[{ required: true, message: 'กรุณากรอกหมู่!' }]}
                             >
                               <Input />
                             </Form.Item> 

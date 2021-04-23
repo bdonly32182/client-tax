@@ -22,7 +22,7 @@ export const readNumber =(number)=>{
     read += seperateSatang[1][0]==="0"?"สตางค์":seperateSatang[1][1]?"สตางค์":"สิบสตางค์"
     read = read.replace("หนึ่งสิบ","สิบ");
     read = read.replace("ศูนย์หน่วย","");
-    read = read.replace("สองสิบ","ยี่สิบ");
+    read = read.replaceAll("สองสิบ","ยี่สิบ");
     read = read.replace("หนึ่งหน่วย","เอ็ด");
     read = read.replace("หน่วย","");
     read = read.replace("สิบหนึ่งล้าน","สิบเอ็ดล้าน");
@@ -35,7 +35,9 @@ export const readNumber =(number)=>{
     read = read.replace("สิบหนึ่ง","สิบเอ็ด");
     read = read.replace("สองสิบเอ็ดสตางค์","ยี่สิบเอ็ดสตางค์");
     read = read.replace("หนึ่งสิบเอ็ดสตางค์","สิบเอ็ดสตางค์");
-    
+    if(parseInt(seperateSatang[0])===0){
+       read = 'ศูนย์บาท'
+    }
     if (seperateSatang[1][0]==="0" &&seperateSatang[1][1]==="0") {
        read = read.replace("บาทสตางค์","บาท");
     }

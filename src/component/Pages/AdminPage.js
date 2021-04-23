@@ -172,7 +172,7 @@ function AdminPage(props) {
                      <Button
                         type="primary"
                         onClick={handleFileRate}
-                        disabled={rate.length === 0}
+                        disabled={rate?.length === 0}
                         loading={uploading}
                         style={{ marginTop: 16 }}
                         >

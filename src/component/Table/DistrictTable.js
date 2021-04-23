@@ -20,6 +20,9 @@ function DistrictTable({districts}) {
             <Column title="เขต" dataIndex="Address_District"/>
             <Column title="จังหวัด" dataIndex="Address_Country"/>
             <Column title="รหัสไปรษณีย์" dataIndex="Address_PostNo"/>
+            <Column title="เลขส่งออกหนังสือ" dataIndex="ExportBookNo"/>
+            <Column title="เดือนที่ชำระภาษี" dataIndex="MonthPay"/>
+            <Column title="หัวหน้าฝ่ายรายได้" dataIndex="LeaderOfDistrict"/>
             <Column title="เบอร์โทร" dataIndex="Tel"/>
             <Column title="ตัวอักษรย่อ" dataIndex="Abbreviations"/>
             <Column title="Action" 
