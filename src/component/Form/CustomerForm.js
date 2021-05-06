@@ -13,7 +13,8 @@ function CustomerForm(props) {
     const [title,setTitle] = useState(title_customer[category_customer[0]])
     const [secondTitle, setSecondTitle] = useState(title_customer[category_customer[0]][0])
     useEffect(()=>{
-      props.customer&& form.setFieldsValue(props.customer)
+      props.customer&& form?.setFieldsValue(props.customer)
+      props.formModal&& props?.formModal?.resetFields();
     },[props.customer,form,props.formModal])
     const onFinish = (values) => { 
    props.onEdit(values.id_customer,values)
@@ -26,7 +27,7 @@ function CustomerForm(props) {
   const onChangeTitle =(value) =>{
      setSecondTitle(value)
   }
-  
+  console.log(title);
     return (
         <Form
         //props.formModal คือส่งค่าฟอร์มมาจาก โมดอล CustomerModal.js
@@ -43,10 +44,10 @@ function CustomerForm(props) {
                               <Form.Item
                                 label="ประเภทเจ้าของทรัพย์สิน"
                                 name="category_Cus"
-                                rules={[{ required: true, message: 'กรุณากรอกรหัสเขต !' }]}
+                                rules={[{ required: true, message: 'กรุณากรอกประเภทเจ้าของทรัพย์สิน !' }]}
                                 >
                                 <Select placeholder="เลือกประเภทเจ้าของทรัพย์สิน" onChange={onChangeCate}
-                                style={{width:120}}
+                                style={{width:120}} virtual={false}
                                 >
                                             {category_customer.map(category=>(
                                                 <Select.Option value={category} key={category}>{category}</Select.Option>
@@ -63,10 +64,11 @@ function CustomerForm(props) {
                             <Form.Item
                               label="คำนำหน้า"
                               name="title"
-                              rules={[{ required: true, message: 'กรุณากรอกชื่อเขต!' }]}
+                              
+                              rules={[{ required: true, message: 'กรุณากรอกคำนำหน้า!' }]}
                             >
                               <Select placeholder="เลือกคำนำหน้า" value={secondTitle} onChange={onChangeTitle}
-                              style={{width:300}}
+                              style={{width:300}} virtual={false}
                               >
                                             {title.map(title=>(
                                                 <Select.Option value={title} key={title}>{title}</Select.Option>
@@ -93,7 +95,7 @@ function CustomerForm(props) {
                                <Form.Item
                                 label="นามสกุล "
                                 name="Cus_Lname"
-                                rules={[{ required: true, message: 'กรุณากรอกนามสกุล!' }]}
+                
                               >
                                 <Input />
                               </Form.Item>
@@ -145,7 +147,6 @@ function CustomerForm(props) {
                              <Form.Item
                               label="หมู่"
                               name="Moo"
-                              // rules={[{ required: true, message: 'กรุณากรอกหมู่!' }]}
                             >
                               <Input />
                             </Form.Item> 
@@ -160,7 +161,6 @@ function CustomerForm(props) {
                           <Form.Item
                               label="ถนน"
                               name="Road_Name"
-                              rules={[{ required: true, message: 'กรุณากรอกถนน!' }]}
                             >
                               <Input />
                             </Form.Item>
@@ -169,7 +169,6 @@ function CustomerForm(props) {
                             <Form.Item
                               label="ซอย"
                               name="Soi"
-                              rules={[{ required: true, message: 'กรุณากรอกซอย!' }]}
                             >
                               <Input />
                             </Form.Item>

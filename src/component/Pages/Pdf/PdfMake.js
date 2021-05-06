@@ -11,7 +11,7 @@ import {CategoryUseful,SizeType,ProportionType,PercentType,Except,ExceptBalance,
 import Seperate from '../../../FuncPDS7/Seperate';
 import axios from '../../../config/axios';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
- function PdfMake({land,tax:{uid_tax,Category_Tax,exceptEmergency},condo,
+ function PdfMake({land,tax:{uid_tax,Category_Tax,exceptEmergency,Address},condo,
     leader,amountCustomer,customers
 }) {
     pdfMake.fonts={
@@ -28,10 +28,11 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     let NowDate = new Date() ;
     let DateThai = NowDate.toDateString().split(" ");
     const [yearDoc,setYearDoc] = useState(+DateThai[3]+543);
-    let Sendto = `${customers[0].title}${customers[0].Cus_Fname} ${customers[0].Cus_Lname} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}`
+    let Sendto = `${customers[0].title}${customers[0].Cus_Fname||''} ${customers[0].Cus_Lname||""} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}`
     let token  = LocalStorageService.getToken();
     let jwt = jwtDecode(token);
     let employeeTable = land[0]?.Land?.Employee?.TableNo||condo[0]?.Room?.Condo?.Employee?.TableNo||jwt?.TableNo;
+    
     let live =[];
     let other = [];
     let farm = [];
@@ -78,7 +79,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     const sumPDS7 = (land = []) => {
         let total = 0;
         land.forEach((record)=>{
-            let result = Summary(record,Category_Tax,uid_tax,exceptEmergency)
+            let result = Summary(record,Category_Tax,uid_tax,exceptEmergency,land)
             if (result[0]?.length>0) {
             let array2D = result[0].reduce((pre,cur)=>pre+cur,0)
             return total += array2D
@@ -101,16 +102,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                 title: `${uid_tax}-${yearDoc}`
             },
            content:[
-                // {text:[
-                //     {image:imageKrut,width: 50,height: 40},
-                //     '                                      ',
-                //     {text:`สํานักงานเขต${jwt?.District_name}`}
-                // ]},
-                // {text:`แขวงบางมด เขตจอมทอง กรุงเทพมหานคร ๑๐๑๕๐` , margin:[20,0,0,0]},
-                // {text:`กรุณาส่ง` , alignment:'center'},
-                // {text:`ชื่อผู้รับ` , alignment:'center'},
-                // {text:`ที่อยู่ผู้รับ` , alignment:'center'},
-               //
+              
                {text:'ภ.ด.ส.๖',fontSize:12,alignment:'right'},
                {image:imageKrut,width: 80,height: 60,alignment: 'center'},
                {text:'หนังสือเเจ้งการประเมินที่ดินและสิ่งปลูกสร้าง',style:'boldStyle',alignment:'center'},
@@ -120,6 +112,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                {text:`วันที่ .......... ${NowDate?.toLocaleDateString('th-TH', { year: 'numeric',month: 'long'})}`,margin: [300, 5, 20, 5]},  
                'เรื่อง แจ้งการประเมินเพื่อเสียภาษีที่ดินและสิ่งปลูกสร้าง',
                {text:`เรียน ${Sendto}`},
+               {text:`ที่อยู่ บ้านเลขที่ ${Address?.Num_House||" - "} ถนน ${Address?.Road_Name||"-"} ซอย ${Address?.Soi||"-"} หมู่ ${Address?.Moo||"-"} แขวง ${Address?.Tambol||"-"} 
+               เขต ${Address?.district_name||"-"} จังหวัด ${Address?.Changwat||"-"}  ${Address?.Post_No||"-"} เบอร์ติดต่อ ${Address?.Phone_no||"-"}`},
                {text:'ตามที่ท่านเป็นเจ้าของทรัพย์สิน ประกอบด้วย',style:'marginText'},
                {text: `1.ที่ดิน จำนวน ${leader.Land?.length>0?leader.Land[0]?.totalLand:0} แปลง`,style:'marginText' },
                {text:`2.สิ่งปลูกสร้าง จำนวน ${leader.Building?.length>0?leader.Building[0]?.totalBuild:0} หลัง`,style:'marginText'},
@@ -218,9 +212,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
            let percentType = PercentType(record);
            let proportionType = ProportionType(record,uid_tax);
            let except = Except(record,Category_Tax,uid_tax);
-           let exceptBalance = ExceptBalance(record,Category_Tax,uid_tax);
-           let rateTax = RateTax(record,Category_Tax,uid_tax);
-           let amountPriceTax = AmountPriceTax(record,Category_Tax,uid_tax,exceptEmergency)
+           let exceptBalance = ExceptBalance(record,Category_Tax,uid_tax,land);
+           let rateTax = RateTax(record,Category_Tax,uid_tax,land);
+           let amountPriceTax = AmountPriceTax(record,Category_Tax,uid_tax,exceptEmergency,land)
            let totalPlace = record.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
                                                     .reduce((pre,cur)=>pre+cur,0)
             return [
@@ -234,32 +228,120 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             {text:record.UsefulLand_Tax_ID===uid_tax?record.Land.Price.toLocaleString():'',style:'tableFontSize'},
             {text:record.UsefulLand_Tax_ID===uid_tax?record.PriceUseful.toLocaleString():'',style:'tableFontSize'},
             record.BuildOnUsefulLands.map((build,index)=> {return {text:index+1,style:'tableFontSize'}}),
-            record.BuildOnUsefulLands.map(({Building:{Sub_Category}})=> {return {text:Sub_Category,style:'tableFontSize'}}),
+            record.BuildOnUsefulLands.map(({Building:{Sub_Category}})=> {return {text:Sub_Category,fontSize:7}}),
             record.BuildOnUsefulLands.map(({Building:{Build_Total_Place}})=> {return {text:Build_Total_Place.toLocaleString(),style:'tableFontSize'}}),
             record.BuildOnUsefulLands.map(({Building:{RateOfBuilding:{Rate_Price}}})=> {return {text:Rate_Price.toLocaleString(),style:'tableFontSize'}}),
             record.BuildOnUsefulLands.map(({Building:{Rate_Price_Build}})=> {return {text:Rate_Price_Build.toLocaleString(),style:'tableFontSize'}}),
             record.BuildOnUsefulLands.map(({Building:{Age_Build}})=> {return {text:Age_Build.toLocaleString(),style:'tableFontSize'}}),
             record.BuildOnUsefulLands.map(({Building:{PriceDepreciation}})=> {return {text:PriceDepreciation.toLocaleString(),style:'tableFontSize'}}),
             record.BuildOnUsefulLands.map(({Building:{AfterPriceDepreciate}})=> {return {text:AfterPriceDepreciate.toLocaleString(),style:'tableFontSize'}}),
-            {text:record.BuildOnUsefulLands?.length>0?
+        
+                record.BuildOnUsefulLands?.length>0?
                 record.UsefulLand_Tax_ID===uid_tax? record.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}}) =>
-                (((Width * Length)/totalPlace)*record.PriceUseful +AfterPriceDepreciate )
+                {return {text:(((Width * Length)/totalPlace)*record.PriceUseful +AfterPriceDepreciate )
                     .toLocaleString(undefined,{minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2})
+                                    maximumFractionDigits: 2}),style:'tableFontSize'}}
                 ):
                 record.BuildOnUsefulLands.map(({Building:{AfterPriceDepreciate}}) =>
-                        AfterPriceDepreciate.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})
+                        {return{text:AfterPriceDepreciate.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2}),style:'tableFontSize'}}
                 )
-                :record.PriceUseful.toLocaleString(),
-                style:'tableFontSize'},
-            ...category,
-            ...sizeType,
-            ...percentType,
-            ...proportionType,
-            ...except,
-            ...exceptBalance,
-            ...rateTax,
-            ...amountPriceTax
+                :{text:record.PriceUseful.toLocaleString(),style:'tableFontSize'},
+                //version old 1.0
+                //     ...category,
+                // ...sizeType,
+                // ...percentType,
+                // ...proportionType,
+                // ...except,
+                // ...exceptBalance,
+                // ...rateTax,
+                // ...amountPriceTax
+                //version new
+                //อันที่ไม่มีสิ่งปลูกสร้างหรือสัดส่วนเลยจะ รีเทริน ออกมาเป็น array 1 dimension แต่อันอื่นจะเป็น array 2 dimension
+                       
+                category?.map(arrcategory=>Array.isArray(arrcategory)?arrcategory.map(cate=>{return {text:cate.text,style:'tableFontSize'}})
+                :{text:arrcategory.text,style:'tableFontSize'}
+                ),
+                sizeType?.map(arrsizeType=>Array.isArray(arrsizeType)?arrsizeType.map(size=>{return {text:size.text,style:'tableFontSize'}})
+                :{text:arrsizeType.text,style:'tableFontSize'}
+                ),
+                percentType?.map(arrpercentType=>Array.isArray(arrpercentType)?arrpercentType.map(percent=>{return {text:percent.text,style:'tableFontSize'}})
+                :{text:arrpercentType.text,style:'tableFontSize'}
+                ),
+                proportionType?.map(ArrproportionType=>Array.isArray(ArrproportionType)?ArrproportionType.map(type=>{return {text:type.text,style:'tableFontSize'}})
+                :{text:ArrproportionType.text,style:'tableFontSize'}
+                ),
+                except?.map(arrexcept=>Array.isArray(arrexcept)?arrexcept.map(Newexcept=>{return {text:Newexcept.text,style:'tableFontSize'}})
+                :{text:arrexcept.text,style:'tableFontSize'}
+                ),
+                exceptBalance?.map(ArrexceptBalance=>Array.isArray(ArrexceptBalance)?
+                    ArrexceptBalance.map(balance=>balance.text?
+                                        Array.isArray(balance.text)?
+                                            balance.text.map(textOld=>{return {text:textOld,style:'tableFontSize'}})
+                                            :
+                                            {text:balance.text,style:'tableFontSize'}
+                                        :
+                                        //กรณีสิ่งปลูกสร้างคร่อมแปลงและมีการไต่อันดับ
+                                        Array.isArray(balance)?
+                                            balance?.map(arr3d=> arr3d.map(arr4d=> arr4d.map(arr5d=>{return {text:arr5d,style:'tableFontSize'}})))
+                                        :null // ไม่งั้นมันจะ รีเทิน false ออกมาแสดง
+                            )
+                            
+                :
+                    Array.isArray(ArrexceptBalance.text)?ArrexceptBalance.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArrexceptBalance.text,style:'tableFontSize'}
+                ),
+                rateTax?.map(ArrrateTax=>Array.isArray(ArrrateTax)?ArrrateTax.map(rate=>rate.text?
+                            Array.isArray(rate.text)?
+                                rate.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}})
+                            :
+                                {text:rate.text,style:'tableFontSize'}
+                        :
+                        Array.isArray(rate)?
+                            rate.map(arr3d=> arr3d.map(arr4d=> arr4d.map(arr5d=>{return {text:arr5d,style:'tableFontSize'}})))
+                            :null
+                    )
+                :
+                Array.isArray(ArrrateTax.text)?ArrrateTax.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArrrateTax.text,style:'tableFontSize'}
+                ),
+                amountPriceTax?.map(ArramountPriceTax=>Array.isArray(ArramountPriceTax)?ArramountPriceTax.map(amount=>
+                    amount.text?
+                                Array.isArray(amount.text)?amount.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}})   
+                            : 
+                                {text:amount.text,style:'tableFontSize'}
+                        :
+                            Array.isArray(amount)?
+                                    amount.map(arr3d=> arr3d.map(arr4d=> arr4d.map(arr5d=>{return {text:arr5d,style:'tableFontSize'}})))
+                                    :null
+                    )
+                :
+                Array.isArray(ArramountPriceTax.text)?ArramountPriceTax.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArramountPriceTax.text,style:'tableFontSize'}
+                )
+                //version 3.0
+                // exceptBalance?.map(ArrexceptBalance=>Array.isArray(ArrexceptBalance)?ArrexceptBalance.map(balance=>
+                //     Array.isArray(balance.text)?balance.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:balance.text,style:'tableFontSize'})
+                // :
+                // Array.isArray(ArrexceptBalance.text)?ArrexceptBalance.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArrexceptBalance.text,style:'tableFontSize'}
+                // ),
+                // rateTax?.map(ArrrateTax=>Array.isArray(ArrrateTax)?ArrrateTax.map(rate=>
+                // Array.isArray(rate.text)?rate.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:rate.text,style:'tableFontSize'})
+                // :
+                //  Array.isArray(ArrrateTax.text)?ArrrateTax.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArrrateTax.text,style:'tableFontSize'}
+                // ),
+                // amountPriceTax?.map(ArramountPriceTax=>Array.isArray(ArramountPriceTax)?ArramountPriceTax.map(amount=>
+                // Array.isArray(amount.text)?amount.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}): {text:amount.text,style:'tableFontSize'})
+                // :
+                // Array.isArray(ArramountPriceTax.text)?ArramountPriceTax.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArramountPriceTax.text,style:'tableFontSize'}
+                // )
+                
+                //version 2.0
+                // sizeType?.map(arrsizeType=>arrsizeType.map(cate=>{return {text:cate.text,style:'tableFontSize'}})),
+                // percentType?.map(arrpercentType=>arrpercentType.map(cate=>{return {text:cate.text,style:'tableFontSize'}})),
+                // proportionType?.map(proportionType=>proportionType.map(cate=>{return {text:cate.text,style:'tableFontSize'}})),
+                // except?.map(arrexcept=>arrexcept.map(cate=>{return {text:cate.text,style:'tableFontSize'}})),
+                // exceptBalance?.map(ArrexceptBalance=>ArrexceptBalance.map(cate=>{return {text:cate.text,style:'tableFontSize'}})),
+                // rateTax?.map(ArrrateTax=>ArrrateTax.map(cate=>{return {text:cate.text,style:'tableFontSize'}})),
+                // amountPriceTax?.map(ArramountPriceTax=>ArramountPriceTax.map(cate=>{return {text:cate.text,style:'tableFontSize'}}))
+
+         
         ]
         })
            docDifinition.content = [...docDifinition.content,
@@ -272,7 +354,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                 color: '#444',//เส้นขอบคอลัมน์
                 table: {
                     widths: [15, 22,35,15,15,15
-                            ,23,28,53,'auto',35,28,
+                            ,23,28,53,'auto',90,28,
                              28,40,14,31,52,70,
                              30,27,30,62,30,52,38,60],//width ต้อทำทุกคอลัมน์
                     headerRows: 2,//headerRowsอย่างน้อยต้องตาม คอลัมน์
@@ -303,7 +385,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                         [
                             {text:`สรุปยอดรวม (ได้รับส่วนลดกรณีฉุกเฉิน ${exceptEmergency} %)`,colSpan:24,alignment:'right',style:'totalPrice'},
                             '','','','','','','','','','','','','','','','','','','','','','','',
-                            {text:((PricePds7*exceptEmergency) /100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                            {text:((PricePds7*(100-exceptEmergency)) /100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2})
                                 ,colSpan:2,style:'totalPrice'}
                         ] 
@@ -411,14 +493,14 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
         pdfMake.createPdf(PreviewDoc).open()
     }
     const FuncSpreadMap =(array=[])=>{
-            
-            let liveFilter = array.filter(item=>item.category ==="อยู่อาศัย" && Array.isArray(item.text))
+            console.log(array);
+            let liveFilter = array.filter(item=>item.category ==="อยู่อาศัย" && item.text )
             live =[...live,...liveFilter];
-            let otherFilter =array.filter(item=>item.category ==="อื่นๆ"&& Array.isArray(item.text))
+            let otherFilter =array.filter(item=>item.category ==="อื่นๆ"&& item.text)
             other = [...other,...otherFilter];
-            let farmFilter = array.filter(item=>item.category ==="เกษตร"&& Array.isArray(item.text))
+            let farmFilter = array.filter(item=>item.category ==="เกษตร"&& item.text)
             farm = [...farm,...farmFilter];
-            let emptyFilter = array.filter(item=>item.category ==="ว่างเปล่า"&& Array.isArray(item.text))
+            let emptyFilter = array.filter(item=>item.category ==="ว่างเปล่า"&& item.text)
             empty = [...empty,...emptyFilter]
     }
     const FilterRoomPrice = (room = []) => {
@@ -452,27 +534,60 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     }
  
     const savePdf =()=>{
+        
         let result = land.map(record=>{
-            let amountPriceTax = AmountPriceTaxCate(record,Category_Tax,uid_tax,exceptEmergency)
+            let amountPriceTax = AmountPriceTaxCate(record,Category_Tax,uid_tax,exceptEmergency,land)
             return amountPriceTax
         })
-        result.map(type=>Array.isArray(type[0])? FuncSpreadMap(type[0]):FuncSpreadMap([type[0]]))
-       
+        //type[0][0][0] คือคร่อมแปลงไจ่บันไดจะรีเทีนค่าออกมาอย่างนี้
+        result.map(type=>type[0][0]&&type[0][0][0]?
+                type[0][0][0]?.filter(arr=>arr.length>0).map(arr4d=>FuncSpreadMap(arr4d))
+            :type.map(type2=>Array.isArray(type2)? FuncSpreadMap(type2):FuncSpreadMap([type2])))       
         let {EmptyRoom,LiveRoom,OtherRoom} = FilterRoomPrice(condo)
-
-        let PriceLive = live.reduce((pre,{text})=>pre + parseFloat(text[0]),0)
-                        live.length =0;
-        let PriceOther = other.reduce((pre,{text})=>pre +parseFloat(text[0]),0)
-                         other.length=0;
-        let PriceFarm = farm.reduce((pre,{text})=>pre +parseFloat(text[0]),0)
-                        farm.length=0;
-        let PriceEmpty = empty.reduce((pre,{text})=>pre +parseFloat(text[0]),0)
-                         empty.length=0; 
+       
+          let PriceLive =0;
+           for (const arr of live) {  
+               if (Array.isArray(arr.text)) {
+                  let totalLive = arr.text.map(number=>number).reduce((pre,cur)=>pre+cur,0) 
+                  PriceLive += totalLive        
+               }else{
+                PriceLive += arr.text  
+               }
+           }
+           let PriceOther =0;
+           for (const arr of other) {  
+               console.log(arr);
+               if (Array.isArray(arr.text)) {
+                  let totalLive = arr.text.map(number=>number).reduce((pre,cur)=>pre+cur,0) 
+                  PriceOther += totalLive        
+               }else{
+                PriceOther += arr.text  
+               }
+           }
+           let PriceFarm =0;
+           for (const arr of farm) {  
+               if (Array.isArray(arr.text)) {
+                  let totalLive = arr.text.map(number=>number).reduce((pre,cur)=>pre+cur,0) 
+                  PriceFarm += totalLive        
+               }else{
+                PriceFarm += arr.text  
+               }
+           }
+           let PriceEmpty =0;
+           for (const arr of empty) {  
+               if (Array.isArray(arr.text)) {
+                  let totalLive = arr.text.map(number=>number).reduce((pre,cur)=>pre+cur,0) 
+                  PriceEmpty += totalLive        
+               }else{
+                PriceEmpty += arr.text  
+               }
+           }
+      
            
         let SaveDoc = DocDifinition();
         const GeneratePDF = pdfMake.createPdf(SaveDoc);
         let EmpTakeCare =  EmployeeTakeCare(land,condo)
-
+      
         GeneratePDF.getBlob((data)=>{
             const formData =new FormData();
             let buildUpdate = BuildUpdateYear(land,yearDoc)
@@ -488,7 +603,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             formData.append('totalPricePds8',PricePds8);
             formData.append('BriefTotal',BriefTotal);
             formData.append('employeeTable',employeeTable);
-            // formData.append('CostBookNo',`${jwt.distict_id}_${employeeTable}${amountDoc.toString().padStart(6,0)}-${yearDoc}`);
             formData.append('Year',yearDoc);
             formData.append('TaxCostBook',uid_tax);
             formData.append('PathPDF',`/Document/${uid_tax}-${yearDoc}`);
@@ -505,6 +619,11 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             buildUpdate.map(build =>formData.append(`buildUpdateAge_Build`,build.Age_Build))
             buildUpdate.map(build =>formData.append(`buildUpdatePercent_Age`,build.Percent_Age))
             axios.post(`/api/generatePdf`,formData).then((result) => {
+                //เผื่อกดเบิ้ล เราคามันจะคูณสอง
+                PriceLive = 0;
+                PriceOther = 0;
+                PriceEmpty= 0;
+                PriceFarm = 0;
                 notification.success({message:'บันทึกไฟล์เรียบร้อยแล้ว'})
             }).catch((err) => {
                 notification.error({message:'บันทึกไฟล์ล้มเหลว'})
@@ -520,7 +639,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
            
             <Button onClick={savePdf}>Save container</Button>
             
-            <Affix offsetTop={10} style={{paddingLeft:'80%' }} onChange={(affixed) => console.log(affixed)}>
+            <Affix offsetTop={10} style={{paddingLeft:'80%' }}>
                 <Button onClick={OpenPDF}>Open PDF</Button>    
             </Affix>
         </div>

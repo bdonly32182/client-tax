@@ -21,12 +21,13 @@ function BuildingModal(props) {
                 let Build_Total_Place = +values.Farm_Size+  + values.Live_Size+ + values.Other_Size+ + values.Empty_Size;
                if (props.onEdit&&props.building) {
                    let {FarmType,LiveType,OtherType,EmptyType,Build_Id} = props.building
-                   values.Farm_Size >0&&values.Percent_Farm > 0 &&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:values.Percent_Farm,Build_farm_ID:Build_Id,id:FarmType?.id});
-                   values.Live_Size >0&&values.Percent_Live> 0 &&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:values.Percent_Live,Live_Status:values.Live_Status,Build_live_ID:Build_Id,id:LiveType?.id});
-                   values.Other_Size > 0&&values.Percent_Other > 0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:values.Percent_Other,Build_other_ID:Build_Id,id:OtherType?.id});
-                   values.Empty_Size > 0 &&values.Percent_Empty > 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:values.Percent_Empty,Build_empty_ID:Build_Id,id:EmptyType?.id,
-                                         EmptyAbsolute:values.EmptyAbsolute,StartYear:values.StartYear<2000?nowYear - values.StartYear:values.StartYear
-                                    });                    
+                
+                usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:values.Percent_Farm,Build_farm_ID:Build_Id,id:FarmType?.id});
+                usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:values.Percent_Live,Live_Status:values.Live_Status,Build_live_ID:Build_Id,id:LiveType?.id});
+                usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:values.Percent_Other,Build_other_ID:Build_Id,id:OtherType?.id});
+                usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:values.Percent_Empty,Build_empty_ID:Build_Id,id:EmptyType?.id,
+                                      EmptyAbsolute:values.EmptyAbsolute,StartYear:values.StartYear<2000?nowYear - values.StartYear:values.StartYear
+                                 });                 
                     let find_percent = await depreciate.find(obj => obj.Age === +findAge && obj.category === values.StyleBuilding);
                     let Percent_Age = (find_percent&& find_percent.percent) || 0;
                     let body ={
@@ -36,16 +37,17 @@ function BuildingModal(props) {
                         Percent_Age,
                         Build_Total_Place,
                         usefulTypeAll:usefulTypeAll,
-                        employee_build:props.employee_land
+                        employee_build:props.employee_land,
+                        FarmType,LiveType,OtherType,EmptyType
                     };
                   return  dispatch(edit_building(body,props.useful_id,props.code_land));
                }
                 let Build_Id = setBuildingID(props.buildings);
                //usefulAll  props.useful_id
-                values.Farm_Size !== 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id});
-                values.Live_Size !==0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:values.Live_Status,Build_live_ID:Build_Id});
-                values.Other_Size !== 0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id});
-                values.Empty_Size !== 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id,
+                values.Farm_Size > 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id});
+                values.Live_Size >0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:values.Live_Status,Build_live_ID:Build_Id});
+                values.Other_Size >0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id});
+                values.Empty_Size > 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id,
                                 EmptyAbsolute:values.EmptyAbsolute,StartYear:values.StartYear<2000?nowYear - values.StartYear:values.StartYear
                                      });
                 
@@ -73,6 +75,7 @@ function BuildingModal(props) {
             
             setVisible(false);
             setConfirmLoading(false);
+            form.resetFields();
         }, 1500);
     }
     const onShow = () => {

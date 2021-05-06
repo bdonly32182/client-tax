@@ -5,6 +5,7 @@ import {EDIT_CUSTOMER,FETCHS_CUSTOMER,FETCH_CUSTOMER} from './ActionType'
 export const fetchs_customer = () =>{
     return dispatch => {
         axios.get('/api/customer').then((result) => {
+            console.log(result.data);
             dispatch({type:FETCHS_CUSTOMER,payload:result.data})
         }).catch((err) => {
             notification.error({message:"การร้องขอข้อมูลของคุณล้มเหลว"})
@@ -54,6 +55,17 @@ export const fetch_customer =(id,history) =>{
         }).catch((err) => {
             history.push('/customer')
             notification.error({message:"ไม่มีประชาชนรายนี้"})
+        });
+    }
+}
+export const SearchFilter = (name,cusId)=>{
+    return dispatch=>{
+        axios.get(`/api/filtercustomer?name=${name}&cusId=${cusId}`)
+        .then((result) => {
+            dispatch({type:FETCHS_CUSTOMER,payload:result.data})
+
+        }).catch((err) => {
+            
         });
     }
 }

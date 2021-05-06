@@ -19,6 +19,7 @@ import EditCheckDoc from '../component/Pages/Document/CheckDoc/EditCheckDoc';
 import CostDoc from '../component/Pages/Document/CostDoc/CostDoc';
 import EditCostDoc from '../component/Pages/Document/CostDoc/EditCostDoc';
 import OverView from '../component/Pages/OverView/OverView'
+import ListWarningDoc from '../component/Pages/Document/CostDoc/WarnningDoc/ListWarningDoc'
 const components ={
     login:{
         url:"/login",
@@ -106,6 +107,10 @@ const components ={
     OverView:{
         url:`/overview`,
         component:OverView
+    },
+    WarningDoc : {
+        url:'/warning/:year',
+        component:ListWarningDoc
     }
     
 }
@@ -147,7 +152,8 @@ const userRole ={
             components.CostDoc,
             components.EditCheckDoc,
             components.EditCostDoc,
-            components.OverView
+            components.OverView,
+            components.WarningDoc
         ],
         redirectRoutes:"/main"
      },
@@ -171,7 +177,8 @@ const userRole ={
             components.CostDoc,
             components.EditCheckDoc,
             components.EditCostDoc,
-            components.OverView
+            components.OverView,
+            components.WarningDoc
         ],
         redirectRoutes:"/main"
      }

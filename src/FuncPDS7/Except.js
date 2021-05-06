@@ -12,21 +12,21 @@ export const Except=({BuildOnUsefulLands,Special_Useful,LiveTypes,OtherTypes,Far
 
    if (BuildOnUsefulLands.length >0) {//กรณีมีสิ่งปลุกสร้าง
     return BuildOnUsefulLands.map(({Building},i)=>{
-        return <>
+        return <div key={i}>
                     {Building.LiveType&&
-                    <p key={i+1}>{Building.LiveType.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?`50ล้าน`:`10ล้าน`:Special_Useful}
+                    <p >{Building.LiveType.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?`50ล้าน`:`10ล้าน`:`${Special_Useful}%`}
                     </p>
                     }
                    
                     {Building.OtherType&&
-                    <p key={i+2}>{Special_Useful}</p> 
+                    <p >{`${Special_Useful}%`}</p> 
                     }  
                     {Building.FarmType&&
-                        <p key={i+3}>{Category_Tax ==="บุคคล"?`50ล้าน`:0}</p>                            }
-                    {Building.EmptyType&&<p key={i+4}>{Special_Useful}</p> }
+                        <p >{Category_Tax ==="บุคคล"?`50ล้าน`:0}</p>                            }
+                    {Building.EmptyType&&<p key={i+4}>{`${Special_Useful}%`}</p> }
 
                          
-        </>
+        </div>
     })
     
 }
@@ -34,32 +34,19 @@ export const Except=({BuildOnUsefulLands,Special_Useful,LiveTypes,OtherTypes,Far
         //ไม่มีอะไรเลยทั้งสิ่งปลูกสร้าง บนแปลง และ คร่อมแปลง เช่นเป็นเกษตรอย่างเดียว ไม่มีสิ่งปลูกสร้าง
         
         return <>
-                <p>{TypeName ==="เกษตร"&&Category_Tax ==="บุคคล"?`50ล้าน`:Special_Useful}</p>
+                <p>{TypeName ==="เกษตร"&&Category_Tax ==="บุคคล"?`50ล้าน`:`${Special_Useful}%`}</p>
             </>
  }else{
      //กรณีที่ไม่มีสิ่งปลูกสร้าง แต่มีสัดส่วน ก็คือมีสิ่งปลูกสร้างคร่อมแปลงมาหรือว่าคนละเจ้าของกับแปลงที่ดิน Building.Build_Tax_ID
   
      return  <>
-     {LiveTypes.length>0&&LiveTypes.map((live,i)=>(<>
-             <p>{live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+     {LiveTypes.length>0&&LiveTypes.map((live,i)=>(
+             <p key={i}>{live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
                 `${(live.Useful_live.BalanceDiscount/1000000).toFixed(2)}ล้าน`:`${(live.Useful_live.BalanceDiscount/1000000).toFixed(2)}ล้าน`
-             :Special_Useful}</p>
-             
-     </>))}
-     {OtherTypes.length>0&&OtherTypes.map((other,i)=>(<>
-             
-             <p>{Special_Useful}</p>
-           
-     </>))}    
-     {FarmTypes.length>0&&FarmTypes.map((farm,i)=>(<>
-           
-        <p key={i+3}>{Category_Tax ==="บุคคล"?`50ล้าน`:0}</p>                   
-     </>))}    
-     {EmptyTypes.length>0&&EmptyTypes.map((empty,i)=><>
-            
-             <p>{Special_Useful}</p>
-            
-     </>)}
+             :`${Special_Useful}%`}</p>))}
+     {OtherTypes.length>0&&OtherTypes.map((other,i)=>(<p key={i}>{`${Special_Useful}%`}</p>))}    
+     {FarmTypes.length>0&&FarmTypes.map((farm,i)=>(<p key={i+3}>{Category_Tax ==="บุคคล"?`50ล้าน`:0}</p>))}    
+     {EmptyTypes.length>0&&EmptyTypes.map((empty,i)=><p key={i}>{`${Special_Useful}%`}</p>)}
      </>
  }
 }

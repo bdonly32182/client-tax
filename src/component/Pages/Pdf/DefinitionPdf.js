@@ -20,10 +20,10 @@ export function DefinitionPdf(land,tax,condo,
    
     let NowDate = new Date() ;
     let DateThai = NowDate.toDateString().split(" ");
-    const sumPDS7 = (land = []) => {
+    const sumPDS7 = (land = [],tax) => {
         let total = 0;
         land.forEach((record)=>{
-            let result = Summary(record,tax.Category_Tax,tax.uid_tax,tax.exceptEmergency)
+            let result = Summary(record,tax.Category_Tax,tax.uid_tax,tax.exceptEmergency,land)
             if (result[0]?.length>0) {
             let array2D = result[0].reduce((pre,cur)=>pre+cur,0)
             return total += array2D
@@ -33,7 +33,7 @@ export function DefinitionPdf(land,tax,condo,
         })
         return total
     }
-    let PricePds7 = sumPDS7(land);
+    let PricePds7 = sumPDS7(land,tax);
     let PricePds8 = SummaryCondo(condo);
     let {PriceExceptEmergency,totalPriceOfTax,PriceDiscount,totalBuilaAndLandYear,
         valueDifference,Relive,BriefTotal} = TotalPrice(PricePds7,PricePds8,tax.exceptEmergency,customers);
@@ -56,6 +56,8 @@ export function DefinitionPdf(land,tax,condo,
                    {text:`วันที่ .......... ${NowDate?.toLocaleDateString('th-TH', { year: 'numeric',month: 'long'})}`,margin: [300, 5, 20, 5]},  
                    'เรื่อง แจ้งการประเมินเพื่อเสียภาษีที่ดินและสิ่งปลูกสร้าง',
                    {text:`เรียน ${Sendto}`},
+                   {text:`ที่อยู่ บ้านเลขที่ ${tax.Address?.Num_House||" - "} ถนน ${tax.Address?.Road_Name||"-"} ซอย ${tax.Address?.Soi||"-"} หมู่ ${tax.Address?.Moo||"-"} แขวง ${tax.Address?.Tambol||"-"} 
+                    เขต ${tax.Address?.district_name||"-"} จังหวัด ${tax.Address?.Changwat||"-"}  ${tax.Address?.Post_No||"-"} เบอร์ติดต่อ ${tax.Address?.Phone_no||"-"}`},
                    {text:'ตามที่ท่านเป็นเจ้าของทรัพย์สิน ประกอบด้วย',style:'marginText'},
                    {text: `1.ที่ดิน จำนวน ${leader.Land?.length>0?leader.Land[0]?.totalLand:0} แปลง`,style:'marginText' },
                    {text:`2.สิ่งปลูกสร้าง จำนวน ${leader.Building?.length>0?leader.Building[0]?.totalBuild:0} หลัง`,style:'marginText'},
@@ -154,9 +156,9 @@ export function DefinitionPdf(land,tax,condo,
                let percentType = PercentType(record);
                let proportionType = ProportionType(record,tax.uid_tax);
                let except = Except(record,tax.Category_Tax,tax.uid_tax);
-               let exceptBalance = ExceptBalance(record,tax.Category_Tax,tax.uid_tax);
-               let rateTax = RateTax(record,tax.Category_Tax,tax.uid_tax);
-               let amountPriceTax = AmountPriceTax(record,tax.Category_Tax,tax.uid_tax,tax.exceptEmergency)
+               let exceptBalance = ExceptBalance(record,tax.Category_Tax,tax.uid_tax,land);
+               let rateTax = RateTax(record,tax.Category_Tax,tax.uid_tax,land);
+               let amountPriceTax = AmountPriceTax(record,tax.Category_Tax,tax.uid_tax,tax.exceptEmergency,land)
                let totalPlace = record.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
                                                         .reduce((pre,cur)=>pre+cur,0)
                 return [
@@ -170,32 +172,82 @@ export function DefinitionPdf(land,tax,condo,
                 {text:record.UsefulLand_Tax_ID===tax.uid_tax?record.Land.Price.toLocaleString():'',style:'tableFontSize'},
                 {text:record.UsefulLand_Tax_ID===tax.uid_tax?record.PriceUseful.toLocaleString():'',style:'tableFontSize'},
                 record.BuildOnUsefulLands.map((build,index)=> {return {text:index+1,style:'tableFontSize'}}),
-                record.BuildOnUsefulLands.map(({Building:{Sub_Category}})=> {return {text:Sub_Category,style:'tableFontSize'}}),
+                record.BuildOnUsefulLands.map(({Building:{Sub_Category}})=> {return {text:Sub_Category,fontSize:7}}),
                 record.BuildOnUsefulLands.map(({Building:{Build_Total_Place}})=> {return {text:Build_Total_Place.toLocaleString(),style:'tableFontSize'}}),
                 record.BuildOnUsefulLands.map(({Building:{RateOfBuilding:{Rate_Price}}})=> {return {text:Rate_Price.toLocaleString(),style:'tableFontSize'}}),
                 record.BuildOnUsefulLands.map(({Building:{Rate_Price_Build}})=> {return {text:Rate_Price_Build.toLocaleString(),style:'tableFontSize'}}),
                 record.BuildOnUsefulLands.map(({Building:{Age_Build}})=> {return {text:Age_Build.toLocaleString(),style:'tableFontSize'}}),
                 record.BuildOnUsefulLands.map(({Building:{PriceDepreciation}})=> {return {text:PriceDepreciation.toLocaleString(),style:'tableFontSize'}}),
                 record.BuildOnUsefulLands.map(({Building:{AfterPriceDepreciate}})=> {return {text:AfterPriceDepreciate.toLocaleString(),style:'tableFontSize'}}),
-                {text:record.BuildOnUsefulLands?.length>0?
-                    record.UsefulLand_Tax_ID===tax.uid_tax? record.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}}) =>
-                    (((Width * Length)/totalPlace)*record.PriceUseful +AfterPriceDepreciate )
-                        .toLocaleString(undefined,{minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2})
-                    ):
-                    record.BuildOnUsefulLands.map(({Building:{AfterPriceDepreciate}}) =>
-                            AfterPriceDepreciate.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})
+                record.BuildOnUsefulLands?.length>0?
+                record.UsefulLand_Tax_ID===tax.uid_tax? record.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}}) =>
+                {return {text:(((Width * Length)/totalPlace)*record.PriceUseful +AfterPriceDepreciate )
+                    .toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}),style:'tableFontSize'}}
+                ):
+                record.BuildOnUsefulLands.map(({Building:{AfterPriceDepreciate}}) =>
+                        {return{text:AfterPriceDepreciate.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2}),style:'tableFontSize'}}
+                )
+                :{text:record.PriceUseful.toLocaleString(),style:'tableFontSize'},
+                
+                category?.map(arrcategory=>Array.isArray(arrcategory)?arrcategory.map(cate=>{return {text:cate.text,style:'tableFontSize'}})
+                :{text:arrcategory.text,style:'tableFontSize'}
+                ),
+                sizeType?.map(arrsizeType=>Array.isArray(arrsizeType)?arrsizeType.map(size=>{return {text:size.text,style:'tableFontSize'}})
+                :{text:arrsizeType.text,style:'tableFontSize'}
+                ),
+                percentType?.map(arrpercentType=>Array.isArray(arrpercentType)?arrpercentType.map(percent=>{return {text:percent.text,style:'tableFontSize'}})
+                :{text:arrpercentType.text,style:'tableFontSize'}
+                ),
+                proportionType?.map(ArrproportionType=>Array.isArray(ArrproportionType)?ArrproportionType.map(type=>{return {text:type.text,style:'tableFontSize'}})
+                :{text:ArrproportionType.text,style:'tableFontSize'}
+                ),
+                except?.map(arrexcept=>Array.isArray(arrexcept)?arrexcept.map(Newexcept=>{return {text:Newexcept.text,style:'tableFontSize'}})
+                :{text:arrexcept.text,style:'tableFontSize'}
+                ),
+                
+                exceptBalance?.map(ArrexceptBalance=>Array.isArray(ArrexceptBalance)?
+                    ArrexceptBalance.map(balance=>balance.text?
+                                        Array.isArray(balance.text)?
+                                            balance.text.map(textOld=>{return {text:textOld,style:'tableFontSize'}})
+                                            :
+                                            {text:balance.text,style:'tableFontSize'}
+                                        :
+                                        //กรณีสิ่งปลูกสร้างคร่อมแปลงและมีการไต่อันดับ
+                                        Array.isArray(balance)?
+                                            balance?.map(arr3d=> arr3d.map(arr4d=> arr4d.map(arr5d=>{return {text:arr5d,style:'tableFontSize'}})))
+                                        :null // ไม่งั้นมันจะ รีเทิน false ออกมาแสดง
+                            )
+                            
+                :
+                    Array.isArray(ArrexceptBalance.text)?ArrexceptBalance.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArrexceptBalance.text,style:'tableFontSize'}
+                ),
+                rateTax?.map(ArrrateTax=>Array.isArray(ArrrateTax)?ArrrateTax.map(rate=>rate.text?
+                            Array.isArray(rate.text)?
+                                rate.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}})
+                            :
+                                {text:rate.text,style:'tableFontSize'}
+                        :
+                        Array.isArray(rate)?
+                            rate.map(arr3d=> arr3d.map(arr4d=> arr4d.map(arr5d=>{return {text:arr5d,style:'tableFontSize'}})))
+                            :null
                     )
-                    :record.PriceUseful.toLocaleString(),
-                    style:'tableFontSize'},
-                ...category,
-                ...sizeType,
-                ...percentType,
-                ...proportionType,
-                ...except,
-                ...exceptBalance,
-                ...rateTax,
-                ...amountPriceTax
+                :
+                Array.isArray(ArrrateTax.text)?ArrrateTax.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArrrateTax.text,style:'tableFontSize'}
+                ),
+                amountPriceTax?.map(ArramountPriceTax=>Array.isArray(ArramountPriceTax)?ArramountPriceTax.map(amount=>
+                    amount.text?
+                                Array.isArray(amount.text)?amount.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}})   
+                            : 
+                                {text:amount.text,style:'tableFontSize'}
+                        :
+                            Array.isArray(amount)?
+                                    amount.map(arr3d=> arr3d.map(arr4d=> arr4d.map(arr5d=>{return {text:arr5d,style:'tableFontSize'}})))
+                                    :null
+                    )
+                :
+                Array.isArray(ArramountPriceTax.text)?ArramountPriceTax.text.map(textOld=>{return{text:textOld,style:'tableFontSize'}}):{text:ArramountPriceTax.text,style:'tableFontSize'}
+                )
             ]
             })
                docDifinition.content = [...docDifinition.content,
@@ -208,7 +260,7 @@ export function DefinitionPdf(land,tax,condo,
                     color: '#444',//เส้นขอบคอลัมน์
                     table: {
                         widths: [15, 22,35,15,15,15
-                                ,23,28,53,'auto',35,28,
+                                ,23,28,53,'auto',90,28,
                                  28,40,14,31,52,70,
                                  30,27,30,62,30,52,38,60],//width ต้อทำทุกคอลัมน์
                         headerRows: 2,//headerRowsอย่างน้อยต้องตาม คอลัมน์
@@ -239,7 +291,7 @@ export function DefinitionPdf(land,tax,condo,
                             [
                                 {text:`สรุปยอดรวม (ได้รับส่วนลดกรณีฉุกเฉิน ${tax.exceptEmergency} %)`,colSpan:24,alignment:'right',style:'totalPrice'},
                                 '','','','','','','','','','','','','','','','','','','','','','','',
-                                {text:((PricePds7*tax.exceptEmergency) /100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                {text:((PricePds7*(100 - tax.exceptEmergency)) /100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                     maximumFractionDigits: 2})
                                     ,colSpan:2,style:'totalPrice'}
                             ] 
@@ -250,7 +302,7 @@ export function DefinitionPdf(land,tax,condo,
                                 {text:PricePds7.toLocaleString(undefined,{minimumFractionDigits: 2,
                                     maximumFractionDigits: 2})
                                     ,colSpan:2,style:'totalPrice'}
-                                ]
+                            ]
                                 
                         ],
                        

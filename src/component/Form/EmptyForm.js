@@ -4,7 +4,9 @@ function EmptyForm({Empty,formEmpty}) {
     return (
         <div>
             <Form form ={formEmpty}
-            initialValues={Empty}
+            initialValues={{...Empty,
+            // "RateEmptyTax":Empty?.Useful_empty?.RateEmptyTax
+            }}
             >
                 
                 <Form.Item 
@@ -12,6 +14,12 @@ function EmptyForm({Empty,formEmpty}) {
                 name="Percent_Empty">
                    <Input />
                 </Form.Item>
+                {/* <Form.Item
+                label="อัตตราภาษี"
+                name="RateEmptyTax"
+                >
+                    <Input />
+                </Form.Item> */}
             </Form>
         </div>
     )

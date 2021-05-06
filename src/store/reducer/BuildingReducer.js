@@ -8,8 +8,8 @@ export default (state =[] , action) => {
             return action.payload
         case FETCH_BUILDING:
             return action.payload
-        case DELETE_BUILDING:
-            return state.filter(build=>build.Build_id_in_Useful !== action.RemoveId);//Build_id_in_Useful ใช้แทน Build_Id ได้
+        // case DELETE_BUILDING:
+        //     return state.filter(build=>build.Build_id_in_Useful !== action.RemoveId);//Build_id_in_Useful ใช้แทน Build_Id ได้
         default:
             return state;
     }

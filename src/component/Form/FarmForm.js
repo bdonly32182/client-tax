@@ -4,7 +4,9 @@ function FarmForm({Farm,formFarm}) {
     return (
         <div>
             <Form form ={formFarm}
-            initialValues={Farm}
+            initialValues={{...Farm,
+                // "RateFarmTax":Farm?.Useful_farm?.RateFarmTax
+            }}
             >
                 
                 <Form.Item 
@@ -12,6 +14,12 @@ function FarmForm({Farm,formFarm}) {
                 name="Percent_Farm">
                    <Input />
                 </Form.Item>
+                {/* <Form.Item
+                label="อัตตราภาษี"
+                name="RateFarmTax"
+                >
+                    <Input />
+                </Form.Item> */}
             </Form>
         </div>
     )

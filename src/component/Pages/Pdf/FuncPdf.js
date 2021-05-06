@@ -1,12 +1,13 @@
 import Seperate from '../../../FuncPDS7/Seperate' 
 import {depreciate} from '../../Select/data'
+import {SeperateAccross} from '../../../FuncPDS7/SeperateAccross'
 export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherTypes,LiveTypes,TypeName}) => {
     
     if (BuildOnUsefulLands.length >0) {//กรณีมีสิ่งปลุกสร้าง
     
         return BuildOnUsefulLands.map(({Building},i)=>{
             return [
-                {text:Building?.LiveType?.Live_Status?'อยู่อาศัย(หลัก)':'อยู่อาศัย(รอง)',style:'tableFontSize'},
+                {text:Building?.LiveType&&`อยู่อาศัย(${Building.LiveType?.Live_Status?"หลัก":"รอง"})`,style:'tableFontSize'},
                 {text:Building?.OtherType&&"อื่นๆ",style:'tableFontSize'},
                 {text:Building?.FarmType&&"เกษตร",style:'tableFontSize'},
                 {text:Building?.EmptyType&&"ว่างเปล่า",style:'tableFontSize'},
@@ -169,12 +170,12 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
     
         return BuildOnUsefulLands.map(({Building},i)=>{
             return [
-                {text:Building.LiveType.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
-                            `50`:`10`:Special_Useful,
+                {text:Building?.LiveType&&Building?.LiveType?.Live_Status&&Category_Tax ==="บุคคล"?Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                            `50`:`10`:Building?.LiveType&&`${Special_Useful}%`,
                             style:'tableFontSize'},
-                {text:Building.OtherType&&Special_Useful,style:'tableFontSize'},
-                {text:Building.FarmType&&Category_Tax ==="บุคคล"?`50`:Building.FarmType&&0,style:'tableFontSize'},
-                {text:Building.EmptyType&&Special_Useful,style:'tableFontSize'},
+                {text:Building?.OtherType&&`${Special_Useful}%`,style:'tableFontSize'},
+                {text:Building?.FarmType&&Category_Tax ==="บุคคล"?`50`:Building.FarmType&&0,style:'tableFontSize'},
+                {text:Building?.EmptyType&&`${Special_Useful}%`,style:'tableFontSize'},
             ]
         
         })
@@ -187,12 +188,12 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
             ...LiveTypes.map((live,i)=>(
                     {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
                     `${(live.Useful_live.BalanceDiscount/1000000).toFixed(2)}`:`${(live.Useful_live.BalanceDiscount/1000000).toFixed(2)}`
-                    :Special_Useful
+                    :`${Special_Useful}%`
                  ,style:'tableFontSize'}
             )),
-            ...OtherTypes.map((other,i)=>({text:Special_Useful,style:'tableFontSize'})) ,
+            ...OtherTypes.map((other,i)=>({text:`${Special_Useful}%`,style:'tableFontSize'})) ,
             ...FarmTypes.map((farm,i)=>({text:Category_Tax ==="บุคคล"?`50`:0,style:'tableFontSize'})),
-            ...EmptyTypes.map((empty,i)=>({text:Special_Useful,style:'tableFontSize'})),]   
+            ...EmptyTypes.map((empty,i)=>({text:`${Special_Useful}%`,style:'tableFontSize'})),]   
             ]
      }
      
@@ -201,7 +202,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
  }
  export const ExceptBalance =({BuildOnUsefulLands,LiveTypes,OtherTypes,
     FarmTypes,EmptyTypes,UsefulLand_Tax_ID,TypeName,StartYears,
-    EmptyAbsolutes,Useful,isNexto,PriceUseful},Category_Tax,uid_tax) => {
+    EmptyAbsolutes,Useful,isNexto,PriceUseful},Category_Tax,uid_tax,lands) => {
         if (Useful.length > 0) {
             let TotalNexto =0;
             let OrginalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
@@ -212,20 +213,22 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                         .reduce((pre,cur)=>pre+cur,0);
                       TotalNexto += OriginalUsefulPrice 
                       Useful.map((usefuls)=>{ 
-                        if (usefuls.BuildOnUsefulLands.length >0) {
-                            let totalPlace = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
-                                               .reduce((pre,cur)=>pre+cur,0);   
-                                               
-                            let totalPriceUseful = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}})=>
-                                        ((((Width * Length)/totalPlace)*usefuls.PriceUseful) + AfterPriceDepreciate)
-                            )
-                            .reduce((pre,cur)=>pre+cur,0);
-                            TotalNexto += totalPriceUseful
-                        }
-                        if (LiveTypes.length === 0 &&OtherTypes.length === 0&& FarmTypes.length === 0&& EmptyTypes.length === 0) {
-                            TotalNexto += usefuls.PriceUseful + PriceUseful
-                        }
-                        return TotalNexto
+                                if (usefuls.BuildOnUsefulLands.length >0) {
+                                    let totalPlace = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                                    .reduce((pre,cur)=>pre+cur,0);   
+                                                    
+                                    let totalPriceUseful = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}})=>
+                                                ((((Width * Length)/totalPlace)*usefuls.PriceUseful) + AfterPriceDepreciate)
+                                    )
+                                    .reduce((pre,cur)=>pre+cur,0);
+                                    TotalNexto += totalPriceUseful
+                                }
+                                //new version
+                                if (usefuls.LiveTypes.length === 0 &&usefuls.OtherTypes.length === 0&& usefuls.FarmTypes.length === 0&& usefuls.EmptyTypes.length === 0) {
+                
+                                    TotalNexto += usefuls.PriceUseful
+                                }
+                                return TotalNexto
                         
                     })
                     return [{text:Seperate(TotalNexto,TypeName,0,StartYears,EmptyAbsolutes).map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -317,6 +320,40 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                 }else{
                     return [[
                         ...LiveTypes.map((live,i)=>(
+                            live?.Useful_live?.Original_Live?
+                                lands?.filter(land=>land.useful_id === live?.Useful_live?.Original_Live)
+                                .map((usefulMap)=>{
+                                    //มีสิ่งปลูกสร้าง
+                                    if (usefulMap.BuildOnUsefulLands.length >0) {
+                                        let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                        .reduce((pre,cur)=>pre+cur,0)  ;
+                                        return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                            let priceArray =  Building?.LiveType?.Live_Status&&Category_Tax ==="บุคคล"?Building?.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                                            Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*usefulMap?.PriceUseful + Building.AfterPriceDepreciate)/100
+                                            ,"อยู่อาศัย",50000000)
+            
+                                            :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
+                                            "อยู่อาศัย",10000000)//เป็นบ้านหลังหลักอย่างเดียว
+                                            :
+                                            Seperate(
+                                                UsefulLand_Tax_ID=== uid_tax?
+                                                Building?.LiveType?.Percent_Live * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100
+                                                :                                          
+                                                Building?.LiveType?.Percent_Live *  Building?.AfterPriceDepreciate/100,"อยู่อาศัย")
+                                                // .filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                            let filterPrice = priceArray.filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                        //เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                            let RateAccross = SeperateAccross((live.Percent_Live * PriceUseful )/100,"อยู่อาศัย",live.Useful_live.BalanceDiscount,filterPrice);
+                                            return RateAccross.map(rate=> rate.PriceOriginal.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2})
+                                                )
+                                                }
+                                        )
+                                        
+                                    }
+                                
+                                })
+                            :
                                 {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
                                 Seperate((live.Percent_Live * PriceUseful )/100 ,
                                 "อยู่อาศัย",live.Useful_live.BalanceDiscount
@@ -332,11 +369,41 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                         maximumFractionDigits: 2}))
                             ,style:'tableFontSize'}
                         )),
-                        ...OtherTypes.map((other,i)=>({text:Seperate((other.Percent_Other *  PriceUseful )/100,
-                            "อื่นๆ")
-                            .map(res =>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2}))
-                                ,style:'tableFontSize'})) ,
+                        ...OtherTypes.map((other,i)=>(
+                            other?.Useful_other?.Original_Other?
+                                lands.filter(land=>land.useful_id === other?.Useful_other?.Original_Other)
+                                .map((usefulMap)=>{
+                                    //มีสิ่งปลูกสร้าง
+                                    if (usefulMap.BuildOnUsefulLands.length >0) {
+                                        let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                        .reduce((pre,cur)=>pre+cur,0)  ;
+                                        return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                            let PriceCondition1 = Building?.OtherType?.Percent_Other * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                            let PriceCondition2 = Building?.OtherType?.Percent_Other *  Building?.AfterPriceDepreciate/100||0;
+                                        
+                                            let priceArray =  Seperate(
+                                                    UsefulLand_Tax_ID=== uid_tax?
+                                                    PriceCondition1                                        
+                                                    :PriceCondition2,
+                                                "อื่นๆ").filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                            let RateAccross = SeperateAccross(other.Percent_Other *  PriceUseful /100,"อื่นๆ",0,priceArray);
+                                            return RateAccross.map(rate=> rate.PriceOriginal.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2})
+                                                )
+                                        
+                                            }
+                                        )
+                                        
+                                    }
+                                
+                                })
+                            :
+                                {text:Seperate((other.Percent_Other *  PriceUseful )/100,
+                                "อื่นๆ")
+                                .map(res =>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                    ,style:'tableFontSize'})) ,
+
                         ...FarmTypes.map((farm,i)=>({text:
                             Category_Tax ==="บุคคล"?Seperate((farm.Percent_Farm * PriceUseful )/100,
                                             "เกษตร",50000000).map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -346,11 +413,94 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             "เกษตร").map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2}))
                             ,style:'tableFontSize'})),
-                        ...EmptyTypes.map((empty,i)=>({text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า')
-                        .map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2}))
-                                ,style:'tableFontSize'})),]   
+
+                        ...EmptyTypes.map((empty,i)=>(
+                            empty?.Useful_empty?.Original_Empty?
+                                     lands.filter(land=>land.useful_id === empty?.Useful_empty?.Original_Empty)
+                                        .map((usefulMap)=>{
+                                            //มีสิ่งปลูกสร้าง
+                                            if (usefulMap.BuildOnUsefulLands.length >0) {
+                                                let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                                .reduce((pre,cur)=>pre+cur,0)  ;
+                                                return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                    
+                                                    let PriceCondition1 = Building?.EmptyType?.Percent_Empty * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                    let PriceCondition2 = Building?.EmptyType?.Percent_Empty *  Building?.AfterPriceDepreciate/100||0;
+                                                
+                                                    let priceArray =  Seperate(
+                                                            UsefulLand_Tax_ID=== uid_tax?
+                                                            PriceCondition1                                        
+                                                            :PriceCondition2,
+                                                        "ว่างเปล่า").filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                    let RateAccross = SeperateAccross(empty.Percent_Empty *  PriceUseful /100,"ว่างเปล่า",0,priceArray);
+                                                    return RateAccross.map(rate=> rate.PriceOriginal.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2})
+                                                        )
+                                                   
+                                                    }
+                                                )
+                                                
+                                            }
+                                         
+                                        })   
+                                    :
+                                    {text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า')
+                                        .map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2}))
+                                        ,style:'tableFontSize'})
+                                    
+
+                                ),
+                               
+
+                            ]   
                         ]
+                    //old version 
+                    // return [[
+                    //     ...LiveTypes.map((live,i)=>(
+                    //             {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                    //             Seperate((live.Percent_Live * PriceUseful )/100 ,
+                    //             "อยู่อาศัย",live.Useful_live.BalanceDiscount
+                    //             ).map(res =>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                    //                     maximumFractionDigits: 2}))
+                    //             :Seperate((live.Percent_Live * PriceUseful )/100,
+                    //             "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res =>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                    //                     maximumFractionDigits: 2}))
+                    //             :
+                    //             Seperate(
+                    //                 (live.Percent_Live * PriceUseful )/100,
+                    //             "อยู่อาศัย").map(res =>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                    //                     maximumFractionDigits: 2}))
+                    //         ,style:'tableFontSize'}
+                    //     )),
+                    //     ...OtherTypes.map((other,i)=>({text:Seperate((other.Percent_Other *  PriceUseful )/100,
+                    //         "อื่นๆ")
+                    //         .map(res =>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                    //             maximumFractionDigits: 2}))
+                    //             ,style:'tableFontSize'})) ,
+                    //     ...FarmTypes.map((farm,i)=>({text:
+                    //         Category_Tax ==="บุคคล"?Seperate((farm.Percent_Farm * PriceUseful )/100,
+                    //                         "เกษตร",50000000).map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                    //                                 maximumFractionDigits: 2}))
+                    //                         :
+                    //                         Seperate((farm.Percent_Farm * PriceUseful )/100,
+                    //                         "เกษตร").map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                    //                                 maximumFractionDigits: 2}))
+                    //         ,style:'tableFontSize'})),
+
+                    //     ...EmptyTypes.map((empty,i)=>(
+                    
+                                    // {text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า')
+                                    //     .map(res=>res.price.toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    //     maximumFractionDigits: 2}))
+                                    //     ,style:'tableFontSize'})
+                    
+
+                    //             ),
+                               
+
+                    //         ]   
+                    //     ]
                 } 
             }
             
@@ -359,7 +509,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
  }
  export const RateTax =({BuildOnUsefulLands,LiveTypes,OtherTypes,
     FarmTypes,EmptyTypes,UsefulLand_Tax_ID,TypeName,StartYears,
-    EmptyAbsolutes,Useful,isNexto,PriceUseful},Category_Tax,uid_tax) => {
+    EmptyAbsolutes,Useful,isNexto,PriceUseful},Category_Tax,uid_tax,lands) => {
         if (Useful.length > 0) {
             let TotalNexto =0;
             let OrginalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
@@ -380,13 +530,14 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                             .reduce((pre,cur)=>pre+cur,0);
                             TotalNexto += totalPriceUseful
                         }
-                        if (LiveTypes.length === 0 &&OtherTypes.length === 0&& FarmTypes.length === 0&& EmptyTypes.length === 0) {
-                            TotalNexto += usefuls.PriceUseful + PriceUseful
+                        if (usefuls.LiveTypes.length === 0 &&usefuls.OtherTypes.length === 0&& usefuls.FarmTypes.length === 0&& usefuls.EmptyTypes.length === 0) {
+                
+                            TotalNexto += usefuls.PriceUseful
                         }
                         return TotalNexto
                         
                     })
-                    return [{text:Seperate(TotalNexto,TypeName,0,StartYears,EmptyAbsolutes).map(res=>res.percent),style:'tableFontSize'}]
+                    return [{text:Seperate(TotalNexto,TypeName,0,StartYears,EmptyAbsolutes).map(res=>res.percentShow),style:'tableFontSize'}]
         }else{
             if (isNexto) {
                 return [{text:'แปลงติดกัน',style:'tableFontSize'}]
@@ -402,16 +553,16 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                         Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                         ,
                                         "อยู่อาศัย",50000000
-                                        ).map(res =>res.percent)
+                                        ).map(res =>res.percentShow)
                                         :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
-                                        "อยู่อาศัย",10000000).map(res =>res.percent)//เป็นบ้านหลังหลักอย่างเดียว
+                                        "อยู่อาศัย",10000000).map(res =>res.percentShow)//เป็นบ้านหลังหลักอย่างเดียว
                                         :
                                         Seperate(
                                             UsefulLand_Tax_ID=== uid_tax?
                                             Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                             :                                          
                                             Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
-                                        "อยู่อาศัย").map(res =>res.percent)
+                                        "อยู่อาศัย").map(res =>res.percentShow)
                                     :null
                                         ,
                                         style:'tableFontSize'},
@@ -421,7 +572,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                     Building.OtherType?.Percent_Other * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                     :Building.OtherType?.Percent_Other *  Building.AfterPriceDepreciate/100,
                                 "อื่นๆ")
-                                .map(res =>res.percent)
+                                .map(res =>res.percentShow)
                                 ,
                                 style:'tableFontSize'},
                             {text:Building.FarmType?Category_Tax ==="บุคคล"?
@@ -429,13 +580,13 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                 UsefulLand_Tax_ID=== uid_tax?
                                 Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                 :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
-                            "เกษตร",50000000).map(res=>res.percent)
+                            "เกษตร",50000000).map(res=>res.percentShow)
                             :
                             Seperate(
                                 UsefulLand_Tax_ID=== uid_tax?
                                     Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                     :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
-                            "เกษตร").map(res=>res.percent)
+                            "เกษตร").map(res=>res.percentShow)
                             :null
                             ,style:'tableFontSize'},
                             {text:Building.EmptyType &&Building.EmptyType?.Percent_Empty &&
@@ -444,7 +595,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                     Building.EmptyType?.Percent_Empty * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                     :Building.EmptyType?.Percent_Empty *  Building.AfterPriceDepreciate/100,
                                 'ว่างเปล่า',0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
-                                .map(res=>res.percent)
+                                .map(res=>res.percentShow)
                                 ,style:'tableFontSize'},
                         ]
                     
@@ -455,41 +606,128 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                         return [{text: TypeName ==="เกษตร"?
                         Category_Tax ==="บุคคล"?
                         Seperate(PriceUseful,
-                        "เกษตร",50000000).map(res=>res.percent)
+                        "เกษตร",50000000).map(res=>res.percentShow)
                         :Seperate(PriceUseful,
-                        "เกษตร").map(res=>res.percent)
+                        "เกษตร").map(res=>res.percentShow)
                     :Seperate(PriceUseful,
-                        TypeName).map(res=>res.percent)
+                        TypeName,0,StartYears,EmptyAbsolutes).map(res=>res.percentShow)
                         ,style:'tableFontSize'}]
                 }else{
                     return [[
                         ...LiveTypes.map((live,i)=>(
+                            live?.Useful_live?.Original_Live?
+                                lands?.filter(land=>land.useful_id === live?.Useful_live?.Original_Live)
+                                .map((usefulMap)=>{
+                                    //มีสิ่งปลูกสร้าง
+                                    if (usefulMap.BuildOnUsefulLands.length >0) {
+                                        let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                        .reduce((pre,cur)=>pre+cur,0)  ;
+                                        return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                            let priceArray =  Building?.LiveType?.Live_Status&&Category_Tax ==="บุคคล"?Building?.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                                            Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*usefulMap?.PriceUseful + Building.AfterPriceDepreciate)/100
+                                            ,"อยู่อาศัย",50000000)
+            
+                                            :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
+                                            "อยู่อาศัย",10000000)//เป็นบ้านหลังหลักอย่างเดียว
+                                            :
+                                            Seperate(
+                                                UsefulLand_Tax_ID=== uid_tax?
+                                                Building?.LiveType?.Percent_Live * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100
+                                                :                                          
+                                                Building?.LiveType?.Percent_Live *  Building?.AfterPriceDepreciate/100,"อยู่อาศัย")
+                                                // .filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                            let filterPrice = priceArray.filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                        //เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                            let RateAccross = SeperateAccross((live.Percent_Live * PriceUseful )/100,"อยู่อาศัย",live.Useful_live.BalanceDiscount,filterPrice);
+                                            return RateAccross.map(rate=>rate.percentShow)
+                                                }
+                                        )
+                                        
+                                    }
+                                })
+                            :
                                 {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
                                 Seperate((live.Percent_Live * PriceUseful )/100 ,
                                 "อยู่อาศัย",live.Useful_live.BalanceDiscount
                                 ).map(res =>res.percent)
                                 :Seperate((live.Percent_Live * PriceUseful )/100,
-                                "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res =>res.percent)
+                                "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res =>res.percentShow)
                                 :
                                 Seperate(
                                     (live.Percent_Live * PriceUseful )/100,
-                                "อยู่อาศัย").map(res =>res.percent)
+                                "อยู่อาศัย").map(res =>res.percentShow)
                             ,style:'tableFontSize'}
                         )),
-                        ...OtherTypes.map((other,i)=>({text:Seperate((other.Percent_Other *  PriceUseful )/100,
-                            "อื่นๆ")
-                            .map(res =>res.percent)
-                                ,style:'tableFontSize'})) ,
+                        ...OtherTypes.map((other,i)=>(
+                            other?.Useful_other?.Original_Other?
+                                lands?.filter(land=>land.useful_id === other?.Useful_other?.Original_Other)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                let PriceCondition1 = Building?.OtherType?.Percent_Other * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                let PriceCondition2 = Building?.OtherType?.Percent_Other *  Building?.AfterPriceDepreciate/100||0;
+                                            
+                                                let priceArray =  Seperate(
+                                                        UsefulLand_Tax_ID=== uid_tax?
+                                                        PriceCondition1                                        
+                                                        :PriceCondition2,
+                                                    "อื่นๆ").filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross(other.Percent_Other *  PriceUseful /100,"อื่นๆ",0,priceArray);
+                                                return RateAccross.map(rate=>rate.percentShow)
+                                                    }
+                                            )
+                                            
+                                        }
+
+                                })
+                            :
+                                {text:Seperate((other.Percent_Other *  PriceUseful )/100,
+                                "อื่นๆ")
+                                .map(res =>res.percentShow)
+                                    ,style:'tableFontSize'})) ,
+                                //
                         ...FarmTypes.map((farm,i)=>({text:
                             Category_Tax ==="บุคคล"?Seperate((farm.Percent_Farm * PriceUseful )/100,
-                                            "เกษตร",50000000).map(res=>res.percent)
+                                            "เกษตร",50000000).map(res=>res.percentShow)
                                             :
                                             Seperate((farm.Percent_Farm * PriceUseful )/100,
-                                            "เกษตร").map(res=>res.percent)
+                                            "เกษตร").map(res=>res.percentShow)
                             ,style:'tableFontSize'})),
-                        ...EmptyTypes.map((empty,i)=>({text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
-                                        0, empty.StartYear,empty.EmptyAbsolute).map(res=>res.percent)
-                                ,style:'tableFontSize'})),]   
+                            //
+                        ...EmptyTypes.map((empty,i)=>(
+                            empty?.Useful_empty?.Original_Empty?
+                                lands?.filter(land=>land.useful_id === empty?.Useful_empty?.Original_Empty)
+                                        .map((usefulMap)=>{
+                                            //มีสิ่งปลูกสร้าง
+                                            if (usefulMap.BuildOnUsefulLands.length >0) {
+                                                let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                                .reduce((pre,cur)=>pre+cur,0)  ;
+                                                return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                    
+                                                    let PriceCondition1 = Building?.EmptyType?.Percent_Empty * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                    let PriceCondition2 = Building?.EmptyType?.Percent_Empty *  Building?.AfterPriceDepreciate/100||0;
+                                                
+                                                    let priceArray =  Seperate(
+                                                            UsefulLand_Tax_ID=== uid_tax?
+                                                            PriceCondition1                                        
+                                                            :PriceCondition2,
+                                                        "ว่างเปล่า",0,empty.StartYear,empty.EmptyAbsolute).filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                    let RateAccross = SeperateAccross(empty.Percent_Empty *  PriceUseful /100,"ว่างเปล่า",0,priceArray,empty.StartYear,empty.EmptyAbsolute);
+                                                    return RateAccross.map(rate=>rate.percentShow)
+                                                }
+                                        )
+                                                
+                                    }
+                                        
+                                })
+                            :
+                                {text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
+                                            0, empty.StartYear,empty.EmptyAbsolute).map(res=>res.percentShow)
+                                    ,style:'tableFontSize'})),
+                            ]   
                         ]
                 } 
             }
@@ -501,7 +739,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
     FarmTypes,EmptyTypes,UsefulLand_Tax_ID,TypeName,StartYears,
     EmptyAbsolutes,Useful,isNexto,PriceUseful,Special_Useful
 },
-    Category_Tax,uid_tax,exceptEmergency) => {
+    Category_Tax,uid_tax,exceptEmergency,lands) => {
         if (Useful.length > 0) {
             let TotalNexto =0;
             let OrginalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
@@ -522,14 +760,15 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                             .reduce((pre,cur)=>pre+cur,0);
                             TotalNexto += totalPriceUseful
                         }
-                        if (LiveTypes.length === 0 &&OtherTypes.length === 0&& FarmTypes.length === 0&& EmptyTypes.length === 0) {
-                            TotalNexto += usefuls.PriceUseful + PriceUseful
+                        if (usefuls.LiveTypes.length === 0 &&usefuls.OtherTypes.length === 0&& usefuls.FarmTypes.length === 0&& usefuls.EmptyTypes.length === 0) {
+                
+                            TotalNexto += usefuls.PriceUseful
                         }
                         return TotalNexto
                         
                     })
                     return [{text:Seperate(TotalNexto,TypeName,0,StartYears,EmptyAbsolutes).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                            (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2})
                             :
                             (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -549,14 +788,14 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                         Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
                                         "อยู่อาศัย",50000000
                                         ).map(res=>Special_Useful>0&&exceptEmergency===0?
-                                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                        (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})
                                         :
                                         (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2}))
                                         :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                         "อยู่อาศัย",10000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                            (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2})
                                             :
                                             (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -568,7 +807,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             :                                          
                                             Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                         "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
-                                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                            (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2})
                                             :
                                             (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -583,7 +822,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                     :Building.OtherType?.Percent_Other *  Building.AfterPriceDepreciate/100,
                                 "อื่นๆ")
                                 .map(res=>Special_Useful>0&&exceptEmergency===0?
-                                    (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                         maximumFractionDigits: 2})
                                     :
                                     (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -597,7 +836,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                             :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                     "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                        (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})
                                         :
                                         (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -608,7 +847,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                             :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                     "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
-                                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                        (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2})
                                         :
                                         (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -622,7 +861,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                     :Building.EmptyType?.Percent_Empty *  Building.AfterPriceDepreciate/100,
                                 'ว่างเปล่า',0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
                                 .map(res=>Special_Useful>0&&exceptEmergency===0?
-                                    (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                         maximumFractionDigits: 2})
                                     :
                                     (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -638,14 +877,14 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                         Category_Tax ==="บุคคล"?
                         Seperate(PriceUseful,
                         "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                            (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2})
                             :
                             (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2}))
                         :Seperate(PriceUseful,
                         "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                            (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2})
                             :
                            (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -653,7 +892,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                     :Seperate(PriceUseful,
                         TypeName,0,StartYears,EmptyAbsolutes
                         ).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                            (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                                 maximumFractionDigits: 2})
                             :
                             (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -662,48 +901,111 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                 }else{
                     return [[
                         ...LiveTypes.map((live,i)=>(
-                                {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
-                                Seperate((live.Percent_Live * PriceUseful )/100 ,
-                                "อยู่อาศัย",live.Useful_live.BalanceDiscount
-                                ).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2})
+                            live?.Useful_live?.Original_Live?
+                                    lands?.filter(land=>land.useful_id === live?.Useful_live?.Original_Live)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                let priceArray =  Building?.LiveType?.Live_Status&&Category_Tax ==="บุคคล"?Building?.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                                                Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*usefulMap?.PriceUseful + Building.AfterPriceDepreciate)/100
+                                                ,"อยู่อาศัย",50000000)
+                
+                                                :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
+                                                "อยู่อาศัย",10000000)//เป็นบ้านหลังหลักอย่างเดียว
+                                                :
+                                                Seperate(
+                                                    UsefulLand_Tax_ID=== uid_tax?
+                                                    Building?.LiveType?.Percent_Live * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100
+                                                    :                                          
+                                                    Building?.LiveType?.Percent_Live *  Building?.AfterPriceDepreciate/100,"อยู่อาศัย")
+                                                    // .filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                                let filterPrice = priceArray.filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                            //เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross((live.Percent_Live * PriceUseful )/100,"อยู่อาศัย",live.Useful_live.BalanceDiscount,filterPrice);
+                                                return RateAccross.map(rate=>(rate.PriceOriginal * rate.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2}))
+                                                    }
+                                            )
+                                            
+                                        }
+                                    })
                             :
-                            (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2}))
-                                :Seperate((live.Percent_Live * PriceUseful )/100,
-                                "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2})
-                            :
-                            (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2}))
+                                    {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                                    Seperate((live.Percent_Live * PriceUseful )/100 ,
+                                    "อยู่อาศัย",live.Useful_live.BalanceDiscount
+                                    ).map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2})
                                 :
-                                Seperate(
-                                    (live.Percent_Live * PriceUseful )/100,
-                                "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2})
-                            :
-                            (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-                                maximumFractionDigits: 2}))
-                            ,style:'tableFontSize'}
+                                (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                    :Seperate((live.Percent_Live * PriceUseful )/100,
+                                    "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2})
+                                :
+                                (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                    :
+                                    Seperate(
+                                        (live.Percent_Live * PriceUseful )/100,
+                                    "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2})
+                                :
+                                (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                ,style:'tableFontSize'}
                         )),
 
-                        ...OtherTypes.map((other,i)=>({text: Seperate((other.Percent_Other *  PriceUseful )/100,
-                            "อื่นๆ")
-                            .map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-                            maximumFractionDigits: 2})
-                        :
-                        (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-                            maximumFractionDigits: 2}))
-                                ,style:'tableFontSize'})) ,
+                        ...OtherTypes.map((other,i)=>(
+                            other?.Useful_other?.Original_Other?
+                                lands?.filter(land=>land.useful_id === other?.Useful_other?.Original_Other)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                let PriceCondition1 = Building?.OtherType?.Percent_Other * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                let PriceCondition2 = Building?.OtherType?.Percent_Other *  Building?.AfterPriceDepreciate/100||0;
+                                            
+                                                let priceArray =  Seperate(
+                                                        UsefulLand_Tax_ID=== uid_tax?
+                                                        PriceCondition1                                        
+                                                        :PriceCondition2,
+                                                    "อื่นๆ").filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross(other.Percent_Other *  PriceUseful /100,"อื่นๆ",0,priceArray);
+                                                return RateAccross.map(rate=>Special_Useful>0&&exceptEmergency===0?
+                                                        (rate.PriceOriginal * rate.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2})
+                                                        :
+                                                        (rate.PriceOriginal * rate.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2}))
+                                                    }
+                                                    
+                                            )
+                                            
+                                        }
+                                    })
+                            :
+                                {text: Seperate((other.Percent_Other *  PriceUseful )/100,
+                                "อื่นๆ")
+                                .map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2})
+                                :
+                                (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                        ,style:'tableFontSize'})) ,
 
                         ...FarmTypes.map((farm,i)=>({text:
                              Category_Tax ==="บุคคล"?Seperate((farm.Percent_Farm * PriceUseful )/100,
                                 "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                        (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                             maximumFractionDigits: 2})
                         :
                         (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
@@ -711,23 +1013,51 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             :
                                             Seperate((farm.Percent_Farm * PriceUseful )/100,
                                             "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                        (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
                             maximumFractionDigits: 2})
                         :
                         (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
                             maximumFractionDigits: 2}))
                             ,style:'tableFontSize'})),
 
-                        ...EmptyTypes.map((empty,i)=>({text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
-                            empty.StartYear,empty.EmptyAbsolute
-                            )
-                            .map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100).toLocaleString(undefined,{minimumFractionDigits: 2,
-                            maximumFractionDigits: 2})
-                        :
-                        (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
-                            maximumFractionDigits: 2}))
-                                ,style:'tableFontSize'})),]   
+                        ...EmptyTypes.map((empty,i)=>(
+                            empty?.Useful_empty?.Original_Empty?
+                                lands?.filter(land=>land.useful_id === empty?.Useful_empty?.Original_Empty)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                
+                                                let PriceCondition1 = Building?.EmptyType?.Percent_Empty * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                let PriceCondition2 = Building?.EmptyType?.Percent_Empty *  Building?.AfterPriceDepreciate/100||0;
+                                            
+                                                let priceArray =  Seperate(
+                                                        UsefulLand_Tax_ID=== uid_tax?
+                                                        PriceCondition1                                        
+                                                        :PriceCondition2,
+                                                    "ว่างเปล่า",0,empty.StartYear,empty.EmptyAbsolute).filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross(empty.Percent_Empty *  PriceUseful /100,"ว่างเปล่า",0,priceArray,empty.StartYear,empty.EmptyAbsolute);
+                                                return RateAccross.map(rate=>(rate.PriceOriginal * rate.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                                                maximumFractionDigits: 2}))
+                                                    }
+                                            )
+                                            
+                                        }
+                                })
+                            :
+                                {text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
+                                empty.StartYear,empty.EmptyAbsolute
+                                )
+                                .map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2})
+                                :
+                                (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                        ,style:'tableFontSize'})),
+                            ]   
                         ]
                 } 
             }
@@ -739,7 +1069,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
     FarmTypes,EmptyTypes,UsefulLand_Tax_ID,TypeName,StartYears,
     EmptyAbsolutes,Useful,isNexto,PriceUseful,Special_Useful
 },
-    Category_Tax,uid_tax,exceptEmergency) => {
+    Category_Tax,uid_tax,exceptEmergency,lands) => {
         if (Useful.length > 0) {
             let TotalNexto =0;
             let OrginalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
@@ -760,20 +1090,21 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                             .reduce((pre,cur)=>pre+cur,0);
                             TotalNexto += totalPriceUseful
                         }
-                        if (LiveTypes.length === 0 &&OtherTypes.length === 0&& FarmTypes.length === 0&& EmptyTypes.length === 0) {
-                            TotalNexto += usefuls.PriceUseful + PriceUseful
+                        if (usefuls.LiveTypes.length === 0 &&usefuls.OtherTypes.length === 0&& usefuls.FarmTypes.length === 0&& usefuls.EmptyTypes.length === 0) {
+                
+                            TotalNexto += usefuls.PriceUseful
                         }
                         return TotalNexto
                         
                     })
                     return [{text:Seperate(TotalNexto,TypeName,0,StartYears,EmptyAbsolutes).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
+                            (res.price * res.percent) *((100-Special_Useful)/100)
                             :
                             (res.price * res.percent))
                         ,category:TypeName,style:'tableFontSize'}]
         }else{
             if (isNexto) {
-                return [{text:['0.00'],category:`${TypeName}`,style:'tableFontSize'}]
+                return [{text:[0],category:`${TypeName}`,style:'tableFontSize'}]
             }else{
                     if (BuildOnUsefulLands.length >0) {//กรณีมีสิ่งปลุกสร้าง
                     let totalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
@@ -785,13 +1116,13 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                         Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100,
                                         "อยู่อาศัย",50000000
                                         ).map(res=>Special_Useful>0&&exceptEmergency===0?
-                                        (res.price * res.percent) *(Special_Useful/100)
+                                        (res.price * res.percent) *((100-Special_Useful)/100)
                                         :
                                         (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
                                             maximumFractionDigits: 2}))
                                         :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                         "อยู่อาศัย",10000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                                            (res.price * res.percent) *(Special_Useful/100)
+                                            (res.price * res.percent) *((100-Special_Useful)/100)
                                             :
                                             (res.price * res.percent)
                                                 )
@@ -802,7 +1133,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             :                                          
                                             Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
                                         "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
-                                            (res.price * res.percent) *(Special_Useful/100)
+                                            (res.price * res.percent) *((100-Special_Useful)/100)
                                             :
                                             (res.price * res.percent))
                                         :null
@@ -815,7 +1146,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                     :Building.OtherType?.Percent_Other *  Building.AfterPriceDepreciate/100,
                                 "อื่นๆ")
                                 .map(res=>Special_Useful>0&&exceptEmergency===0?
-                                    (res.price * res.percent) *(Special_Useful/100)
+                                    (res.price * res.percent) *((100-Special_Useful)/100)
                                     :
                                     (res.price * res.percent))
                                 ,category:'อื่นๆ',
@@ -827,7 +1158,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                             :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                     "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                                        (res.price * res.percent) *(Special_Useful/100)
+                                        (res.price * res.percent) *((100-Special_Useful)/100)
                                         :
                                         (res.price * res.percent))
                                     :
@@ -836,7 +1167,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                             Building.FarmType?.Percent_Farm * (((Building.Width * Building.Length)/totalPlace)*PriceUseful + Building.AfterPriceDepreciate)/100
                                             :Building.FarmType?.Percent_Farm *  Building.AfterPriceDepreciate/100,
                                     "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
-                                        (res.price * res.percent) *(Special_Useful/100)
+                                        (res.price * res.percent) *((100-Special_Useful)/100)
                                         :
                                         (res.price * res.percent))
                                 :null
@@ -849,7 +1180,7 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                                     :Building.EmptyType?.Percent_Empty *  Building.AfterPriceDepreciate/100,
                                 'ว่างเปล่า',0, Building.EmptyType?.StartYear,Building.EmptyType?.EmptyAbsolute)
                                 .map(res=>Special_Useful>0&&exceptEmergency===0?
-                                    (res.price * res.percent) *(Special_Useful/100)
+                                    (res.price * res.percent) *((100-Special_Useful)/100)
                                     :
                                     (res.price * res.percent))
                                 ,category:'ว่างเปล่า',style:'tableFontSize'},
@@ -863,18 +1194,18 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                         Category_Tax ==="บุคคล"?
                         Seperate(PriceUseful,
                         "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
+                            (res.price * res.percent) *((100-Special_Useful)/100)
                             :
                             (res.price * res.percent))
                         :Seperate(PriceUseful,
                         "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
+                            (res.price * res.percent) *((100-Special_Useful)/100)
                             :
                            (res.price * res.percent))
                     :Seperate(PriceUseful,
                         TypeName,0,StartYears,EmptyAbsolutes
                         ).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
+                            (res.price * res.percent) *((100-Special_Useful)/100)
                             :
                             (res.price * res.percent))
                         ,
@@ -882,59 +1213,200 @@ export const CategoryUseful =({BuildOnUsefulLands,EmptyTypes,FarmTypes,OtherType
                 }else{
                     return [[
                         ...LiveTypes.map((live,i)=>(
-                                {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
-                                Seperate((live.Percent_Live * PriceUseful )/100 ,
-                                "อยู่อาศัย",live.Useful_live.BalanceDiscount
-                                ).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
+                            live?.Useful_live?.Original_Live?
+                                    lands?.filter(land=>land.useful_id === live?.Useful_live?.Original_Live)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                let priceArray =  Building?.LiveType?.Live_Status&&Category_Tax ==="บุคคล"?Building?.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                                                Seperate(Building.LiveType?.Percent_Live * (((Building.Width * Building.Length)/totalPlace)*usefulMap?.PriceUseful + Building.AfterPriceDepreciate)/100
+                                                ,"อยู่อาศัย",50000000)
+                
+                                                :Seperate(Building.LiveType?.Percent_Live *  Building.AfterPriceDepreciate/100,
+                                                "อยู่อาศัย",10000000)//เป็นบ้านหลังหลักอย่างเดียว
+                                                :
+                                                Seperate(
+                                                    UsefulLand_Tax_ID=== uid_tax?
+                                                    Building?.LiveType?.Percent_Live * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100
+                                                    :                                          
+                                                    Building?.LiveType?.Percent_Live *  Building?.AfterPriceDepreciate/100,"อยู่อาศัย")
+                                                    // .filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                                let filterPrice = priceArray.filter(rate=>rate.price>0 || !isNaN(rate.price) )
+                                            //เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross((live.Percent_Live * PriceUseful )/100,"อยู่อาศัย",live.Useful_live.BalanceDiscount,filterPrice);
+                                                return RateAccross.map(rate=>({text:(rate.PriceOriginal * rate.percent),category:'อยู่อาศัย'}))
+                                                    }
+                                            )
+                                            
+                                        }
+                                    })
                             :
-                            (res.price * res.percent))
-                                :Seperate((live.Percent_Live * PriceUseful )/100,
-                                "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
-                            :
-                            (res.price * res.percent))
+                                    {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                                    Seperate((live.Percent_Live * PriceUseful )/100 ,
+                                    "อยู่อาศัย",live.Useful_live.BalanceDiscount
+                                    ).map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100)
                                 :
-                                Seperate(
-                                    (live.Percent_Live * PriceUseful )/100,
-                                "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
-                            (res.price * res.percent) *(Special_Useful/100)
-                            :
-                            (res.price * res.percent))
-                            ,category:'อยู่อาศัย',style:'tableFontSize'}
+                                (res.price * res.percent))
+                                    :Seperate((live.Percent_Live * PriceUseful )/100,
+                                    "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100)
+                                :
+                                (res.price * res.percent).toLocaleString(undefined,{minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2}))
+                                    :
+                                    Seperate(
+                                        (live.Percent_Live * PriceUseful )/100,
+                                    "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100)
+                                :
+                                (res.price * res.percent))
+                                    ,category:'อยู่อาศัย',style:'tableFontSize'}
                         )),
 
-                        ...OtherTypes.map((other,i)=>({text: Seperate((other.Percent_Other *  PriceUseful )/100,
-                            "อื่นๆ")
-                            .map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100)
-                        :
-                        (res.price * res.percent))
-                                ,category:'อื่นๆ',style:'tableFontSize'})) ,
+                        ...OtherTypes.map((other,i)=>(
+                            other?.Useful_other?.Original_Other?
+                                lands?.filter(land=>land.useful_id === other?.Useful_other?.Original_Other)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                let PriceCondition1 = Building?.OtherType?.Percent_Other * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                let PriceCondition2 = Building?.OtherType?.Percent_Other *  Building?.AfterPriceDepreciate/100||0;
+                                            
+                                                let priceArray =  Seperate(
+                                                        UsefulLand_Tax_ID=== uid_tax?
+                                                        PriceCondition1                                        
+                                                        :PriceCondition2,
+                                                    "อื่นๆ").filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross(other.Percent_Other *  PriceUseful /100,"อื่นๆ",0,priceArray);
+                                                return RateAccross.map(rate=>({text:(rate.PriceOriginal * rate.percent),category:'อื่นๆ'}))
+                                                    }
+                                                    
+                                            )
+                                            
+                                        }
+                                    })
+                            :
+                                {text: Seperate((other.Percent_Other *  PriceUseful )/100,
+                                "อื่นๆ")
+                                .map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100)
+                                :
+                                (res.price * res.percent))
+                                    ,category:'อื่นๆ',style:'tableFontSize'})) ,
 
                         ...FarmTypes.map((farm,i)=>({text:
                              Category_Tax ==="บุคคล"?Seperate((farm.Percent_Farm * PriceUseful )/100,
                                 "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100)
+                        (res.price * res.percent) *((100-Special_Useful)/100)
                         :
                         (res.price * res.percent))
                                             :
                                             Seperate((farm.Percent_Farm * PriceUseful )/100,
                                             "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100)
+                        (res.price * res.percent) *((100-Special_Useful)/100)
                         :
                         (res.price * res.percent))
                             ,category:'เกษตร',style:'tableFontSize'})),
 
-                        ...EmptyTypes.map((empty,i)=>({text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
-                            empty.StartYear,empty.EmptyAbsolute
-                            )
-                            .map(res=>Special_Useful>0&&exceptEmergency===0?
-                        (res.price * res.percent) *(Special_Useful/100)
-                        :
-                        (res.price * res.percent))
-                                ,category:'ว่างเปล่า',style:'tableFontSize'})),]   
+                        ...EmptyTypes.map((empty,i)=>(
+                            empty?.Useful_empty?.Original_Empty?
+                                lands?.filter(land=>land.useful_id === empty?.Useful_empty?.Original_Empty)
+                                    .map((usefulMap)=>{
+                                        //มีสิ่งปลูกสร้าง
+                                        if (usefulMap.BuildOnUsefulLands.length >0) {
+                                            let totalPlace = usefulMap.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                            .reduce((pre,cur)=>pre+cur,0)  ;
+                                            return usefulMap.BuildOnUsefulLands.map(({Building})=>{
+                                                
+                                                let PriceCondition1 = Building?.EmptyType?.Percent_Empty * (((Building?.Width * Building?.Length)/totalPlace)*usefulMap?.PriceUseful + Building?.AfterPriceDepreciate)/100||0;
+                                                let PriceCondition2 = Building?.EmptyType?.Percent_Empty *  Building?.AfterPriceDepreciate/100||0;
+                                            
+                                                let priceArray =  Seperate(
+                                                        UsefulLand_Tax_ID=== uid_tax?
+                                                        PriceCondition1                                        
+                                                        :PriceCondition2,
+                                                    "ว่างเปล่า",0,empty.StartYear,empty.EmptyAbsolute).filter(rate => rate.price !== 0);//เพราะมันมีกรณี ค่าที่ส่งไปมันยังคำนวนไม่เสร็จและส่งกลับมาเลยมีค่าเท่ากับ ศูนย์
+                                                let RateAccross = SeperateAccross(empty.Percent_Empty *  PriceUseful /100,"ว่างเปล่า",0,priceArray,empty.StartYear,empty.EmptyAbsolute);
+                                                return RateAccross.map(rate=>({text:(rate.PriceOriginal * rate.percent),category:'ว่างเปล่า'}))
+                                                    }
+                                            )
+                                            
+                                        }
+                                })
+                            :
+                                {text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
+                                empty.StartYear,empty.EmptyAbsolute
+                                )
+                                .map(res=>Special_Useful>0&&exceptEmergency===0?
+                                (res.price * res.percent) *((100-Special_Useful)/100)
+                                :
+                                (res.price * res.percent))
+                                    ,category:'ว่างเปล่า' ,style:'tableFontSize'})),
+                            ]   
                         ]
+                    //version 1.0
+                    // return [[
+                    //     ...LiveTypes.map((live,i)=>(
+                    //             {text:live.Live_Status&&Category_Tax ==="บุคคล"?live.Building.Build_Tax_ID=== uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                    //             Seperate((live.Percent_Live * PriceUseful )/100 ,
+                    //             "อยู่อาศัย",live.Useful_live.BalanceDiscount
+                    //             ).map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //         (res.price * res.percent) *((100-Special_Useful)/100)
+                    //         :
+                    //         (res.price * res.percent))
+                    //             :Seperate((live.Percent_Live * PriceUseful )/100,
+                    //             "อยู่อาศัย",live.Useful_live.BalanceDiscount).map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //         (res.price * res.percent) *((100-Special_Useful)/100)
+                    //         :
+                    //         (res.price * res.percent))
+                    //             :
+                    //             Seperate(
+                    //                 (live.Percent_Live * PriceUseful )/100,
+                    //             "อยู่อาศัย").map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //         (res.price * res.percent) *((100-Special_Useful)/100)
+                    //         :
+                    //         (res.price * res.percent))
+                    //         ,category:'อยู่อาศัย',style:'tableFontSize'}
+                    //     )),
+
+                    //     ...OtherTypes.map((other,i)=>({text: Seperate((other.Percent_Other *  PriceUseful )/100,
+                    //         "อื่นๆ")
+                    //         .map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //     (res.price * res.percent) *((100-Special_Useful)/100)
+                    //     :
+                    //     (res.price * res.percent))
+                    //             ,category:'อื่นๆ',style:'tableFontSize'})) ,
+
+                    //     ...FarmTypes.map((farm,i)=>({text:
+                    //          Category_Tax ==="บุคคล"?Seperate((farm.Percent_Farm * PriceUseful )/100,
+                    //             "เกษตร",50000000).map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //     (res.price * res.percent) *((100-Special_Useful)/100)
+                    //     :
+                    //     (res.price * res.percent))
+                    //                         :
+                    //                         Seperate((farm.Percent_Farm * PriceUseful )/100,
+                    //                         "เกษตร").map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //     (res.price * res.percent) *((100-Special_Useful)/100)
+                    //     :
+                    //     (res.price * res.percent))
+                    //         ,category:'เกษตร',style:'tableFontSize'})),
+
+                    //     ...EmptyTypes.map((empty,i)=>({text:Seperate((empty.Percent_Empty * PriceUseful )/100,'ว่างเปล่า',
+                    //         empty.StartYear,empty.EmptyAbsolute
+                    //         )
+                    //         .map(res=>Special_Useful>0&&exceptEmergency===0?
+                    //     (res.price * res.percent) *((100-Special_Useful)/100)
+                    //     :
+                    //     (res.price * res.percent))
+                    //             ,category:'ว่างเปล่า',style:'tableFontSize'})),]   
+                    //     ]
                 } 
             }
             

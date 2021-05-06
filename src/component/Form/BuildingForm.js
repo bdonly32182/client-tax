@@ -2,12 +2,13 @@ import React,{useState,useEffect} from 'react'
 import { Form, Input, Col,Select ,Divider,Checkbox} from 'antd';
 import {code_cate_building,sub_Cate} from '../Select/data'
 function BuildingForm(props) {
+  const [form] = Form.useForm()
   const [category,setCategory] = useState(sub_Cate[code_cate_building[0].code]);//เอาไปเป็นตัวเลือก
   const [secondCate,setSecondCate] = useState(sub_Cate[code_cate_building[0].code][0]);//เก็บค่าไว้เมื่อกด select
   const {Option} = Select;
   useEffect(() => {
-    props.formModal.resetFields()
-  }, [props.formModal,props.building])
+    props?.formModal?.resetFields();
+  }, [props.formModal,props.building,form])
   const onChangeCategory =(value) =>{
     setCategory(sub_Cate[value]);
     setSecondCate(sub_Cate[value][0]);
@@ -15,6 +16,7 @@ function BuildingForm(props) {
   const onChangeSubCate = value => {
     setSecondCate(value);
   }
+  console.log('clieckk forbukd');
   return (
         <Form
         form={props.formModal}
@@ -67,7 +69,29 @@ function BuildingForm(props) {
                   </Col>
               </Input.Group>
             </Form.Item>
-
+            <Form.Item>
+              <Input.Group compact>
+                  <Col>
+                    <Form.Item
+                      label="ถนน/ซอย"
+                      name="RoadBuild"
+                    >
+                     <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={1}/>
+                  <Col>
+                    <Form.Item
+                      label="แขวง"
+                      name="TabolBuild"
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  
+                  
+              </Input.Group>
+            </Form.Item>
             <Form.Item>
               <Input.Group compact>
                   <Col>
@@ -95,9 +119,11 @@ function BuildingForm(props) {
                   
               </Input.Group>
             </Form.Item>
+           
+            <Divider />
             <Form.Item>
               <Input.Group compact>
-                 <Col>
+                  <Col>
                       <Form.Item
                       label="ลักษณะสิ่งปลูกสร้าง"
                       name="StyleBuilding"
@@ -108,20 +134,6 @@ function BuildingForm(props) {
                           <Option value="ตึก">ตึก</Option>
                           <Option value="ครึ่งตึกครึ่งไม้">ครึ่งตึกครึ่งไม้</Option>
                         </Select>
-                      </Form.Item>
-                  </Col>
-              </Input.Group>
-            </Form.Item>
-            <Divider />
-            <Form.Item>
-              <Input.Group compact>
-                  <Col>
-                    <Form.Item
-                        label="จำนวนห้อง"
-                        name="Amount_Room"
-                        rules={[{ required: true, message: 'กรุณากรอกจำนวนห้อง !' }]}
-                      >
-                        <Input />
                       </Form.Item>
                   </Col>
                   <Col>

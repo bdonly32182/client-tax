@@ -8,8 +8,8 @@ function BuildingTable(props) {
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0 ;
-    const onConfirm =(id)=>{
-        dispatch(delete_building(id));
+    const onConfirm =(id,useful_id)=>{
+        dispatch(delete_building(id,useful_id));
     }
     return (
         <>
@@ -109,7 +109,7 @@ function BuildingTable(props) {
                    
                     <Popconfirm title="คุณต้องการลบใช่หรือไม่"
                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                    onConfirm={()=>onConfirm(record.Building.Build_Id)}
+                    onConfirm={()=>onConfirm(record.Building.Build_Id,props.useful_id)}
                     >
                         <Button type="link">
                             <DeleteFilled style={{ color: 'red' ,fontSize:15}}/>

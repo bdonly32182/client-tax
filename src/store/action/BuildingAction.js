@@ -68,11 +68,16 @@ export const generate_building =(uid_tax,land_id,id_customer,customer,Category_T
         });
     }
 }
-export const delete_building=id=>{
+export const delete_building=(id,useful_id)=>{
     return dispatch => {
         axios.delete(`/api/build/${id}`).then((result) => {
-            dispatch({type:DELETE_BUILDING,RemoveId:id})
+            // dispatch({type:DELETE_BUILDING,RemoveId:id})
             notification.success({message:'ลบแปลงที่ดินเรียบร้อยแล้ว'})
+            axios.get(`/api/read/usefuls?useful_id=${useful_id}`).then((result) => {
+                dispatch({type:FETCHS_BUILD_IN_USEFULLAND,payload:result.data.BuildOnUsefulLands})
+            }).catch((err) => {
+                notification.error({message:'การเรียกดูข้อมูลการใช้ประโยชน์ของที่ดินล้มเหลว'})
+            });
         }).catch((err) => {
             notification.error({message:'ลบแปลงที่ดินล้มเหลว'})
         });

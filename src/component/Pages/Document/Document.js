@@ -21,6 +21,7 @@ function Document() {
                             <Panel key={index} header={`ประจำปี${year}`}>
                                 <Link to={`/checkdocument/${year}`}><p>ภ.ด.ส.๓,๔</p></Link>
                                 <Link to={`/costdocument/${year}`}><p>ภ.ด.ส.๖,๗,๘</p></Link>
+                                <Link to={`/warning/${year}`}>ใบแจ้งให้มาชำระภาษี</Link>
                             </Panel>
                                         
                         )}

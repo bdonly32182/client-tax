@@ -69,13 +69,22 @@ function UsefulLand(props) {
                 
                 <Input.Search></Input.Search>
                 
-                <Menu theme="light" mode="inline">
+                <Menu theme="light" mode="inline"
+                triggerSubMenuAction="click"
+                >
                     {Array.isArray(props.usefullands)&&props.usefullands.map((useful,i)=>
                     
                         <Menu.Item key={useful.useful_id}
                         onClick={onClickMenu}
+                        style={{height:'80px',borderStartEndRadius:'40px',borderEndEndRadius:'40px',backgroundColor:'#d3e0ea'}}
                         >
-                            {useful.useful_id}
+                            <b  >{`${useful.useful_id} `}</b>
+                            <br />
+                            <b >
+                                {`(${useful.Useful_RAI}-${useful.Useful_GNAN}-${useful.Useful_WA})`}
+                           </b>    
+                            
+                            
                         </Menu.Item>
                         
                     )}

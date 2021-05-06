@@ -17,8 +17,6 @@ import NewPDS7 from '../../Table/NewPDS7'
 import PDS6 from './PDS6'
 import PdfMake from '../Pdf/PdfMake'
 import PdfSurvey from '../Pdf/PdfSurvey'
-import CartSaveCost from '../../Modal/CartSaveCost'
-
 function EditTax(props) {
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -37,7 +35,6 @@ function EditTax(props) {
     const onTabClick =async(value)=>{
         if (value === "3") {
            pds3.length===0&& axios.get('/api/pds3/'+tax.uid_tax).then((result) => {
-               console.log(result.data);
                 setPds3(result.data);
                 result.data&& setLoading3(false);
             }).catch((err) => {
@@ -84,7 +81,6 @@ function EditTax(props) {
         }
         if (value ==="8") {
             pds3.length===0&& axios.get('/api/pds3/'+tax.uid_tax).then((result) => {
-                console.log(result.data);
                  setPds3(result.data);
                  result.data&& setLoading3(false);
              }).catch((err) => {
@@ -92,7 +88,6 @@ function EditTax(props) {
              });
             pds8.length===0&&
             axios.get(`/api/pds8/${tax.uid_tax}`).then((result) => {
-                console.log('8',result.data);
                 setPds8(result.data)
                 result.data&&setLoading8(false);
             }).catch((err) => {
@@ -101,7 +96,6 @@ function EditTax(props) {
         }
        
     }
-   
     return (
         <div>
             <Header />
@@ -134,9 +128,9 @@ function EditTax(props) {
                     <Row style={{padding:20}}>
                         <Col>
                             <h2 style={{color:'red'}}>* ที่อยู่เริ่มต้นในระบบ </h2>
-                            <h3><strong style={{color:'royalblue'}}>{tax.Address&&`บ้านเลขที่ ${tax.Address.Num_House} ถนน ${tax.Address.Road_Name} ซอย ${tax.Address.Soi} หมู่ ${tax.Address.Moo} 
-                            แขวง ${tax.Address.Tambol} เขต ${tax.Address.district_name} จังหวัด ${tax.Address.Changwat} รหัสไปรษณีย์ ${tax.Address.Post_No} 
-                            เบอร์ติดต่อ ${tax.Address.Phone_no}`}</strong></h3>
+                            <h3><strong style={{color:'royalblue'}}>{tax.Address&&`บ้านเลขที่ ${tax.Address.Num_House} ถนน ${tax.Address.Road_Name||"-"} ซอย ${tax.Address.Soi||"-"} หมู่ ${tax.Address.Moo||"-"} 
+                            แขวง ${tax.Address.Tambol||"-"} เขต ${tax.Address.district_name||"-"} จังหวัด ${tax.Address.Changwat||"-"} รหัสไปรษณีย์ ${tax.Address.Post_No||"-"} 
+                            เบอร์ติดต่อ ${tax.Address.Phone_no||"-"}`}</strong></h3>
                             <Divider />
                         </Col>
                     </Row>
@@ -158,7 +152,7 @@ function EditTax(props) {
                 <TabPane key="5" tab="ภ.ด.ส.4 ">
                     {pds8 &&(
                         <>
-                        <PDS4Table condo={pds8} loading={loading8}/>
+                        <PDS4Table condo={pds8} loading={loading8} tax={tax}/>
                            </> 
                     )}
                            
@@ -188,13 +182,13 @@ function EditTax(props) {
                             <PdfSurvey land = {pds3} tax={tax} leader={leader} condo={pds8} amountCustomer={tax?.Customers?.length}
                                         customers={tax?.Customers}/>
                             <Divider />
-                                {pds3 && (
+                                {pds3.length>0 && (
                                 <>                           
                                 <PDS3Table land={pds3} tax={tax} loading={loading3}/>
                                 </>
                                 )}
                                 <Divider />
-                                {pds8 &&(
+                                {pds8.length>0 &&(
                                     <>
                                     <PDS4Table condo={pds8} loading={loading8} tax={tax}/>
                                     </> 
@@ -207,8 +201,7 @@ function EditTax(props) {
                         <PdfMake land = {pds7} tax={tax} leader={leader} condo={pds8} amountCustomer={tax?.Customers?.length}
                         customers={tax?.Customers} 
                         />
-                        {/* <CartSaveCost land = {pds7} tax={tax} leader={leader} condo={pds8} amountCustomer={tax?.Customers?.length}
-                        customers={tax?.Customers}/> */}
+                        
                         <PDS6 land = {pds7} tax={tax} leader={leader} condo={pds8} customers={tax?.Customers}
                         amountCustomer={tax?.Customers?.length} tax={tax} invit={tax?.Customers&&tax?.Customers[0]}
                         />

@@ -11,7 +11,6 @@ function RateBuild(props) {
             notification.error({message:'เรียกดูราคาประเมินสิ่งปลูกสร้างล้มเหลว'})
         });
     }, [])
-    console.log(rate);
     return (
         <div style={{padding:'30px'}}>
             <RateTable  rate = {rate} />

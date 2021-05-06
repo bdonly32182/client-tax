@@ -90,9 +90,7 @@ function PaymentDoc({costbook,payment_doc}) {
     console.log(DateWarnning);
     const briefBills = BriefBills(FinishDate,DateWarnning,DayPay,costbook?.BriefTotal);
     let totalPricePay =costbook?.BriefTotal + briefBills?.interestTotal + briefBills?.interestAdd
-    console.log(briefBills?.interestAdd);
-    console.log(briefBills?.interestTotal);
-    console.log(totalPricePay);
+   
     const onOk = () => {
         if(!NameWarning||!FinishDate||!DayPay||!DateRate||
           !briefBills?.interestString||!briefBills?.interestTotal||!totalPricePay||
@@ -171,7 +169,7 @@ function PaymentDoc({costbook,payment_doc}) {
                                     </Col>
                                     <Col span={12}>
                                         <h3>ค่าภาษีที่ดินและสิ่งปลูกสร้าง (บาท)</h3>
-                                      <Input value={costbook?.BriefTotal}/>
+                                      <Input value={costbook?.BriefTotal.toFixed(2)}/>
                                     </Col>
                                 </Row>
                                 <Divider />

@@ -13,7 +13,7 @@ function FarmTable({FarmList,onDelete}) {
     let uniqueId = 0 ;
     const onOk = (type)=> {
         form.validateFields().then((body) => {
-            axios.put(`/api/farm/${type.id}`,body).then((result) => {
+            axios.put(`/api/farm/${type.id}?usefulId=${type.Useful_farm.Useful_farm_ID}`,body).then((result) => {
                 notification.success({message:'แก้ไขสัดส่วนเรียบร้อยแล้ว'})
                 axios.get(`/api/read/usefuls?useful_id=${type.Useful_farm.Useful_farm_ID}`).then((result) => {
                     dispatch({type:FETCH_USEFUL_LAND,payload:result.data})

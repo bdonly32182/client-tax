@@ -13,7 +13,7 @@ function LiveTable({LiveList,onDelete}) {
     let uniqueId = 0 ;
     const onOk = (type)=> {
         form.validateFields().then((body) => {
-            axios.put(`/api/live/${type.id}`,body).then((result) => {
+            axios.put(`/api/live/${type.id}?usefulId=${type.Useful_live.Useful_live_ID}`,body).then((result) => {
                 notification.success({message:'แก้ไขสัดส่วนเรียบร้อยแล้ว'})
                 axios.get(`/api/read/usefuls?useful_id=${type.Useful_live.Useful_live_ID}`).then((result) => {
                     dispatch({type:FETCH_USEFUL_LAND,payload:result.data})

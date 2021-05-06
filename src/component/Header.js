@@ -8,8 +8,13 @@ export default function Header(props) {
     let [user,setUser] = useState(null)
    
     useEffect(() => {
-        let token = LocalStorageService.getToken();
-        setUser(jwtDecode(token))
+        try {
+          let token = LocalStorageService.getToken();
+             setUser(jwtDecode(token))   
+        } catch (error) {
+            window.location.reload()
+        }
+       
     },[])
      const log_out = ()=>{
         LocalStorageService.removeToken()

@@ -13,7 +13,7 @@ function EmptyTable({EmptyList,onDelete}) {
     let uniqueId = 0 ;
     const onOk = (type)=> {
         form.validateFields().then((body) => {
-            axios.put(`/api/empty/${type.id}`,body).then((result) => {
+            axios.put(`/api/empty/${type.id}?usefulId=${type.Useful_empty.Useful_empty_ID}`,body).then((result) => {
                 notification.success({message:'แก้ไขสัดส่วนเรียบร้อยแล้ว'})
                 axios.get(`/api/read/usefuls?useful_id=${type.Useful_empty.Useful_empty_ID}`).then((result) => {
                     dispatch({type:FETCH_USEFUL_LAND,payload:result.data})
@@ -29,7 +29,6 @@ function EmptyTable({EmptyList,onDelete}) {
         });
         setVisible(false);
     }
-    console.log(EmptyList);
     return (
         <div>
             <Table dataSource={Array.isArray(EmptyList)&&EmptyList}

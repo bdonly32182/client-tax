@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode';
 import LocalStorageService from '../../../LocalStorage/LocalStorageSevice';
 import axios from '../../../config/axios';
 import {YearsDoc} from './FuncPdf'
-function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,customers}) {
+function PdfSurvey({land,tax:{uid_tax,Category_Tax,Address},condo,amountCustomer,customers}) {
     pdfMake.fonts={
         Sarabun:{
             normal:'Sarabun-Regular.ttf',
@@ -21,7 +21,7 @@ function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,custome
     let DateThai = NowDate.toDateString().split(" ");
     const [yearDoc,setYearDoc] = useState(+DateThai[3]+543);
     const [amountDoc , setAmountDoc] = useState(0);
-    
+    let  No = land?.filter(text=>land.some(value=>value?.Land?.Serial_code_land === text?.Land?.Serial_code_land))
     let token  = LocalStorageService.getToken();
     let jwt = jwtDecode(token);
     const fetch_image =()=>{
@@ -104,7 +104,9 @@ function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,custome
                {text:`สำนักงานเขต${jwt?.District_name}`,style:['alignItemDistrict']},     
                {text:`วันที่ ${DateThai[2]} เดือน ${ReplaceMonth(DateThai[1])} ปี ${+DateThai[3] + 543}`,margin: [300, 5, 20, 5]},
                'เรื่อง แจ้งให้ตรวจสอบรายการที่ดินและสิ่งปลูกสร้าง',, 
-               {text:`เรียน ${customers[0].title}${customers[0].Cus_Fname} ${customers[0].Cus_Lname} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}`},
+               {text:`เรียน ${customers[0]?.title||""}${customers[0]?.Cus_Fname||""} ${customers[0]?.Cus_Lname||""} ${amountCustomer>1?"และผู้ที่เป็นเจ้าของทรัพย์สินร่วม":''}`},
+               {text:`ที่อยู่ บ้านเลขที่ ${Address?.Num_House||" - "} ถนน ${Address?.Road_Name||"-"} ซอย ${Address?.Soi||"-"} หมู่ ${Address?.Moo||"-"} แขวง ${Address?.Tambol||"-"} 
+               เขต ${Address?.district_name||"-"} จังหวัด ${Address?.Changwat||"-"}  ${Address?.Post_No||"-"} เบอร์ติดต่อ ${Address?.Phone_no||"-"}`},
                'สิ่งที่ส่งมาด้วย แบบบัญชีรายการที่ดินและสิ่งปลูกสร้าง',
                {text:`ตามพระราชบัญญัติภาษีที่ดินและสิ่งปลูกสร้าง พ.ศ. ๒๕๖๒ มาตรา ๓๗ ประกอบกับระเบียบกระทรวงมหาดไทยว่าด้วยการดำเนินการ`,style:['sizeFonts','marginText']},
                {text:[{text:`ตามพระราชบัญญัติภาษีที่ดินและสิ่งปลูกสร้าง พ.ศ. ๒๕๖๒ ข้อ ๒๓ข้อ ๒๔ และข้อ ๒๕ `},
@@ -114,7 +116,7 @@ function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,custome
               {text:` สํานักงานเขต${jwt?.District_name} ได้จัดทำบัญชีรายการที่ดินและสิ่งปลูกสร้างแล้วเสร็จจึงแจ้งให้ท่านตรวจสอบรายการที่ดินและสิ่งปลูกสร้างของท่าน `,style:['sizeFonts','marginText']},
               {text:[
               {text:`ตามบัญชีรายการที่ดินและสิ่งปลูกสร้าง ชุดที่๑ ปิดประกาศไว้`,style:['sizeFonts','marginText']},
-              {text:` ณ สำนักงานเขตจอมทอง ตามรายการที่ดินลำดับที่ ...`,style:'sizeFonts'}
+              {text:` ณ สำนักงานเขตจอมทอง ตามรายการที่ดินลำดับที่ ${No?.map(text=>text?.Land?.Serial_code_land)||'...'}`,style:'sizeFonts'}
                     ]},
               {text:`หากรายการที่ดิน สิ่งปลูกสร้าง หรือการใช้ประโยชน์ ไม่ถูกต้องตามความเป็นจริง ให้ยื่นคำร้องขอแก้ไขได้ ณ สํานักงานเขต${jwt?.District_name}`,style:['sizeFonts','marginText']},
               {text:`ภายใน ๑๕ วัน นับแต่วันที่ได้รับหนังสือฉบับนี้หากพ้นกำหนดดังกล่าว จะถือว่ารายการตามบัญชีที่ดินและสิ่งปลูกสร้างถูกต้อง แล้วจะดำเนินการประเมินค่า
@@ -174,7 +176,7 @@ function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,custome
                 color: 'black'
             },
             tableFontSize:{
-                fontSize:10,
+                fontSize:8,
                 
             },
             totalPrice:{
@@ -233,7 +235,7 @@ function PdfSurvey({land,tax:{uid_tax,Category_Tax},condo,amountCustomer,custome
                 table: {
                     widths: [20, 28,38,23,45,41,
                             20,20,20,35,36,28,
-                             36,56,16,40,44,44,
+                             36,56,16,100,100,44,
                              35,32,35,32,35,35],//width ต้อทำทุกคอลัมน์
                     body: [
                         [

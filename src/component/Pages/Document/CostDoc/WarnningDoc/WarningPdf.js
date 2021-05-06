@@ -17,11 +17,17 @@ function WarningPdf({WarningBook,costbook}) {
         }
     }
     let token = LocalStorageService.getToken();
-    let  jwt = jwtDecode(token);
     const [imageKrut,setImageKrut] = useState(null);
+    const [jwt,setJwt] = useState(null);
     useEffect(() => {
-        fetch_image();
-    }, [])
+        try {
+         fetch_image();   
+         setJwt(jwtDecode(token))
+        } catch (error) {
+            window.location.reload()
+        }
+        
+    }, [token])
     const fetch_image =()=>{
         Promise.all(['/krut.jpeg','/logobkk.jpeg'].map(index=>{
             return new Promise((resolve,reject)=>{
@@ -108,7 +114,7 @@ function WarningPdf({WarningBook,costbook}) {
                  month: 'long',day: 'numeric'})}`,margin:[50,15,0,0]},
                  {text:[
                    {text:`รวมเป็นเงินภาษีค้างทั้งสิ้น `}, 
-                   {text:`${WarningBook?.totalPricePay} บาท (${readNumber(`${WarningBook?.totalPricePay.toFixed(2)}`)})`,bold:true} 
+                   {text:`${WarningBook?.totalPricePay.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})} บาท (${readNumber(`${WarningBook?.totalPricePay.toFixed(2)}`)})`,bold:true} 
                  ]},
                  
                  {text:`ไปชำระที่ ฝ่ายรายได้ สำนักงานเขต${jwt?.District_name} ภายใน ๑๕ วัน นับแต่วันที่ได้รับหนังสือฉบับนี้ ทั้งนี้ หากเห็นว่า 

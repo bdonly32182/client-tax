@@ -21,14 +21,14 @@ function CustomerTable(props) {
             title:"ชื่อ-นามสกุล",
             dataIndex:"Cus_Fname",
             // key:"Cus_Fname",
-            render:(text,record)=><p>{`${record.title} ${text} ${record.Cus_Lname}`}</p>
+            render:(text,record)=><p>{`${record.title||""} ${text||"-"} ${record.Cus_Lname||""}`}</p>
         },
         {
             title:"ที่อยู่",
             dataIndex:"Num_House",
             // key:"Num_House" ,
-            render:(text,record)=><p>{`${text} ${record.Moo} ${record.Road_Name} ${record.Soi} 
-            ${record.Tambol} ${record.district_name} ${record.Changwat} ${record.Post_No}`}</p>
+            render:(text,record)=><p>{`${text||"-"} ${record.Moo||"-"} ${record.Road_Name||"-"} ${record.Soi||"-"} 
+            ${record.Tambol||"-"} ${record.district_name||"-"} ${record.Changwat||"-"} ${record.Post_No||"-"}`}</p>
         },
         {
             title:"เบอร์ติดต่อ",

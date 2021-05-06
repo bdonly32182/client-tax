@@ -7,7 +7,7 @@ import AdminPage from './AdminPage'
 function FirstPage(props) {
     const card =[
         {icon:<Avatar size={70} icon={<AreaChartOutlined />} style={{ backgroundColor: '#9FC1E3' }}/>,
-        title:'ภารวม',
+        title:'ภาพรวม',
         description:'ภาพรวมและสถิติของทั้งเขต',
         path:`/overview`
         },

@@ -36,7 +36,7 @@ function WarningDoc({costbook,warning_doc}) {
 
         return {
             interestString:PercentMost?"40":"20",
-            interestTotal:PercentMost?totalPrice * 0.4:totalPrice * 0.2,
+            interestTotal:PercentMost?totalPrice * 0.004:totalPrice * 0.002,
             interestAdd : monthDateAdd - monthFinish >0?totalPrice * ((monthDateAdd - monthFinish) / 100):0,
             amountMonth :monthDateAdd - monthFinish >0 ?monthDateAdd - monthFinish:0
           }

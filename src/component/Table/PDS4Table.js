@@ -4,12 +4,11 @@ function PDS4Table({condo,loading,tax}) {
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0 ;
     const content = (customers=[]) => {
-        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div key={Cus_No}>
             <p>เลขบัตรประชาชน :{Cus_No}</p>
             <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
         </div>)
     }
-    console.log(condo);
     return (
         <div>
              <div style={{display:'block',paddingLeft:'650px'}}>
@@ -22,7 +21,7 @@ function PDS4Table({condo,loading,tax}) {
                             </div>
                             <div style={{padding:'20px'}}>
                             <Popover content={content(tax?.Customers)}>
-                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${tax?.uid_tax} (${tax?.Category_Tax})`}</b></p>
+                                    <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${tax?.uid_tax||""} (${tax?.Category_Tax||""})`}</b></p>
                             </Popover>
                 </div>
             <Table

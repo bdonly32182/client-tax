@@ -5,6 +5,7 @@ import {Link, useParams} from 'react-router-dom';
 import {Input,Button,Table,Switch} from 'antd'
 import Header from '../../../Header'
 function CheckDoc() {
+    let uniqueId = 0;
     const dispatch = useDispatch();
     const {year} = useParams();
     const { Column } = Table;
@@ -17,8 +18,7 @@ function CheckDoc() {
     const ChangeSwitch = value => {
       setSwitch(value)
   }
- console.log('checkdoc',year);
- console.log('checkdoc',onSwitch);
+
     return (
         <div>
             <Header />
@@ -36,6 +36,11 @@ function CheckDoc() {
             unCheckedChildren="เขต" defaultChecked
             ></Switch>
             <Table  dataSource={Array.isArray(checks)&&checks}
+                    rowKey={(record)=>{
+                      if (!record.__uniqueId)
+                    record.__uniqueId = ++uniqueId;
+                    return record.__uniqueId;
+                    }}
             >
               <Column  title="ลำดับ" 
               render={(text,_,index)=>index+1}

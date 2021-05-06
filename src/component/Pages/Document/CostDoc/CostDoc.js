@@ -5,6 +5,7 @@ import {FetchsCostDocumentEmployee,FetchsCostDocumentDistrict} from '../../../..
 import {Link, useParams} from 'react-router-dom';
 import Header from '../../../Header'
 function CostDoc() {
+    let uniqueId = 0;
     const dispatch = useDispatch();
     const {Column}  = Table;
     const {year} = useParams();
@@ -35,7 +36,13 @@ function CostDoc() {
             onChange={ChangeSwitch}
             unCheckedChildren="เขต" defaultChecked
             ></Switch>
-            <Table dataSource={Array.isArray(costs)&&costs}>
+            <Table dataSource={Array.isArray(costs)&&costs}
+                    rowKey={(record)=>{
+                        if (!record.__uniqueId)
+                    record.__uniqueId = ++uniqueId;
+                     return record.__uniqueId;
+                    }}
+            >
                 <Column title="ลำดับ"
                 render={(text,_,index)=>index+1}
                 >

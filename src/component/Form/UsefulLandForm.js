@@ -40,7 +40,7 @@ function UsefulLandForm(props) {
                         Special_Useful:`${props.useful.Special_Useful}`
                     }
                     :{
-                    Place:props.balancePlace,
+                    Place:props.balancePlace?.toFixed(2),
                     Usage:true,
                     Special_Useful:'0'}}
             >

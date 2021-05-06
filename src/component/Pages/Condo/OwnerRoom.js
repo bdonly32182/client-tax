@@ -67,20 +67,25 @@ function OwnerRoom({customers,Room_ID}) {
         return comparison;
       }
     const generate_tax_id = (category)=>{
-        let jwt = jwtDecode(token)
-        if (customer.length >1) {
-            customer.sort(compare);
-            const id_tax =  customer.map(cus =>cus.Cus_No.substr(9,13)).reduce((pervious,current)=>pervious+current);
-            
-            customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:`${jwt.distict_id}_${id_tax}`}));//use table customer_has_tax
-            dispatch(generate_tax_room(`${jwt.distict_id}_${id_tax}`,id_cus,customer[0],category,Room_ID));
-            id_cus.length=0 
-        }else{
-            customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:customer[0].id_customer}));
-            dispatch(generate_tax_room(`${jwt.distict_id}_${customer[0].Cus_No}`,id_cus,customer[0],category,Room_ID));
-            id_cus.length=0 
+        try {
+            let jwt = jwtDecode(token)
+            if (customer.length >1) {
+                customer.sort(compare);
+                const id_tax =  customer.map(cus =>cus.Cus_No.substr(9,13)).reduce((pervious,current)=>pervious+current);
+                
+                customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:`${jwt.distict_id}_${id_tax}`}));//use table customer_has_tax
+                dispatch(generate_tax_room(`${jwt.distict_id}_${id_tax}`,id_cus,customer[0],category,Room_ID));
+                id_cus.length=0 
+            }else{
+                customer.map(cus =>id_cus.push({Cus_No:cus.id_customer,Customer_Tax_ID:customer[0].id_customer}));
+                dispatch(generate_tax_room(`${jwt.distict_id}_${customer[0].Cus_No}`,id_cus,customer[0],category,Room_ID));
+                id_cus.length=0 
+            }
+            setGenerateClick(true);   
+        } catch (error) {
+            window.location.reload()
         }
-        setGenerateClick(true);
+        
     }
     const customer_list = customers =>{
         return Array.isArray(customers)&&customers.map((customer,i) =>(

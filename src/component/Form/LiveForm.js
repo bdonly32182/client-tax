@@ -4,7 +4,9 @@ function LiveForm({Live,formLive}) {
     return (
         <div>
             <Form form ={formLive}
-            initialValues={Live}
+            initialValues={{...Live,
+            // "RateLiveTax":Live?.Useful_live?.RateLiveTax
+            }}
             >
                 
                 <Form.Item 
@@ -12,6 +14,12 @@ function LiveForm({Live,formLive}) {
                 name="Percent_Live">
                    <Input />
                 </Form.Item>
+                {/* <Form.Item
+                label="อัตตราภาษี"
+                name="RateLiveTax"
+                >
+                    <Input />
+                </Form.Item> */}
             </Form>
         </div>
     )

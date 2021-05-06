@@ -4,15 +4,15 @@ export const PercentType =({BuildOnUsefulLands,PriceUseful,EmptyTypes,FarmTypes,
     if (BuildOnUsefulLands.length >0) {//กรณีมีสิ่งปลุกสร้าง
      
         return BuildOnUsefulLands.map(({Building},i)=>{
-            return <>
-                     <p key={i+1}>{Building.LiveType&&Building.LiveType?.Percent_Live}</p>
+            return <div key={i}>
+                     <p >{Building.LiveType&&Building.LiveType?.Percent_Live}</p>
                      
-                     <p key={i+2}>{Building.OtherType&&Building.OtherType?.Percent_Other}</p>             
+                     <p>{Building.OtherType&&Building.OtherType?.Percent_Other}</p>             
                     
-                    <p key={i+3}>{Building.FarmType&&Building.FarmType?.Percent_Farm}</p>
+                    <p >{Building.FarmType&&Building.FarmType?.Percent_Farm}</p>
                     
-                      <p key={i+4}>{Building.EmptyType&&Building.EmptyType?.Percent_Empty}</p>     
-             </>
+                      <p >{Building.EmptyType&&Building.EmptyType?.Percent_Empty}</p>     
+             </div>
         })
         
     }
@@ -24,22 +24,10 @@ export const PercentType =({BuildOnUsefulLands,PriceUseful,EmptyTypes,FarmTypes,
      }else{
          //กรณีที่ไม่มีสิ่งปลูกสร้าง แต่มีสัดส่วน ก็คือมีสิ่งปลูกสร้างคร่อมแปลงมา หรือ สิ่งปลูกสร้างกับที่ดินคนละเจ้าของ
          return <>
-                 {LiveTypes.length>0&&LiveTypes.map((live,i)=>(<>
-                        
-                         <p key={i}>{live.Percent_Live}</p>
-                 </>))}
-                 {OtherTypes.length>0&&OtherTypes.map((other,i)=>(<>
-                         
-                         <p key={i}>{other.Percent_Other}</p>             
-                 </>))}    
-                 {FarmTypes.length>0&&FarmTypes.map((farm,i)=>(<>
-                         
-                         <p >{farm.Percent_Farm}</p>
-                 </>))}    
-                 {EmptyTypes.length>0&&EmptyTypes.map((empty,i)=><>
-                        
-                         <p >{empty.Percent_Empty}</p>     
-                 </>)}    
+                 {LiveTypes.length>0&&LiveTypes.map((live,i)=>(<p key={i}>{live.Percent_Live}</p>))}
+                 {OtherTypes.length>0&&OtherTypes.map((other,i)=>(<p key={i}>{other.Percent_Other}</p>))}    
+                 {FarmTypes.length>0&&FarmTypes.map((farm,i)=>(<p key={i}>{farm.Percent_Farm}</p>))}    
+                 {EmptyTypes.length>0&&EmptyTypes.map((empty,i)=><p key={i}>{empty.Percent_Empty}</p>)}    
                      
              </>
      }

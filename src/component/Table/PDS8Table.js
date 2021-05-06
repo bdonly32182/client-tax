@@ -116,7 +116,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
                 let Price =   text.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
                 (record.Price_Room * record.Amount_Place)- 50000000:
                 record.Price_Room * record.Amount_Place
-                return seperate(Price,record.Category_use,0,record.StartYearEmpty).map(res=><p>{res.percent}</p>)
+                return seperate(Price,record.Category_use,0,record.StartYearEmpty).map((res,i)=><p key={i}>{res.percentShow}</p>)
               }}
              
     
@@ -126,7 +126,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
                 let Price =   text.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
                 (record.Price_Room * record.Amount_Place)- 50000000:
                 record.Price_Room * record.Amount_Place
-                return seperate(Price,record.Category_use,0,record.StartYearEmpty).map(res=><p>{(res.percent * res.price).toLocaleString()}</p>)
+                return seperate(Price,record.Category_use,0,record.StartYearEmpty).map((res,i)=><p key={i}>{(res.percent * res.price).toLocaleString()}</p>)
               }}
             />
         </Table>

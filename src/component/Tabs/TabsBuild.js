@@ -19,6 +19,7 @@ function TabsBuild(props) {
                         </Row>
                 
                 </TabPane>
+                {props.buildings&&
                 <TabPane tab="สิ่งปลูกสร้างคร่อมแปลง" key="3">
                     <Row>
                         <Col>
@@ -26,8 +27,8 @@ function TabsBuild(props) {
                         </Col>
                         <Col span={15}></Col>
                         <Col>
-                            <BuildAccrossModal titleButton="เลือกที่ดินคร่อมแปลง" building={props.building} 
-                            PriceUseful={props.PriceUseful}  buildings={props.buildings} UsefulLand_Tax_ID={props.UsefulLand_Tax_ID}/>
+                            <BuildAccrossModal titleButton="เลือกที่ดินคร่อมแปลง" building={props.building} usefulLandID={props.useful_id}
+                            PriceUseful={props.PriceUseful}  buildings={props.buildings} UsefulLand_Tax_ID={props.UsefulLand_Tax_ID} />
                         </Col>
                     </Row>
                 
@@ -41,6 +42,7 @@ function TabsBuild(props) {
                       <p style={{padding:'10px',color:'red'}}>* กรณีมีการเปลี่ยนแปลงกับสิ่งปลูกสร้างแปลงนี้ให้ทำการลบการใช้ประโยชน์ที่ถูกคร่อมทิ้งก่อน แล้วค่อยทำการคร่อมแปลงใหม่</p>
                   </Row>
                 </TabPane>
+                }
             </Tabs>
         </>
     )

@@ -4,9 +4,9 @@ function PDS3Table({land,tax,loading}) {
     const {Column,ColumnGroup} = Table;
     let uniqueId = 0;
     const content = (customers=[]) => {
-        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
-            <p>เลขบัตรประชาชน :{Cus_No}</p>
-            <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname},index)=><div key={Cus_No}>
+            <p >เลขบัตรประชาชน :{Cus_No}</p>
+            <p >ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
         </div>)
     }
     return (
@@ -24,12 +24,13 @@ function PDS3Table({land,tax,loading}) {
                                     <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${tax?.uid_tax} (${tax?.Category_Tax})`}</b></p>
                             </Popover>
                 </div>
-                            <Table bordered={true} dataSource={land } size="small"
+                <Table bordered={true} dataSource={land } size="small"
                 rowKey={(record)=>{
                     if (!record.__uniqueId)
                 record.__uniqueId = ++uniqueId;
                 return record.__uniqueId;
                 }}
+                scroll={{ x: 'calc(1500px + 50%)'}}
                 loading={loading}
         >
             <ColumnGroup title="รายการที่ดิน">
@@ -72,13 +73,16 @@ function PDS3Table({land,tax,loading}) {
 
                 />
                 <ColumnGroup title="จำนวนเนื้อที่ดิน">
-                    <Column dataIndex="Useful_RAI" title="ไร่" key="Useful_RAI"
+                    <Column dataIndex="Useful_RAI" title="ไร่" 
+                    key="Useful_RAI"
                     render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Useful_RAI}</p>}
                     />
-                    <Column dataIndex="Useful_GNAN" title="งาน" key="Useful_GNAN"
+                    <Column dataIndex="Useful_GNAN" title="งาน" 
+                    key="Useful_GNAN"
                     render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Useful_GNAN}</p>}                   
                     />
-                    <Column dataIndex="Useful_WA" title="ตร.วา" key="Useful_WA"
+                    <Column dataIndex="Useful_WA" title="ตร.วา" 
+                    key="Useful_WA"
                     render={(text,record)=><p>{record.UsefulLand_Tax_ID===tax?.uid_tax&&record.Useful_WA}</p>}
                     />
                 </ColumnGroup>

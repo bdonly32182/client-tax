@@ -28,7 +28,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
         )
     }
     const content = (customers=[]) => {
-        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div key={Cus_No}>
             <p>เลขบัตรประชาชน :{Cus_No}</p>
             <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
         </div>)
@@ -56,11 +56,11 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                 }}
                 loading={loading}
                 pagination={false}
-                scroll={{ x: 'calc(700px + 50%)'}}
+                scroll={{ x: 'calc(2200px + 50%)'}}
                 summary={pageData=>{
                     let total = 0;
                     pageData.forEach((record)=>{
-                        let result = Summary(record,Category_Tax,uid_tax,exceptEmergency)
+                        let result = Summary(record,Category_Tax,uid_tax,exceptEmergency,land)
                         // console.log(result[0]);
                         if (result[0]?.length>0) {//กรณีที่มัน มี building เราต้อง map เข้าไปจึงทำให้  return array 2D ออกมา
                             //result[0] เพราะว่า มันซ้ำกันเลยไม่ต้อง map
@@ -104,38 +104,46 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                 title="ที่"
                 dataIndex="Land"
                 key="Serial_code_land"
+                width={20} 
                 render={(text)=><p>{text.Serial_code_land}</p>}
 
                 />
                 <Column 
                 title="ประเภทที่ดิน"
                 dataIndex="Land"
+                width={100} 
                 key="Category_doc"
                 render={(text)=><p>{`${text.Category_doc}/${text.Parcel_No}`}</p>}
                 />
                 <Column dataIndex="TypeName" title="ลักษณะการใช้ประโยชน์ที่ดิน"
+                 width={80} 
                 />
                 <ColumnGroup title="จำนวนเนื้อที่ดิน">
                     <Column dataIndex="Useful_RAI" title="ไร่" key="Useful_RAI" 
+                     width={50} 
                     render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text}
                     />
                     <Column dataIndex="Useful_GNAN" title="งาน" key="Useful_GNAN"
+                     width={50} 
                     render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text}
                     />
                     <Column dataIndex="Useful_WA" title="ตร.วา" key="Useful_WA"
+                    width={50} 
                     render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text}
                     />
                 </ColumnGroup>
                 <Column title="คำนวณเป็น ตรว." key="Place" dataIndex="Place"
+                width={80} 
                     render={(text,record)=>record.UsefulLand_Tax_ID===uid_tax&&text.toLocaleString(undefined,{minimumFractionDigits: 2,
                             maximumFractionDigits: 2})}
                 />
                 <Column  title="ราคาประเมินต่อ ตรว." dataIndex="Land"
+                width={90} 
                      render={(Land,record)=>record.UsefulLand_Tax_ID===uid_tax&&Land.Price.toLocaleString(undefined,{minimumFractionDigits: 2,
                         maximumFractionDigits: 2})}
                 />
                 <Column title="รวมราคาประเมิณของที่ดิน" dataIndex="PriceUseful"
-                width={100}  
+                width={90}  
                 render={(text,record)=>{
                   return  record.UsefulLand_Tax_ID===uid_tax&&text.toLocaleString(undefined,{minimumFractionDigits: 2,
                     maximumFractionDigits: 2})
@@ -160,28 +168,28 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                              
                                 <Column  title="ประเภทสิ่งปลูกสร้าง"
                                 dataIndex="BuildOnUsefulLands"
-                                width={80}  
+                                width={240}  
                                 render={(text)=>formatColHaveBuild(text,"ประเภทสิ่งปลูกสร้าง")}
                                  />
                                 <Column title="ลักษณะสิ่งปลูกสร้าง" 
-                                width={68}  
+                                width={50}  
                                 dataIndex="BuildOnUsefulLands"
                                 render={(text)=>formatColHaveBuild(text,"ลักษณะสิ่งปลูกสร้าง")}
 
                                 />
                                 <Column title="ขนาดพื้นที่รวม (ตร.ม)" 
-                                width={65}  
+                                width={75}  
                                 dataIndex="BuildOnUsefulLands"
                                 render={(text)=>formatColHaveBuild(text,"ขนาดพื้นที่รวม")}
 
                                 />
                                 <Column title="ราคาประเมินสิ่งปลูกสร้างต่อ ตรม."
-                                width={80}  
+                                width={70}  
                                 dataIndex="BuildOnUsefulLands"
                                 render={(text)=>formatColHaveBuild(text,"ราคาประเมิน")}
                                  /> 
                                   <Column title="รวมราคาสิ่งปลูกสร้าง"
-                                  width={100}  
+                                  width={90}  
                                   dataIndex="BuildOnUsefulLands"
                                   render={(text)=>formatColHaveBuild(text,"รวมราคาสิ่งปลูกสร้าง")}
                                  /> 
@@ -192,12 +200,12 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                                     render={(text)=>formatColHaveBuild(text,"อายูสิ่งปลูกสร้าง")}                            
                                     /> 
                                     <Column title="เปอร์เซ็นต์"   
-                                    width={63}   
+                                    width={20}   
                                     dataIndex="BuildOnUsefulLands"
                                     render={(text)=>formatColHaveBuild(text,"เปอร์เซ็นต์")}                                 
                                     /> 
                                     <Column title="คิดเป็นค่าเสื่อม(บาท)"         
-                                    width={100}     
+                                    width={80}     
                                     dataIndex="BuildOnUsefulLands"
                                     render={(text)=>formatColHaveBuild(text,"คิดเป็นค่าเสื่อม")}                       
                                     /> 
@@ -210,15 +218,15 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
             </ColumnGroup>
                                 <Column title="รวมราคาประเมิณที่ดินและสิ่งปลูกสร้าง" 
                                 dataIndex="BuildOnUsefulLands"
-                                width={110}
+                                width={140}
                                 render={(build,{PriceUseful,UsefulLand_Tax_ID})=>{
                                     let totalPlace = build.map(({Building:{Width,Length}})=>Width * Length)
                                                     .reduce((pre,cur)=>pre+cur,0)
-                                    return build.length>0?UsefulLand_Tax_ID===uid_tax? build.map(({Building:{Width,Length,AfterPriceDepreciate}}) =><p>{(((Width * Length)/totalPlace)*PriceUseful +AfterPriceDepreciate )
+                                    return build.length>0?UsefulLand_Tax_ID===uid_tax? build.map(({Building:{Width,Length,AfterPriceDepreciate}},index) =><p key={index}>{(((Width * Length)/totalPlace)*PriceUseful +AfterPriceDepreciate )
                                                                 .toLocaleString(undefined,{minimumFractionDigits: 2,
                                                                     maximumFractionDigits: 2})
                                                             }</p>):
-                                                            build.map(({Building:{Width,Length,AfterPriceDepreciate}}) =><p>{(AfterPriceDepreciate)
+                                                            build.map(({Building:{Width,Length,AfterPriceDepreciate}},i) =><p key={i}>{(AfterPriceDepreciate)
                                                                 .toLocaleString(undefined,{minimumFractionDigits: 2,
                                                                     maximumFractionDigits: 2})
                                                             }</p>)
@@ -227,36 +235,38 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                                 }}
                                 /> 
                                 <Column title="ลักษณะการใช้ประโยชน์"
-                                width={120}
+                                width={110}
                                 render={(_,record)=>CategoryUseful(record)}
                                 />
                                 <Column title="ขนาดพื้นที่"
+                                width={50}
                                  render={(_,record)=>SizeType(record)}
                                 />
                                 <Column title="คิดเป็นสัดส่วน"
+                                width={50}
                                 render={(_,record)=>PercentType(record)}
                                 />
                                 <Column title="รวมราคาประเมินที่ดินและสิ่งปลูกสร้างตามสัดส่วน"
+                                width={120}
                                 render={(_,record)=>ProportionType(record,uid_tax)}
                                 />
                                 <Column title="หักมูลค่าฐานภาษีที่ได้รับยกเว้น(บาท)" 
-                                        width={140}
+                                         width={20}
                                         render={(_,record)=>Except(record,Category_Tax,uid_tax)}
                                 />
                                 <Column title="คงเหลือราคาประเมิณทรัพย์ที่ต้องชำระ" 
-                                        width={150}
-                                       render={(_,record)=>exceptBalance(record,Category_Tax,uid_tax)}
+                                        width={136}
+                                       render={(_,record)=>exceptBalance(record,Category_Tax,uid_tax,land)}
                                 />
                                 <Column title="อัตราภาษีร้อยละ" 
-                                        width={120}
+                                        width={50}
                                         // colSpan={2}
-                                        render={(_,record) =>RateTax(record,Category_Tax,uid_tax)}
+                                        render={(_,record) =>RateTax(record,Category_Tax,uid_tax,land)}
                                 />
                                 <Column title="จำนวนภาษีต้องชำระ(บาท)" 
-                                        width={120}
-                                        render={(_,record) =>AmountPriceTax(record,Category_Tax,uid_tax,exceptEmergency)}
+                                        width={150}
+                                        render={(_,record) =>AmountPriceTax(record,Category_Tax,uid_tax,exceptEmergency,land)}
 
-                                        // render={(text,record,index) =>objPDS7.AmountPriceTax(record)}
                                 />
                                 
                                

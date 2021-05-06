@@ -1,11 +1,13 @@
 import React from 'react'
 import {Form, Input} from 'antd'
 function OtherForm({other,formOther}) {
-
+    console.log(other);
     return (
         <div>
             <Form form ={formOther}
-            initialValues={other}
+            initialValues={{...other,
+                // "RateOtherTax":other?.Useful_other?.RateOtherTax
+            }}
             >
                
                 <Form.Item 
@@ -13,6 +15,12 @@ function OtherForm({other,formOther}) {
                 name="Percent_Other">
                    <Input />
                 </Form.Item>
+                {/* <Form.Item
+                label="อัตตราภาษี"
+                name="RateOtherTax"
+                >
+                    <Input />
+                </Form.Item> */}
             </Form>
         </div>
     )
