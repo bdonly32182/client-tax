@@ -18,14 +18,15 @@ function BuildingModal(props) {
                 let date =new Date()
                 let nowYear = date.getFullYear() + 543
                 let findAge =values.Age_Build>2000?nowYear-values.Age_Build+1:values.Age_Build
-                let Build_Total_Place = +values.Farm_Size+  + values.Live_Size+ + values.Other_Size+ + values.Empty_Size;
+                let Build_Total_Place = +values.Farm_Size+  + values.Live_Size+ + values.Other_Size+ + values.Empty_Size + + values.Forrent_Size;
                if (props.onEdit&&props.building) {
-                   let {FarmType,LiveType,OtherType,EmptyType,Build_Id} = props.building
+                   let {FarmType,LiveType,OtherType,EmptyType,Build_Id,ForrentLive} = props.building
                 
-                usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:values.Percent_Farm,Build_farm_ID:Build_Id,id:FarmType?.id});
-                usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:values.Percent_Live,Live_Status:values.Live_Status,Build_live_ID:Build_Id,id:LiveType?.id});
-                usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:values.Percent_Other,Build_other_ID:Build_Id,id:OtherType?.id});
-                usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:values.Percent_Empty,Build_empty_ID:Build_Id,id:EmptyType?.id,
+                usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:values.Percent_Farm,Build_farm_ID:Build_Id,id:FarmType?.id,usefulId:props.useful_id});
+                usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:values.Percent_Live,Live_Status:values.Live_Status,Build_live_ID:Build_Id,id:LiveType?.id,usefulId:props.useful_id});
+                usefulTypeAll.push({Forrent_Size:values.Forrent_Size,Percent_Forrent:values.Percent_Forrent,Build_forrent_ID:Build_Id,id:ForrentLive?.id ,usefulId:props.useful_id});
+                usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:values.Percent_Other,Build_other_ID:Build_Id,id:OtherType?.id,usefulId:props.useful_id});
+                usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:values.Percent_Empty,Build_empty_ID:Build_Id,id:EmptyType?.id,usefulId:props.useful_id,
                                       EmptyAbsolute:values.EmptyAbsolute,StartYear:values.StartYear<2000?nowYear - values.StartYear:values.StartYear
                                  });                 
                     let find_percent = await depreciate.find(obj => obj.Age === +findAge && obj.category === values.StyleBuilding);
@@ -40,12 +41,14 @@ function BuildingModal(props) {
                         employee_build:props.employee_land,
                         FarmType,LiveType,OtherType,EmptyType
                     };
+                    console.log(LiveType?.id);
                   return  dispatch(edit_building(body,props.useful_id,props.code_land));
                }
                 let Build_Id = setBuildingID(props.buildings);
                //usefulAll  props.useful_id
                 values.Farm_Size > 0&&usefulTypeAll.push({Farm_Size:values.Farm_Size,Percent_Farm:Math.floor((values.Farm_Size/Build_Total_Place*100)*100 )/100,Build_farm_ID:Build_Id});
                 values.Live_Size >0&&usefulTypeAll.push({Live_Size:values.Live_Size,Percent_Live:Math.floor((values.Live_Size/Build_Total_Place*100)*100)/100,Live_Status:values.Live_Status,Build_live_ID:Build_Id});
+                values.Forrent_Size >0&&usefulTypeAll.push({Forrent_Size:values.Forrent_Size,Percent_Forrent:Math.floor((values.Forrent_Size/Build_Total_Place*100)*100)/100,Build_forrent_ID:Build_Id});
                 values.Other_Size >0&& usefulTypeAll.push({Other_Size:values.Other_Size,Percent_Other:Math.floor((values.Other_Size/Build_Total_Place*100)*100)/100,Build_other_ID:Build_Id});
                 values.Empty_Size > 0 && usefulTypeAll.push({Empty_Size:values.Empty_Size,Percent_Empty:Math.floor((values.Empty_Size / Build_Total_Place*100)*100) / 100,Build_empty_ID:Build_Id,
                                 EmptyAbsolute:values.EmptyAbsolute,StartYear:values.StartYear<2000?nowYear - values.StartYear:values.StartYear

@@ -112,7 +112,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                {text:`วันที่ .......... ${NowDate?.toLocaleDateString('th-TH', { year: 'numeric',month: 'long'})}`,margin: [300, 5, 20, 5]},  
                'เรื่อง แจ้งการประเมินเพื่อเสียภาษีที่ดินและสิ่งปลูกสร้าง',
                {text:`เรียน ${Sendto}`},
-               {text:`ที่อยู่ บ้านเลขที่ ${Address?.Num_House||" - "} ถนน ${Address?.Road_Name||"-"} ซอย ${Address?.Soi||"-"} หมู่ ${Address?.Moo||"-"} แขวง ${Address?.Tambol||"-"} 
+               {text:` บ้านเลขที่ ${Address?.Num_House||" - "} ถนน ${Address?.Road_Name||"-"} ซอย ${Address?.Soi||"-"} หมู่ ${Address?.Moo||"-"} แขวง ${Address?.Tambol||"-"} 
                เขต ${Address?.district_name||"-"} จังหวัด ${Address?.Changwat||"-"}  ${Address?.Post_No||"-"} เบอร์ติดต่อ ${Address?.Phone_no||"-"}`},
                {text:'ตามที่ท่านเป็นเจ้าของทรัพย์สิน ประกอบด้วย',style:'marginText'},
                {text: `1.ที่ดิน จำนวน ${leader.Land?.length>0?leader.Land[0]?.totalLand:0} แปลง`,style:'marginText' },
@@ -493,7 +493,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
         pdfMake.createPdf(PreviewDoc).open()
     }
     const FuncSpreadMap =(array=[])=>{
-            console.log(array);
             let liveFilter = array.filter(item=>item.category ==="อยู่อาศัย" && item.text )
             live =[...live,...liveFilter];
             let otherFilter =array.filter(item=>item.category ==="อื่นๆ"&& item.text)
@@ -587,7 +586,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
         let SaveDoc = DocDifinition();
         const GeneratePDF = pdfMake.createPdf(SaveDoc);
         let EmpTakeCare =  EmployeeTakeCare(land,condo)
-      
+           
         GeneratePDF.getBlob((data)=>{
             const formData =new FormData();
             let buildUpdate = BuildUpdateYear(land,yearDoc)

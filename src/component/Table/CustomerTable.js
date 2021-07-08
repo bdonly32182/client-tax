@@ -58,6 +58,8 @@ function CustomerTable(props) {
                 return record.__uniqueId;
                 }}
                 onChange={handleTableChange}
+                scroll={{x:'100%'}}
+                size="small"
         ></Table>
         </>
     )

@@ -43,6 +43,7 @@ function EditTax(props) {
         }
         if (value === "4") {
             pds7.length===0&& axios.get('/api/pds7/'+tax.uid_tax).then((result) => {
+                console.log(result.data);
                 setPds7(result.data)
                 result.data&&setLoading7(false)
             }).catch((err) => {
@@ -99,30 +100,38 @@ function EditTax(props) {
     return (
         <div>
             <Header />
-            <Tabs type="card" onTabClick={onTabClick} onTabScroll={{direction:"top"}}>
+            <Tabs type="card" onTabClick={onTabClick}>
                 <TabPane key="1" tab="จัดการข้อมูลเจ้าของทรัพย์สิน">
-                    <Row style={{padding:'60px',textAlign:'center'}}>
+                    <Row style={{paddingLeft:'10%',textAlign:'center'}}>
                         
-                        <Col xs={24} sm={24} md={20} lg={20} xl={20}>
-                        <Layout>
-                            <CustomerTable customer = {tax.Customers} isEdit={true}/>
-                        </Layout>
-                        <Divider />
-                        <Layout>
-                            <LandTable lands={tax.Lands} isEdit={true}/>
-                        </Layout>
-                        <Divider />
-                        <Layout>
-                            <BuildInTaxTable building={tax.Buildings} isEdit={true} />
-                        </Layout>
-                        <Layout>
-                            <CondoTable condos={tax.Rooms} isEdit={true}/>
-                        </Layout>
-                        <Divider />
-                       
+                        <Col xs={22} sm={20} md={20} lg={20} xl={22} xxl={22}>
+                            <Layout>
+                                <CustomerTable customer = {tax.Customers} isEdit={true}/>
+                            </Layout>
+                            <Divider />
+       
+                        </Col>
+                        <Col  xs={22} sm={20} md={20} lg={20} xl={22} xxl={22}>
+                            <Layout>
+                                <LandTable lands={tax.Lands} isEdit={true}/>
+                            </Layout>
+                            <Divider />
+                        </Col>
+                        <Col  xs={22} sm={20} md={20} lg={20} xl={22} xxl={22}>
+                            <Layout>
+                                <BuildInTaxTable building={tax.Buildings} isEdit={true} />
+                            </Layout>
+                            <Divider />
+                        </Col>
+                        <Col  xs={22} sm={20} md={20} lg={20} xl={22} xxl={22}>
+                            <Layout>
+                                <CondoTable condos={tax.Rooms} isEdit={true}/>
+                            </Layout>
+                            
                         </Col>
                     
                     </Row>
+                    
                 </TabPane>
                 <TabPane key="2" tab="จัดการที่อยู่ในการส่ง">
                     <Row style={{padding:20}}>
@@ -161,7 +170,7 @@ function EditTax(props) {
                     {pds7 &&(
                         <div style={{margin:'15px'}}>
                           
-                           <NewPDS7 land = {pds7} tax={tax} loading={loading7} />
+                           {/* <NewPDS7 land = {pds7} tax={tax} loading={loading7} /> */}
                            </div> 
                     )}
                            

@@ -169,7 +169,7 @@ function PaymentDoc({costbook,payment_doc}) {
                                     </Col>
                                     <Col span={12}>
                                         <h3>ค่าภาษีที่ดินและสิ่งปลูกสร้าง (บาท)</h3>
-                                      <Input value={costbook?.BriefTotal.toFixed(2)}/>
+                                      <Input value={costbook?.BriefTotal?.toFixed(2)}/>
                                     </Col>
                                 </Row>
                                 <Divider />

@@ -1,18 +1,22 @@
 import React,{useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import {fetch_land} from '../../../store/action/LandAction'
+// import {FetchsBuildInLand} from '../../../store/action/BuildingAction'
 import {useParams} from 'react-router-dom'
 import {Row,Col,Divider,Popover} from 'antd'
 import LandForm from '../../Form/LandForm'
 import OwnerLand from './OwnerLand'
 import UsefulLand from './UsefulLand'
 import Header from '../../Header'
+// import BuildingTable from '../../Table/BuildingTable'
 function DetialLand(props) {
     const dispatch = useDispatch();
     const {id} = useParams();
     const land = useSelector(state => state.lands);
+    const buildings = useSelector(state=>state.buildings);
     useEffect(() => {
        dispatch(fetch_land(id))
+    //    dispatch(FetchsBuildInLand(id))
     }, [dispatch,id,land.totalPlace])
     const content = (rate=[],createdAt,updatedAt)=>{
         let DateLand = createdAt?.split("-");
@@ -29,7 +33,7 @@ function DetialLand(props) {
         </div>)
     }
     return (
-        <div >
+        <div style={{margin:10}}>
             <Header /> 
             <Row>
                 <Popover content={content(land?.RateLands,land?.createdAt,land?.updatedAt)}>
@@ -45,12 +49,12 @@ function DetialLand(props) {
             <Row >
                 <Col span={1} >
                 </Col>
-                <Col xs={2} sm={4} md={8} lg={10} xl={12}>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
                     <LandForm land={land} />
                 </Col>
                 <Col span={1} >     
                 </Col>
-                <Col  xs={2} sm={4} md={6} lg={8} xl={10} >
+                <Col  xs={24} sm={10} md={10} lg={10} xl={10} xxl={10}>
                     <OwnerLand code_land={land.code_land} customers={land.Tax_Group&&land.Tax_Group.Customers}/>
                 <Divider />                
                 </Col>
@@ -58,7 +62,7 @@ function DetialLand(props) {
             </Row>
             <Divider />
             <Row >
-                <Col xs={2} sm={4} md={6} lg={8} xl={12}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <UsefulLand  code_land={land.code_land} 
                     totalPlace ={land.totalPlace} tax_id_land ={land.Land_Tax_ID}
                      usefullands={land.UsefulLands}
@@ -66,6 +70,7 @@ function DetialLand(props) {
                      categoryTax={land.Tax_Group}
                      employee_land ={land.employee_land}
                      />
+                     {/* <BuildingTable buildings={buildings} /> */}
                 </Col>
                 
             </Row>

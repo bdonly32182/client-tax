@@ -33,6 +33,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
             <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
         </div>)
     }
+    console.log(land);
     return (
         <div>
                             <div style={{textAlign:'right',paddingRight:'60px'}}>
@@ -48,6 +49,7 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                                     <p>รหัสผู้เสียภาษีที่ดินและสิ่งปลูกสร้าง : <b>{`${uid_tax} (${Category_Tax})`}</b></p>
                             </Popover>
                             </div>
+                            {/* 'calc(2200px + 50%)' */}
         <Table bordered={true} dataSource={land } size="small"
                 rowKey={(record)=>{
                     if (!record.__uniqueId)
@@ -56,12 +58,11 @@ function NewPDS7({land,tax:{uid_tax,Category_Tax,exceptEmergency,Customers},load
                 }}
                 loading={loading}
                 pagination={false}
-                scroll={{ x: 'calc(2200px + 50%)'}}
+                scroll={{ x: '100%'}}
                 summary={pageData=>{
                     let total = 0;
                     pageData.forEach((record)=>{
                         let result = Summary(record,Category_Tax,uid_tax,exceptEmergency,land)
-                        // console.log(result[0]);
                         if (result[0]?.length>0) {//กรณีที่มัน มี building เราต้อง map เข้าไปจึงทำให้  return array 2D ออกมา
                             //result[0] เพราะว่า มันซ้ำกันเลยไม่ต้อง map
                         let array2D = result[0].reduce((pre,cur)=>pre+cur,0)

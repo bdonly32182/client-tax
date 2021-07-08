@@ -15,6 +15,7 @@ function LandTable({isEdit,lands,onSelectCross}) {
                 record.__uniqueId = ++uniqueId;
                 return record.__uniqueId;
                 }}
+                scroll={{x:'100%'}}
         >
             <Column 
             title="ประเภทเอกสาร"

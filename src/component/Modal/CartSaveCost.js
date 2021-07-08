@@ -154,7 +154,7 @@ function CartSaveCost() {
                 let employeeTable = land[0]?.Land?.Employee?.TableNo||condo[0]?.Room?.Condo?.Employee?.TableNo||jwt?.TableNo;
                 let PricePds7 = sumPDS7(land,tax);
                 let PricePds8 = SummaryCondo(condo);
-                let {PriceExceptEmergency,totalPriceOfTax,PriceDiscount,totalBuilaAndLandYear,
+                let {PriceExceptEmergency,totalPriceOfTax,totalBuilaAndLandYear,
                     valueDifference,Relive,BriefTotal} = TotalPrice(PricePds7,PricePds8,tax.exceptEmergency,tax?.Customers);
                 let result = land.map(record=>{
                     let amountPriceTax = AmountPriceTaxCate(record,tax.Category_Tax,tax.uid_tax,tax.exceptEmergency,land)
@@ -179,7 +179,6 @@ function CartSaveCost() {
                 let PriceOther =0;
                 PriceOther = 0;
                 for (const arr of other) {  
-                    console.log(arr);
                     if (Array.isArray(arr.text)) {
                        let totalLive = arr.text.map(number=>number).reduce((pre,cur)=>pre+cur,0) 
                        PriceOther += totalLive        
@@ -214,7 +213,6 @@ function CartSaveCost() {
                 empty.length =0;
 
                 let {EmptyRoom,LiveRoom,OtherRoom} = FilterRoomPrice(condo)
-
                 let SaveDoc = DefinitionPdf(land,tax,condo,leader,amountCustomer,tax?.Customers,jwt,yearDoc,imageKrut,logoBkk,Sendto);
                 const GeneratePDF = pdfMake.createPdf(SaveDoc);
                      GeneratePDF.getBlob(async(data)=>{

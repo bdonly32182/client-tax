@@ -83,7 +83,7 @@ function WarningPdf({WarningBook,costbook}) {
                  {text:`ตามหนังสือที่อ้างถึง สำนักงานเขตจอมทอง ได้แจ้งการประเมินภาษีที่ดินและ สิ่งปลูกสร้าง`,margin:[70,0,0,0]},
                  {text:[
                    {text:`ประจำปีภาษี พ.ศ. ${costbook?.Year} เป็นเงินค่าภาษีทั้งสิ้น `},  
-                   {text:`${costbook?.BriefTotal.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})} บาท (${readNumber(`${costbook?.BriefTotal.toFixed(2)}`)}) นั้น`,bold:true}
+                   {text:`${costbook?.BriefTotal.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})} บาท (${readNumber(`${costbook?.BriefTotal?.toFixed(2)}`)}) นั้น`,bold:true}
                  ]},
                  {text:`ปรากฏว่าท่านไม่ได้มาชำระค่าภาษีภายในระยะเวลาที่กำหนด จึงต้องเสียเบี้ยปรับและเงินเพิ่มตามกฎหมาย ดังมีรายละเอียดต่อไปนี้`,margin:[0,0,0,20]},
                 {
@@ -114,7 +114,7 @@ function WarningPdf({WarningBook,costbook}) {
                  month: 'long',day: 'numeric'})}`,margin:[50,15,0,0]},
                  {text:[
                    {text:`รวมเป็นเงินภาษีค้างทั้งสิ้น `}, 
-                   {text:`${WarningBook?.totalPricePay.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})} บาท (${readNumber(`${WarningBook?.totalPricePay.toFixed(2)}`)})`,bold:true} 
+                   {text:`${WarningBook?.totalPricePay.toLocaleString(undefined,{minimumFractionDigits: 2,maximumFractionDigits: 2})} บาท (${readNumber(`${WarningBook?.totalPricePay?.toFixed(2)}`)})`,bold:true} 
                  ]},
                  
                  {text:`ไปชำระที่ ฝ่ายรายได้ สำนักงานเขต${jwt?.District_name} ภายใน ๑๕ วัน นับแต่วันที่ได้รับหนังสือฉบับนี้ ทั้งนี้ หากเห็นว่า 

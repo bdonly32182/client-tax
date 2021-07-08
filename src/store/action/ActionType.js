@@ -20,6 +20,7 @@ export const FETCH_BUILDING = 'fetch_building';
 export const FETCHS_BUILDING = 'fetchs_Building';
 export const FETCHS_BUILD_IN_USEFULLAND = 'fetchs_build_in_usefulland';
 export const DELETE_BUILDING = "DELETE_BUILDING";
+export const FETCHS_BUILDING_LAND = "fetchsbuildinginland"
 
 export const FETCHS_CONDO = "fetchs_condo";
 export const FETCH_CONDO = "fetch_condo";

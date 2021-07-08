@@ -17,6 +17,7 @@ function BuildInTaxTable(props) {
                     record.__uniqueId = ++uniqueId;
                     return record.__uniqueId;
                     }}
+                    scroll={{x:'100%'}}
             >
             <Column 
             title="บ้านเลขที่"

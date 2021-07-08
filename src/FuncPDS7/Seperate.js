@@ -4,19 +4,15 @@ function Percent (year,percent){
         percent += 0.003 // length = 5 is percent / 100
        
       };
-      
     return percent.toFixed(5);
   };
 function PercentShow (year,percent){
   let lastIndex = parseInt(year/3);
   for (let index = 1; index < lastIndex; index++) {
-      percent += 0.3
-     
+      percent += 0.3    
     };
-    
   return percent.toFixed(2);
 }
-
 //old ver sion 
 function Seperate(price=0,type="",discount=0,year=0,absoluteEmpty=false){
     let rate = [];

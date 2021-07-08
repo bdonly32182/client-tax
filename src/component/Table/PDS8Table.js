@@ -5,7 +5,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
     let uniqueId = 0 ;
     const {Column} = Table;
     const content = (customers=[]) => {
-        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div>
+        return customers.map(({Cus_No,title,Cus_Fname,Cus_Lname})=><div key={Cus_No}>
             <p>เลขบัตรประชาชน :{Cus_No}</p>
             <p>ชื่อ-นามสกุล :{`${title} ${Cus_Fname} ${Cus_Lname}`}</p>
         </div>)
@@ -27,7 +27,6 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
                             </div>
         <Table 
         dataSource={condo}
-        pagination={false}
         bordered={true}
         loading={loading}
         rowKey={(record)=>{
@@ -41,7 +40,7 @@ function PDS8Table({condo,loading,tax:{uid_tax,Category_Tax,exceptEmergency,Cust
                 let Price =   record.Room.LiveStatus?(record.Price_Room * record.Amount_Place)- 50000000 <0?0:
                 (record.Price_Room * record.Amount_Place)- 50000000:
                 record.Price_Room * record.Amount_Place
-              let totalPrice = seperate(Price,record.Category_use,0,record.StartYearEmpty).map(res=>res.percent * res.price)
+              let totalPrice = seperate(Price,record.Category_use,0,record.StartYearEmpty).map((res)=>res.percent * res.price)
                                 .reduce((pre,cur)=>pre+cur);
             total += totalPrice
             

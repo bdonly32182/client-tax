@@ -1,5 +1,5 @@
 import {FETCHS_TAX,FETCH_TAX} from '../action/ActionType'
-export default (state=[],action)=>{
+const TaxReducer = (state=[],action)=>{
     switch (action.type) {
         case FETCH_TAX:
             
@@ -10,3 +10,4 @@ export default (state=[],action)=>{
             return state;
     }
 }
+export default TaxReducer

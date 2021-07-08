@@ -32,10 +32,10 @@ export default function Header(props) {
     return (
         <div style={{width:"100%",paddingTop:5 ,backgroundColor:'whitesmoke',paddingLeft:'20px'}}>
             <Row >
-                <Col xs={7}sm= {10} md= {12} lg= {15} xl={17} xxl={18} style={{paddingTop:'15px'}}>
+                <Col xs={5}sm= {8} md= {12} lg= {15} xl={17} xxl={18} style={{paddingTop:'15px'}}>
                      <Link to="/main" style={{color:'black'}}><Image src="/home.png" width={20}preview={false}/>  หน้าหลัก</Link>  
                 </Col>
-                <Col xs={17}sm= {14} md= {12} lg= {9} xl={7} xxl={6} style={{paddingTop:'15px'}} >
+                <Col xs={19}sm= {16} md= {12} lg= {9} xl={7} xxl={6} style={{paddingTop:'15px'}} >
                     {user?.role ==="leader"&&
                         <Link to="/manage" style={{backgroundColor:'seashell',color:'steelblue',paddingRight:'10px'}}><b>*ในส่วนของหัวหน้า</b></Link>
                     }

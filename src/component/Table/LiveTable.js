@@ -5,7 +5,9 @@ import LiveForm from '../Form/LiveForm'
 import {useDispatch} from 'react-redux'
 import axios from '../../config/axios'
 import {FETCH_USEFUL_LAND} from '../../store/action/ActionType'
-function LiveTable({LiveList,onDelete}) {
+import NextoModal from '../Modal/NextoModal'
+
+function LiveTable({LiveList,onDelete,isAccross,tax_id,useful_id}) {
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
     const [form] = Form.useForm();
@@ -65,6 +67,9 @@ function LiveTable({LiveList,onDelete}) {
                                     <DeleteOutlined style={{color:'red'}}/>
                                     </Button>
                                 </Popconfirm>
+                                {isAccross &&
+                                    <NextoModal tax_id={tax_id} useful_id={useful_id} TypeName="อยู่อาศัย" isAccross={isAccross}/>
+                                }
                     </Space>}
                     />
                 </ColumnGroup>

@@ -66,7 +66,7 @@ function Manage(props) {
         });
     }
     return (
-        <Layout style={{height:"100vh"}}>
+        <Layout style={{height:"100%"}}>
             <Sider
             trigger={null} collapsible collapsed={collapsed}
             >
@@ -95,7 +95,7 @@ function Manage(props) {
                 
             </Menu>
             </Sider>
-            <Layout style={{height:"100vh"}}>
+            <Layout style={{height:"100%"}}>
             <Header className="site-layout-background" style={{ padding: 0 }}>
             {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
               className: 'trigger',
@@ -133,7 +133,7 @@ function Manage(props) {
                     {keys ==="7" && <Pds6Form />}
                 </div>
             </Content>
-            {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> */}
+            <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
             </Layout>
         </Layout>
     )

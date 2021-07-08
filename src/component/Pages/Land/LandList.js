@@ -69,7 +69,6 @@ function LandList(props) {
             )
         }
     ]
-    
     return (
         <div>
 
@@ -80,6 +79,7 @@ function LandList(props) {
                 record.__uniqueId = ++uniqueId;
                 return record.__uniqueId;
                 }}
+                loading={props.lands.length === 0}
             />
             
         </div>

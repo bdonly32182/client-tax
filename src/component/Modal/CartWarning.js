@@ -144,7 +144,7 @@ function CartWarning({onSearchWarning,warning,setWarning}) {
                     <Column title="เลขหนังสือแจ้งการประเมิน" dataIndex="CostBookNo" key="CostBookNo"/>
                     <Column title="ชื่อผู้ชำระภาษี" dataIndex="SendTo"key="SendTo"/>
                     <Column title="ราคาทั้งหมด" dataIndex="BriefTotal"key="BriefTotal"
-                            render={(text)=>text.toFixed(2)}
+                            render={(text)=>text?.toFixed(2)}
                     />
                     <Column title="ประจำปี" dataIndex="Year"key="Year"/>
                     {/* <Column title="พนักงานที่รับผิดชอบ" dataIndex="Employee_No"key="Employee_No"/> */}

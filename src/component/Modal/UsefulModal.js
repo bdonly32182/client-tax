@@ -123,7 +123,6 @@ function UsefulModal(props) {
             onCancel={handleCancel}
             width="60%"
             wrapClassName="center"
-            style={{justifyContent:"center"}}
                 > 
                 {props.onEdit?<TabsUseful  formModal={form} useful ={props.usefulTable} />
                     :

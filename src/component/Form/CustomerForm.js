@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
-import { Form, Input, Button, Col,Select } from 'antd';
+import { Form, Input, Button, Col,Select , Modal, notification } from 'antd';
 import {category_customer,title_customer} from '../Select/data'
+import axios from 'axios';
 
   const tailLayout = {
     wrapperCol: {
@@ -12,6 +13,8 @@ function CustomerForm(props) {
     const [form] = Form.useForm();
     const [title,setTitle] = useState(title_customer[category_customer[0]])
     const [secondTitle, setSecondTitle] = useState(title_customer[category_customer[0]][0])
+    const [visible,setVisible] = useState(false);
+    const [persdistrict,setPersDistrict] = useState('');
     useEffect(()=>{
       props.customer&& form?.setFieldsValue(props.customer)
       props.formModal&& props?.formModal?.resetFields();
@@ -27,7 +30,19 @@ function CustomerForm(props) {
   const onChangeTitle =(value) =>{
      setSecondTitle(value)
   }
-  console.log(title);
+  const onEditTax = ()=>{
+    const {id_customer} = props.customer
+    let body = {
+      BeforeNumber:id_customer,
+      AfterNumber:persdistrict
+    }
+    console.log(body);
+    axios.post('/api/edit/persno',body).then((result) => {
+      notification.success({message:'แก้ไขรหัสประจำเขตเรียบร้อยแล้ว'})
+    }).catch((err) => {
+      notification.error({message:"แก้ไขรหัสประจำเขตล้มเหลว"})
+    });
+  }
     return (
         <Form
         //props.formModal คือส่งค่าฟอร์มมาจาก โมดอล CustomerModal.js
@@ -138,7 +153,7 @@ function CustomerForm(props) {
                             <Form.Item
                                 label="บ้านเลขที่"
                                 name="Num_House"
-                                rules={[{ required: true, message: 'กรุณากรอกบ้านเลขที่!' }]}
+                                // rules={[{ required: true, message: 'กรุณากรอกบ้านเลขที่!' }]}
                               >
                                 <Input />
                               </Form.Item>
@@ -259,7 +274,19 @@ function CustomerForm(props) {
                         {props.button}
                       </Button>
                       <Button style={{backgroundColor:'red',color:'whitesmoke'}} onClick={()=>props.onDelete(props.customer.id_customer)}>ลบข้อมูลประชาชน</Button>
+                      {props.onEdit &&
+                      <>
+                        <Button style={{backgroundColor:'#344fa1',color:'whitesmoke'}} onClick={()=>setVisible(true)}>แก้ไขรหัสผู้เสียภาษีประจำเขต</Button>
+                        <Modal visible={visible} title="แก้ไขรหัสผู้เสียภาษีประจำเขต"
+                        onCancel={()=>setVisible(false)}
+                        onOk={onEditTax}
+                        >
+                            <Input onChange={(e)=>setPersDistrict(e.target.value)}/>
+                        </Modal> 
+                      </>
+                      }
                     </Form.Item>
+                      
                   }
                 </Form>
     )

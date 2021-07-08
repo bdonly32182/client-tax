@@ -48,7 +48,7 @@ function UsefulTable({ListUseful,PriceLand}) {
                  render={(text,record)=>record.TypeName ==='หลายประเภท'?<CheckOutlined />:null}
                 
                 />
-                <ColumnGroup title="เนื้อที่ใช้ประโยชน์">
+                <ColumnGroup title="เนื้อที่ใช้ประโยชน์" responsive= {['md']}>
                 <Column title="ไร่" dataIndex="Useful_RAI"/>
                 <Column title="งาน" dataIndex="Useful_GNAN"/>
                 <Column title="วา" dataIndex="Useful_WA"/>
@@ -57,6 +57,7 @@ function UsefulTable({ListUseful,PriceLand}) {
                 <Column title="การจัดการ"
                 dataIndex="action"
                 key="action"
+                responsive= {['md']}
                 render= {(text,record)=>(
                     <>
                     <Space>

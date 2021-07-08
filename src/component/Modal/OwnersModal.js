@@ -7,7 +7,7 @@ function OwnersModal(props) {
     const [value,setValue] = useState('')
     return (
         <div>
-            <Button onClick={()=>setShow(true)} type="primary">สร้างสมาชิกผู้เสียภาษี</Button>
+            <Button onClick={()=>setShow(true)} type="primary">จัดการผู้เสียภาษี</Button>
             <Modal
             title="สร้างเจ้าของทรัพย์สิน"
             visible={show}

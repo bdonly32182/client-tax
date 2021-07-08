@@ -56,7 +56,7 @@ export function DefinitionPdf(land,tax,condo,
                    {text:`วันที่ .......... ${NowDate?.toLocaleDateString('th-TH', { year: 'numeric',month: 'long'})}`,margin: [300, 5, 20, 5]},  
                    'เรื่อง แจ้งการประเมินเพื่อเสียภาษีที่ดินและสิ่งปลูกสร้าง',
                    {text:`เรียน ${Sendto}`},
-                   {text:`ที่อยู่ บ้านเลขที่ ${tax.Address?.Num_House||" - "} ถนน ${tax.Address?.Road_Name||"-"} ซอย ${tax.Address?.Soi||"-"} หมู่ ${tax.Address?.Moo||"-"} แขวง ${tax.Address?.Tambol||"-"} 
+                   {text:` บ้านเลขที่ ${tax?.Address?.Num_House||" - "} ถนน ${tax?.Address?.Road_Name||"-"} ซอย ${tax?.Address?.Soi||"-"} หมู่ ${tax?.Address?.Moo||"-"} แขวง ${tax.Address?.Tambol||"-"} 
                     เขต ${tax.Address?.district_name||"-"} จังหวัด ${tax.Address?.Changwat||"-"}  ${tax.Address?.Post_No||"-"} เบอร์ติดต่อ ${tax.Address?.Phone_no||"-"}`},
                    {text:'ตามที่ท่านเป็นเจ้าของทรัพย์สิน ประกอบด้วย',style:'marginText'},
                    {text: `1.ที่ดิน จำนวน ${leader.Land?.length>0?leader.Land[0]?.totalLand:0} แปลง`,style:'marginText' },

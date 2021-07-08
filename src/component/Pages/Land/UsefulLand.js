@@ -52,7 +52,7 @@ function UsefulLand(props) {
     }
     return (
         <>
-            <Layout style={{height:"100vh" , width:'180vh',margin:'4px 26px 0'}}>
+            <Layout style={{height:"100%" , width:'100%',margin:'4px 26px 0'}}>
                 {props.PriceLand >0&&props.tax_id_land&&
                 <UsefulModal button ="สร้าง" code_land={props.code_land} 
                             useful = {props.usefullands} balancePlace={balancePlace} 

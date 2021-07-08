@@ -1,6 +1,6 @@
 import {FETCHS_CUSTOMER,FETCH_CUSTOMER} from '../action/ActionType';
 
-export default (state=[],action) =>{
+const CustomerReducer = (state=[],action) =>{
     switch (action.type) {
         case FETCHS_CUSTOMER:
             
@@ -11,3 +11,4 @@ export default (state=[],action) =>{
             return state;
     }
 };
+export default CustomerReducer

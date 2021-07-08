@@ -1,4 +1,4 @@
-import {FETCHS_CONDO,FETCH_CONDO,DELETE_ROOM,CREATE_ROOM} from '../action/ActionType';
+import {FETCHS_CONDO,FETCH_CONDO} from '../action/ActionType';
 const condoReducer =  (state = [] , action) => {
         switch (action.type) {
             case FETCHS_CONDO:

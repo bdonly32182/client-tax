@@ -5,7 +5,9 @@ import FarmForm from '../Form/FarmForm'
 import {useDispatch} from 'react-redux'
 import axios from '../../config/axios'
 import {FETCH_USEFUL_LAND} from '../../store/action/ActionType'
-function FarmTable({FarmList,onDelete}) {
+import NextoModal from '../Modal/NextoModal'
+
+function FarmTable({FarmList,onDelete,isAccross,tax_id,useful_id}) {
     const {Column,ColumnGroup} = Table;
     const dispatch = useDispatch();
     const [form] = Form.useForm();
@@ -66,6 +68,9 @@ function FarmTable({FarmList,onDelete}) {
                                     <DeleteOutlined style={{color:'red'}}/>
                                     </Button>
                                 </Popconfirm>
+                                {isAccross &&
+                                    <NextoModal tax_id={tax_id} useful_id={useful_id} TypeName="เกษตร" isAccross={isAccross}/>
+                                }
                     </Space>}
                     />
                 </ColumnGroup>

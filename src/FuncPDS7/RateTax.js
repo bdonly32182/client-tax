@@ -6,39 +6,99 @@ export const RateTax=({BuildOnUsefulLands,LiveTypes,OtherTypes,
                         },
                             Category_Tax,uid_tax,lands)=>{
     if (Useful.length > 0) {
+        let excepLive = BuildOnUsefulLands.filter(({Building:{LiveType}})=>LiveType?.Live_Status === true)
+                        .map(({Building:{LiveType,Build_Tax_ID}}) => ({LiveStatus:LiveType?.Live_Status,Build_Tax_ID}));
         let TotalNexto =0;
-        let OrginalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
-                                       .reduce((pre,cur)=>pre+cur,0);   
-                    let OriginalUsefulPrice = BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}})=>
-                                (((Width * Length)/OrginalPlace)*PriceUseful + AfterPriceDepreciate)
-                    )
-                    .reduce((pre,cur)=>pre+cur,0);
-                  TotalNexto += OriginalUsefulPrice 
-                    Useful.map((usefuls)=>{ 
+       
+                    Useful.map((usefuls,index)=>{ 
+                                //usefuls คือแปลงที่ติดกัน
+                        if (usefuls.UsefulLand_Tax_ID === uid_tax) { //สิ่งปลูกสรา้งกับที่ดินคนละเจ้าของ
+                            let OrginalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
+                                .reduce((pre,cur)=>pre+cur,0);   
+                            let OriginalUsefulPrice = BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}})=>
+                                        (((Width * Length)/OrginalPlace)*PriceUseful + AfterPriceDepreciate)
+                            )
+                            .reduce((pre,cur)=>pre+cur,0);
+                            if (index === 0 &&UsefulLand_Tax_ID=== uid_tax) { //ให้มันบวก ราคาที่ดินและสิ่งปลูกสร้างของแปลงหลักแค่ครั้งเดียว
+                                if (OriginalUsefulPrice !== 0) {//มีสิ่งปลูกสร้าง   OriginalUsefulPrice !== 0
+                                    TotalNexto += OriginalUsefulPrice 
+                                }else{
+                                    TotalNexto += PriceUseful
+                                }
+                            
+                            }
+                            
                             if (usefuls.BuildOnUsefulLands.length >0) {
                                 let totalPlace = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)
                                                 .reduce((pre,cur)=>pre+cur,0);   
-                                                
-                                let totalPriceUseful = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate}})=>
-                                            ((((Width * Length)/totalPlace)*usefuls.PriceUseful) + AfterPriceDepreciate)
+                                let totalPriceUseful = usefuls.BuildOnUsefulLands.map(({Building:{Width,Length,AfterPriceDepreciate,LiveType}})=>{
+                                    return LiveType?
+                                    LiveType.Live_Status? 0 :usefuls.LiveTypes.length>0&&usefuls.LiveTypes[0].Useful_live?.IntregateLive===true?
+                                        ((((Width * Length)/totalPlace)*usefuls.PriceUseful) + AfterPriceDepreciate)
+                                        : usefuls.PriceUseful
+                                    : 
+                                    ((((Width * Length)/totalPlace)*usefuls.PriceUseful) + AfterPriceDepreciate)
+                                }              
                                 )
                                 .reduce((pre,cur)=>pre+cur,0);
-                                TotalNexto += totalPriceUseful
+                                TotalNexto += totalPriceUseful 
                             }
-                            //new version
                             if (usefuls.LiveTypes.length === 0 &&usefuls.OtherTypes.length === 0&& usefuls.FarmTypes.length === 0&& usefuls.EmptyTypes.length === 0) {
             
                                 TotalNexto += usefuls.PriceUseful
                             }
+                            //ไม่มีสิ่งปลูกสร้าง
+                            if (usefuls.BuildOnUsefulLands.length ===0 ) {
+                                //มีสัดส่วน ก็คือสิ่งปลูกสร้างเป็นของคนอื่นในแปลงที่ติดกัน(แปลงรอง)
+                                if (usefuls.FarmTypes.length>0 || usefuls.LiveTypes.length>0 || usefuls.OtherTypes.length>0 || usefuls.EmptyTypes.length>0) {                               
+                                    TotalNexto += usefuls.PriceUseful 
+                                }
+                            
+                            }
+                        
                             return TotalNexto
                             
-                        })
-            return Seperate(TotalNexto,TypeName,0,StartYears,EmptyAbsolutes).map((res,i)=><p key={i}>{res.percentShow}</p>)
+                    }else{
+                            if (BuildOnUsefulLands.length >0 && index === 0) { //index === 0 เพราะว่าอาจมีแปลงติดกันหลายแปลง ทำให้ AfterPriceDepreciate * index ดังนั้นจึงให้ทำแค่รอบเดียวพอ
+                                //  สิ่งปลูกสร้างคนละเจ้าของ
+                                let totalPriceUseful = BuildOnUsefulLands.map(({Building:{AfterPriceDepreciate}})=>
+                                    AfterPriceDepreciate
+                                )
+                                .reduce((pre,cur)=>pre+cur,0);
+                                TotalNexto += totalPriceUseful
+                                
+                            return TotalNexto   
+                            }
+                    }
+                })
+               
+            return Seperate(TotalNexto,TypeName,
+                excepLive.length>0?
+                        excepLive[0]?.Build_Tax_ID === uid_tax && UsefulLand_Tax_ID=== uid_tax?
+                        50000000:10000000
+                    :
+                    Category_Tax ==="บุคคล" &&UsefulLand_Tax_ID=== uid_tax &&TypeName ==="เกษตร"?
+                    50000000
+                    :0,
+                StartYears,EmptyAbsolutes).map((res,i)=><p key={i}>{res.percentShow}</p>)
 
     }else{
             
         if (isNexto) {
-            return <p>0</p>
+            //กรณีแปลงติดกันหลังหลักกับหลังรอง จะต้องมีสิ่งปลูกสร้างที่มี Live_Status === false ต้องเอาราคาสิ่งปลูกสร้างมาคิด
+            //ถ้าเป็นกรณีอื่นๆ ไม่ต้องเอามาคำนวณ AfterPriceDepreciate
+           let buildLive = BuildOnUsefulLands.filter(({Building})=>Building?.LiveType?.Live_Status === false);
+           return  buildLive.length>0&&LiveTypes.length>0&& LiveTypes[0]?.Useful_live?.IntregateLive===false?
+                Seperate(buildLive[0]?.Building?.AfterPriceDepreciate,"อยู่อาศัย")
+                .map((res,i) =><p key={i}>{res.percentShow}</p>)                   
+            :  
+            UsefulLand_Tax_ID=== uid_tax?
+            <p>แปลงติดกัน</p> 
+            : // สิ่งปลูกสร้างคนละเจ้าของ
+            BuildOnUsefulLands.map(({Building})=>Seperate(Building?.AfterPriceDepreciate,TypeName,
+                TypeName=== "เกษตร"?50000000:0
+            )
+            .map((res,i) =><p key={i}>{res.percentShow}</p>))
         }else{
             if (BuildOnUsefulLands.length >0) {      
                 let totalPlace = BuildOnUsefulLands.map(({Building:{Width,Length}})=>Width * Length)

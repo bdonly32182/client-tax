@@ -107,17 +107,17 @@ function ImportExcel() {
             <Row >
                 <Col style={{paddingLeft:'16px'}}>
                 <div style={{borderRadius:'10px',width:250}}>
-                    <b>ตัวอย่างคอลัมน์ไฟล์ของกรมธนารักษ์</b>
+                    <b>ไฟล์ข้อมูลแปลงที่ดินและผู้ครอบครอง</b>
                     <Image src="exampleThanaruk.png" style={{padding:'10px 0px 10px 0px',height:140}}/>
                     <Upload {...UploadThanaruk}>
                        <Button style={{width:250,backgroundColor:'green',color:'white'}}>เลือกไฟล์ excel ของกรมธนารักษ์</Button>
                     </Upload>
                     <Button 
                     onClick={HandleThanaruk}
-                    style={{backgroundColor:'#F5C813',width:250}}>อัพโหลดไฟล์กรมธนารักษ์</Button>
+                    style={{backgroundColor:'#F5C813',width:250}}>อัพโหลดไฟล์แปลงที่ดินและผู้ครอบครอง</Button>
                 </div>
                 </Col>
-                <Col style={{paddingLeft:'46px'}}>
+                {/* <Col style={{paddingLeft:'46px'}}>
                 <div style={{borderRadius:'10px',width:250}}>
                     <b>ตัวอย่างคอลัมน์ไฟล์ที่ไม่มีราคาประเมิน </b>
                     <Image src="exampleRateLandZero.png" style={{padding:'10px 0px 10px 0px',height:140}}/>
@@ -154,14 +154,14 @@ function ImportExcel() {
 
                 </div>
                 </Col>
-                
+                 */}
                 
             </Row>
             <h1 style={{paddingTop:'20px',color:'#175DB8'}}><u>อาคารชุด</u></h1>
             <Row >
                 <Col style={{paddingLeft:'16px'}}>
                 <div style={{borderRadius:'10px',width:250}}>
-                    <b>ตัวอย่างคอลัมน์ไฟล์ของผู้เสียภาษีห้องชุด </b>
+                    <b>ไฟล์ข้อมูลห้องชุดและผู้ครอบครอง </b>
                     <Image src="ExampleCustomer.png" style={{padding:'10px 0px 10px 0px',height:140}}/>
                     <Upload {...uploadCustomer}>
                     <Button style={{width:250,backgroundColor:'green',color:'white'}}>เลือกไฟล์ excel ของกรมที่ดิน</Button>
@@ -173,17 +173,6 @@ function ImportExcel() {
                  </div>
                 </Col>
                 {/* <Col style={{paddingLeft:'46px'}}>
-                <div style={{borderRadius:'10px',width:250}}>
-                    <b>ตัวอย่างคอลัมน์ไฟล์ที่ไม่มีราคาประเมินห้องชุด </b>
-                    <Image src="exampleThanaruk.png" style={{padding:'10px 0px 10px 0px',height:140}}/>
-                    <Upload>
-                    <Button style={{width:250,backgroundColor:'green',color:'white'}}>เลือกไฟล์ excel ของกรมธนารักษ์</Button>
-                    </Upload>
-                    <Button style={{backgroundColor:'#F5C813',width:250}}>อัพโหลดไฟล์กรมธนารักษ์</Button>
-
-                 </div>
-                </Col> */}
-                <Col style={{paddingLeft:'46px'}}>
                 <div style={{borderRadius:'10px',width:250}}>
                     <b>ตัวอย่างคอลัมน์ไฟล์ของอาคารชุด </b>
                     <Image src="ExampleCondo.png" style={{padding:'10px 0px 10px 0px',height:140}}/>
@@ -208,7 +197,7 @@ function ImportExcel() {
                      style={{backgroundColor:'#F5C813',width:250}}>อัพโหลดไฟล์ของกรมที่ดิน</Button>
 
                 </div>
-                </Col>
+                </Col> */}
             </Row>
         </div>
     )

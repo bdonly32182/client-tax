@@ -16,6 +16,7 @@ function CondoTable(props) {
                 record.__uniqueId = ++uniqueId;
                 return record.__uniqueId;
                 }}
+                scroll={{x:'100%'}}
         >
             <Column title="ชื่ออาคารชุด" dataIndex="Condo"
             render={text=>text.Condo_name}

@@ -8,7 +8,6 @@ function FilterLand() {
     const dispatch = useDispatch();
     let token = LocalStorageService.getToken();
     let jwt = jwtDecode(token)
-    console.log(jwt);
     const {Option} = Select;
     const [CodeLand, setCodeLand] = useState('')
     const [ParcelNo, setParcelNo] = useState('')
@@ -24,11 +23,14 @@ function FilterLand() {
     return (
         <div style={{backgroundColor:'#9ddfd3',padding:'60px',paddingLeft:'200px',margin:'10px'}}>
            <Row >
-               <Col >
-                <p>คำค้นหารหัสแปลงที่ดิน</p>
-                <Input onChange={(e)=>setCodeLand(e.target.value)} />
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
+                   <div style={{paddingLeft:'30px',textAlign:'center'}}>
+                     <p>คำค้นหารหัสแปลงที่ดิน</p>
+                    <Input onChange={(e)=>setCodeLand(e.target.value)} />  
+                   </div>
+                
                </Col>
-               <Col>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
                <div style={{paddingLeft:'30px',textAlign:'center'}}>
                     <p>คำค้นหาเลขที่เอกสารสิทธิ์</p>
                     <Input onChange={(e)=>setParcelNo(e.target.value)}/> 
@@ -36,7 +38,7 @@ function FilterLand() {
 
                 
                </Col>
-               <Col>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
                <div style={{paddingLeft:'30px',textAlign:'center'}}>
                     <p>คำค้นหาเลขที่ดิน</p>
                     <Input onChange={(e)=>setLandNo(e.target.value)}/>
@@ -44,7 +46,7 @@ function FilterLand() {
 
                 
                </Col>
-               <Col>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
                <div style={{paddingLeft:'30px',textAlign:'center'}}>
                     <p>คำค้นหาหน้าสำรวจ</p>
                     <Input onChange={(e)=>setSurveyNo(e.target.value)}/>
@@ -54,14 +56,17 @@ function FilterLand() {
                </Col>
            </Row>
            <Row  style={{paddingTop:'20px'}}>
-               <Col>
-                <p>คำค้นหารหัสผู้เสียภาษี</p>
-                <Input onChange={(e)=>setTaxId(e.target.value)}/>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
+                <div  style={{paddingLeft:'30px',textAlign:'center'}}>
+                   <p>คำค้นหารหัสผู้เสียภาษี</p>
+                    <Input onChange={(e)=>setTaxId(e.target.value)}/> 
+                </div>
+                
                </Col>
-               <Col>
-               <div style={{paddingLeft:'40px',textAlign:'center'}}>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
+               <div style={{paddingLeft:'30px',textAlign:'center'}}>
                     <p>ตัวเลือกพิเศษ</p>
-                    <Select onChange={(value)=>setSpecial(value)} style={{ width: 300 }}>
+                    <Select onChange={(value)=>setSpecial(value)} style={{ width: '100%' }}>
                         <Option value={``}></Option>
                         <Option value={`L left join  usefulLand UL on L.code_land = UL.Land_id
                                         where L.distict_id =${jwt.distict_id}
@@ -87,8 +92,8 @@ function FilterLand() {
                </div>
                 
                </Col>
-               <Col>
-               <div style={{paddingLeft:'40px' ,textAlign:'center'}}>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
+               <div style={{paddingLeft:'30px' ,textAlign:'center'}}>
                  <p>ตัวเลือกคำค้นหา</p>
                 <Radio.Group onChange={(e)=>setOperator(e.target.value)} value={Operator}>
                     <Radio value='or'>ตรงกันบางส่วน</Radio>
@@ -99,7 +104,7 @@ function FilterLand() {
                 
                </Col>
                
-               <Col>
+               <Col xs={24}sm= {20} md= {10} lg= {10} xl={6} xxl={6}>
                <div style={{padding:'30px'}}>
                 <Button onClick={()=>SearchLand()}>ค้นหา</Button>
                </div>

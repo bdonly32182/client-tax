@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { Form, Input,Col,Select ,Checkbox} from 'antd';
+import { Form, Input,Col,Select ,Checkbox,Row} from 'antd';
 const layout = {
     labelCol: {
       span: 3,
@@ -46,23 +46,23 @@ function UsefulLandForm(props) {
             >
                 <Form.Item>
                     <Input.Group compact>
-                        <Col>
-                            <Form.Item
-                            label="รหัสการใช้ประโยชน์"
-                            name="useful_id"
-                            >
-                            <Input disabled={true}/>
-                            </Form.Item>
-                        </Col>
-                        <Col>
-                            <Form.Item
-                            label={`เนื้อที่(ตร.ว)`}
-                            name="Place"
-                            rules={[{ required: true, message: 'กรุณากรอกเนื้อที่!' }]}
-                            >
-                            <Input />
-                            </Form.Item>
-                        </Col>  
+                            <Col >
+                                <Form.Item
+                                label="รหัสการใช้ประโยชน์"
+                                name="useful_id"
+                                >
+                                <Input disabled={true}/>
+                                </Form.Item>
+                            </Col>
+                            <Col >
+                                <Form.Item
+                                label={`เนื้อที่(ตร.ว)`}
+                                name="Place"
+                                rules={[{ required: true, message: 'กรุณากรอกเนื้อที่!' }]}
+                                >
+                                <Input />
+                                </Form.Item>
+                            </Col>    
                     </Input.Group>
                 </Form.Item>  
                 <Form.Item >
@@ -72,7 +72,7 @@ function UsefulLandForm(props) {
                                     name="Usage"
                                     rules={[{ required: true, message: 'กรุณาเลือกลักษณะการใช้!' }]}
                         >
-                            <Select placeholder="เลือกลักษณะการใช้">
+                            <Select placeholder="เลือกลักษณะการใช้" style={{width:'100%'}}>
                                 <Option value={true}>ใช้เอง</Option>
                                 <Option value={false}>ให้เช่า</Option>                                       
                             </Select>
@@ -83,7 +83,7 @@ function UsefulLandForm(props) {
                                 label="ลักษณะการใช้ประโยชน์"
                                 rules={[{ required: true, message: 'กรุณาเลือกลักษณะการใช้ประโยชน์!' }]}
                             >
-                                <Select placeholder="ลักษณะการใช้ประโยชน์" onChange={onChange} style={{width:130}}>
+                                <Select placeholder="ลักษณะการใช้ประโยชน์" onChange={onChange} style={{width:'100%'}}>
                                     {options.map((option,i) =><Option value={option.value} key={i}>{option.label}</Option>)}
                                 </Select>
                             
@@ -113,7 +113,7 @@ function UsefulLandForm(props) {
                             name="Special_Useful"
                             rules={[{ required: true, message: 'กรุณาเลือกลักษณะพิเศษ!' }]}
                         >
-                            <Select placeholder="เลือกการยกเว้นภาษี" style={{width:220}}>
+                            <Select placeholder="เลือกการยกเว้นภาษี" style={{width:'100%'}}>
                                 <Option value="0">ไม่เลือก</Option>
                                 <Option value="100">ยกเว้นภาษีตาม พรบ.มาตรา 8</Option>
                                 <Option value="90">ยกเว้นภาษีตาม พรก.มาตรา 4</Option>
@@ -125,16 +125,16 @@ function UsefulLandForm(props) {
                     </Input.Group>
                 </Form.Item>
                 <Form.Item>
-                    <Input.Group compact>
-                        <Col>
+                    {/* <Input.Group compact> */}
+                        <Col span={24}>
                                 <Form.Item
                                 label="หมายเหตุ"
                                 name="marks"
                                 >
-                                <Input style={{width:400}}/>
+                                <Input style={{width:'70%'}}/>
                                 </Form.Item>
                         </Col>
-                    </Input.Group>
+                    {/* </Input.Group> */} 
                 </Form.Item>
                             
         </Form>

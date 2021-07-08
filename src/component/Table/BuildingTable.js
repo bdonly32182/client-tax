@@ -70,14 +70,18 @@ function BuildingTable(props) {
                 />
             </ColumnGroup>
             <Column title="อายุ(ปี)"dataIndex="Age_Build" key="Age_Build"
+            responsive= {['sm']}
             render={(text,record)=><p>{record.Building.Age_Build}</p>}
             />
-            <ColumnGroup title="ลักษณะการใช้ประโยชน์ (ตรม.)">
+            <ColumnGroup title="ลักษณะการใช้ประโยชน์ (ตรม.)"
+            responsive= {['md']}
+            >
                 <ColumnGroup title="อยู่อาศัย">
                     <Column title="หลังหลัก" 
                     render={(text,record)=><p>{record.Building.LiveType && record.Building.LiveType.Live_Status === true && record.Building.LiveType.Live_Size}</p>}
                     />
                     <Column title="หลังรอง" dataIndex="Live_Size" key="second_live"
+                    responsive= {['md']}
                     render={(text,record)=><p>{record.Building.LiveType && record.Building.LiveType.Live_Status === false && record.Building.LiveType.Live_Size}</p>}
 
                     />
@@ -96,9 +100,11 @@ function BuildingTable(props) {
                 />
             </ColumnGroup>
             <Column title="หมายเหตุ" dataIndex="Mark" key="Mark"
+            responsive= {['lg']}
             render={(text,record)=><p>{record.Building.Mark}</p>}
             />
             <Column title="จัดการ" dataIndex="action" key="action" 
+            responsive= {['lg']}
             render={(text,record)=>(
                 <Space>
                     <BuildingModal button ={<EditFilled />} onEdit={true} building ={record.Building} TypeName={props.TypeName} 

@@ -5,7 +5,9 @@ import EmptyForm from '../Form/EmptyForm'
 import axios from '../../config/axios'
 import {FETCH_USEFUL_LAND} from '../../store/action/ActionType'
 import {useDispatch} from 'react-redux'
-function EmptyTable({EmptyList,onDelete}) {
+import NextoModal from '../Modal/NextoModal'
+
+function EmptyTable({EmptyList,onDelete,isAccross,tax_id,useful_id}) {
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
     const [form] = Form.useForm();
@@ -65,6 +67,9 @@ function EmptyTable({EmptyList,onDelete}) {
                                     <DeleteOutlined style={{color:'red'}}/>
                                     </Button>
                                 </Popconfirm>
+                                {isAccross &&
+                                    <NextoModal tax_id={tax_id} useful_id={useful_id} TypeName="ว่างเปล่า" isAccross={isAccross}/>
+                                }
                     </Space>}
                     />
                 </ColumnGroup>

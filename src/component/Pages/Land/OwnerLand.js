@@ -122,9 +122,9 @@ function OwnerLand(props) {
                    
                 </Col>
                 <Col >
-                    <SelectCategoryModal generate_tax_id={generate_tax_id} generateClick={generateClick} titleButton ="สร้างรหัสผู้เสียภาษี"
+                    <SelectCategoryModal generate_tax_id={generate_tax_id} generateClick={generateClick} titleButton ="แมทช์รหัสผู้เสียภาษี"
                     style={generateClick?{backgroundColor:'green',color:'black'}:{backgroundColor:'red',color:'white'}}
-                    popover="สร้างรหัสผู้เสียภาษี"
+                    popover="แมทช์รหัสผู้เสียภาษี"
                     />
                 </Col>
                 <Col >

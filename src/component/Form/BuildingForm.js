@@ -16,7 +16,6 @@ function BuildingForm(props) {
   const onChangeSubCate = value => {
     setSecondCate(value);
   }
-  console.log('clieckk forbukd');
   return (
         <Form
         form={props.formModal}
@@ -28,11 +27,13 @@ function BuildingForm(props) {
               Live_Size:props.building.LiveType?props.building.LiveType.Live_Size :0,
               Empty_Size:props.building.EmptyType?props.building.EmptyType.Empty_Size:0 ,
               Other_Size:props.building.OtherType?props.building.OtherType.Other_Size:0 ,
+              Forrent_Size:props.building.ForrentLive?props.building.ForrentLive.Forrent_Size:0,
               rating_id:props.building.RateOfBuilding.Code,
               Percent_Farm:props.building.FarmType?props.building.FarmType.Percent_Farm:0,
               Percent_Live:props.building.LiveType?props.building.LiveType.Percent_Live:0,
               Percent_Other:props.building.OtherType?props.building.OtherType.Percent_Other:0,
               Percent_Empty:props.building.EmptyType?props.building.EmptyType.Percent_Empty:0,
+              Percent_Forrent:props.building.ForrentLive?props.building.ForrentLive.Percent_Forrent:0,
               Live_Status:props.building.LiveType?props.building.LiveType.Live_Status:0,
               StartYear:props.building.EmptyType?props.building.EmptyType.StartYear:0,
               EmptyAbsolute:props.building.EmptyType?props.building.EmptyType.EmptyAbsolute:0
@@ -44,6 +45,7 @@ function BuildingForm(props) {
               Live_Size:0,
               Empty_Size:0,
               Other_Size:0,
+              Forrent_Size:0,
               Live_Status:false
             }}
           >
@@ -100,7 +102,7 @@ function BuildingForm(props) {
                       name="rating_id"
                       rules={[{ required: true, message: 'กรุณาเลือกประเภทสิ่งปลูกสร้าง !' }]}
                     >
-                      <Select onChange={onChangeCategory} placeholder="เลือกประเภทการใช้ประโยชน์ย่อย" style={{width:280}}>
+                      <Select onChange={onChangeCategory} placeholder="เลือกประเภทการใช้ประโยชน์ย่อย" style={{width:280}} virtual={false}>
                         {code_cate_building.map(cate=><Select.Option  value={cate.code} key={cate.code}>{cate.category}</Select.Option >)}
                       </Select>
                     </Form.Item>
@@ -111,7 +113,7 @@ function BuildingForm(props) {
                       name="Sub_Category"
                       rules={[{ required: true, message: 'กรุณาเลือกประเภทสิ่งปลูกสร้างย่อย !' }]}
                     >
-                      <Select placeholder="เลือกประเภทการใช้ประโยชน์ย่อย"  value={secondCate} onChange={onChangeSubCate} style={{width:280}}>
+                      <Select placeholder="เลือกประเภทการใช้ประโยชน์ย่อย"  value={secondCate} onChange={onChangeSubCate} style={{width:280}} virtual={false}>
                         {category.map(subcate=>(<Select.Option key={subcate} >{subcate}</Select.Option>))}
                       </Select>
                     </Form.Item>
@@ -129,7 +131,7 @@ function BuildingForm(props) {
                       name="StyleBuilding"
                       rules={[{ required: true, message: 'กรุณาเลือกลักษณะสิ่งปลูกสร้าง !' }]}
                       >
-                        <Select placeholder="เสือกลักษณะสิ่งปลูกสร้าง" style={{width:130}}>
+                        <Select placeholder="เสือกลักษณะสิ่งปลูกสร้าง" style={{width:130}} virtual={false}>
                           <Option value="ไม้">ไม้</Option>
                           <Option value="ตึก">ตึก</Option>
                           <Option value="ครึ่งตึกครึ่งไม้">ครึ่งตึกครึ่งไม้</Option>
@@ -270,6 +272,27 @@ function BuildingForm(props) {
                                 name="Percent_Empty"
                               >
                                 <Input disabled={props.TypeName === "ว่างเปล่า" ||props.TypeName==="หลายประเภท"?false:true}/>
+                              </Form.Item>
+                        </div>
+                       
+                      
+                      }
+                  </Col>
+                  <Col>
+                  <Form.Item
+                      label="เช่าอาศัย"
+                      name="Forrent_Size"
+                    >
+                      <Input disabled={props.TypeName === "อยู่อาศัย" ||props.TypeName==="หลายประเภท"?false:true}/>
+                      
+                    </Form.Item>
+                    {props.building &&
+                        <div style={{display:'block',paddingRight:'20px'}}>
+                            <p style={{color:'red'}}>*สัดส่วนประเภทว่างเปล่า</p>
+                            <Form.Item
+                                name="Percent_Forrent"
+                              >
+                                <Input disabled={props.TypeName === "อยู่อาศัย" ||props.TypeName==="หลายประเภท"?false:true}/>
                               </Form.Item>
                         </div>
                        

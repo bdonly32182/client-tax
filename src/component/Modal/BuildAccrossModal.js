@@ -54,11 +54,8 @@ function BuildAccrossModal({titleButton,building,PriceUseful,buildings,UsefulLan
             useful_id,
             Land_id:code_land,
             PercentPlaceBuild:PercentPlaceBuild.toFixed(2),
-            // Place:building.Build_Total_Place /4,
             PriceUseful:Price,
-            Special_Useful:"0",
-            
-            // ...seperate,
+            Special_Useful:"0",            
             Usage:false,
             UsefulLand_Tax_ID:Tax_Group.Category_Tax === "รัฐบาล" ? building.Build_Tax_ID :Tax_Group.uid_tax
             

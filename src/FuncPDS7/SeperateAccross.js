@@ -94,9 +94,9 @@ export const SeperateAccross = (PriceOriginal = 0,type ="อื่นๆ" ,disco
                           rate.push({PriceOriginal:150000000,percent:0.4/100 ,percentShow:0.40})
                         :
 
-                         PriceOriginal + LastPrice?.price-50000000>0?
+                         PriceOriginal + LastPrice?.price-50000000>0&&
                           rate.push({PriceOriginal:PriceOriginal+ LastPrice?.price-50000000,percent:0.4/100 ,percentShow:0.40})
-                          :rate.push({PriceOriginal:PriceOriginal - (50000000 + LastPrice?.price) ,percent:0.4/100 ,percentShow:0.40})
+                          // :rate.push({PriceOriginal:PriceOriginal - (50000000 + LastPrice?.price) ,percent:0.4/100 ,percentShow:0.40})
                       
               PriceOriginal + LastPrice?.price -200000000>=800000000?
                           rate.push({PriceOriginal:800000000,percent:0.5/100 ,percentShow:0.50})
@@ -195,16 +195,16 @@ export const SeperateAccross = (PriceOriginal = 0,type ="อื่นๆ" ,disco
                           })
                         :
 
-                         PriceOriginal + LastPrice?.price-50000000>0?
+                         PriceOriginal + LastPrice?.price-50000000>0&&
                           rate.push({PriceOriginal:PriceOriginal+ LastPrice?.price-50000000,
                             percent:absoluteEmpty?0.4/100:nowYear - year>=27?3.0/100:Percent(nowYear-year,0.4/100) ,
                             percentShow:absoluteEmpty?0.4:nowYear - year>=27?3.0:PercentShow(nowYear-year,0.4)
                           })
-                          :
-                          rate.push({PriceOriginal:PriceOriginal - (50000000 + LastPrice?.price) ,
-                            percent:absoluteEmpty?0.4/100:nowYear - year>=27?3.0/100:Percent(nowYear-year,0.4/100) ,
-                            percentShow:absoluteEmpty?0.4:nowYear - year>=27?3.0:PercentShow(nowYear-year,0.4)
-                          })
+                          // :
+                          // rate.push({PriceOriginal:PriceOriginal - (50000000 + LastPrice?.price) ,
+                          //   percent:absoluteEmpty?0.4/100:nowYear - year>=27?3.0/100:Percent(nowYear-year,0.4/100) ,
+                          //   percentShow:absoluteEmpty?0.4:nowYear - year>=27?3.0:PercentShow(nowYear-year,0.4)
+                          // })
                       
               PriceOriginal + LastPrice?.price -200000000>=800000000?
                           rate.push({PriceOriginal:800000000,

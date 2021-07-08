@@ -62,7 +62,7 @@ function FirstPage(props) {
 
     ]  
     return (
-        <div style={{backgroundColor:'whitesmoke',height:"100vh"}}>
+        <div style={{backgroundColor:'whitesmoke',height:"100%",width:'100%'}}>
             
             
             {props.role === 'employee' ||props.role === 'leader'?

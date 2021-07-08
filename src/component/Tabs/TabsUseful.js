@@ -64,6 +64,13 @@ function TabsUseful({useful,formModal}) {
                 )
             .catch(e=>notification.error({message:"ลบการใช้ประโยชน์ที่ดินล้มเหลว"}))
    }
+   const onIntregateLive =(id)=>{
+    axios.post('/api/intregate',{useful_id:id}).then((result) => {
+        notification.success({message:'สลับการเชื่อมข้อมูลเรียบร้อยแล้ว'})
+    }).catch((err) => {
+        notification.error({message:'สลับการเชื่อมข้อมูลล้มเหลว'})
+    });
+}
     return (
         <div style={{padding:10,paddingLeft:15}}>
         <Tabs>
@@ -75,12 +82,19 @@ function TabsUseful({useful,formModal}) {
                            <Col >
                            {useful.TypeName ==="หลายประเภท" ?<h3 style={{color:'red'}}>**เนื่องจากการใช้ประโยชน์ที่ดินเป็นหลายประเภทจึงไม่สามารถทำที่ดินแปลงติดกันได้ ต้องไปทำที่คร่อมแปลงแทน</h3>:
                            <Row>
-                               <Col>
+                               <Row>
                                  <NextoModal tax_id={useful.UsefulLand_Tax_ID} useful_id ={useful.useful_id} TypeName={useful.TypeName}/>
-                               </Col>
-                               <Col>
-                                    <NextoTable tabs={true} nextos ={nextos} onDeleteNexto={onDeleteNexto}/>
-                             </Col>
+                               </Row>
+                               <Row>
+                                    <NextoTable tabs={true} nextos ={nextos} onDeleteNexto={onDeleteNexto}  onIntregateLive={onIntregateLive}/>
+                                    {useful.TypeName ==="อยู่อาศัย"&& 
+                                        <Row>
+                                            <b>หมายเหตุ </b>
+                                            <p> - เมื่อคลิ๊กปุ่มสลับการเชื่อมข้อมูล(ปุ่มสีเขียว) จะแยกคิดแต่การใช้ประโยชน์ และ จะออกราคาสิ่งปลูกสร้าง</p>
+                                            <p> - ควรเลือกหลังรองเท่านั้น เพราะราคาที่ดินต้องไปลดรวมกับหลังหลัก</p>
+                                        </Row>
+                                    }
+                             </Row>
                            </Row>
                             }
                            </Col>
@@ -91,20 +105,30 @@ function TabsUseful({useful,formModal}) {
                 <TabPane tab="สัดส่วนการใช้ประโยชน์" key="3">
                         <Row>
                            <Col>
-                           <FarmTable FarmList={Farm} onDelete={onDeleteFarm}/>
+                           <FarmTable FarmList={Farm} onDelete={onDeleteFarm} 
+                            isAccross={useful.isAccross}tax_id={useful.UsefulLand_Tax_ID}
+                            useful_id={useful.useful_id}/>
                            </Col>
                            <Col span={3}></Col>
                            <Col>
-                           <LiveTable LiveList={Live} onDelete={onDeleteLive}/>
+                           <LiveTable LiveList={Live} onDelete={onDeleteLive}  
+                           isAccross={useful.isAccross} tax_id={useful.UsefulLand_Tax_ID}
+                           useful_id={useful.useful_id}/>
                            </Col>
                         </Row>
                         <Row>
                             <Col>
-                           <EmptyTable EmptyList={Empty} onDelete={onDeleteEmpty}/>
+                           <EmptyTable EmptyList={Empty} onDelete={onDeleteEmpty}  
+                           isAccross={useful.isAccross} tax_id={useful.UsefulLand_Tax_ID}
+                           useful_id={useful.useful_id}
+                           />
                            </Col>
                            <Col span={3}></Col>
                            <Col>
-                           <OtherTable OtherList={Other} onDelete={onDeleteOther}/>
+                           <OtherTable OtherList={Other} onDelete={onDeleteOther} 
+                           isAccross={useful.isAccross} tax_id={useful.UsefulLand_Tax_ID}
+                           useful_id={useful.useful_id}
+                           />
                            </Col>
                         </Row>
                 </TabPane>

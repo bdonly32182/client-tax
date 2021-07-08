@@ -34,7 +34,6 @@ function EditCostDoc() {
             notification.error({message:'เปิดไฟล์ PDF ล้มเหลว'})
         });
     }
-    console.log(cost);
     return (
         <div>
             <Header />
@@ -45,7 +44,7 @@ function EditCostDoc() {
                     <Popover content={ContentPopover(cost?.Tax_Group?.Customers)}>
                     <p>{`TaxID : ${cost?.SendTo}`}</p>   
                     </Popover>
-                    <p>{`BriefTotal: ${cost?.BriefTotal.toFixed(2)}`}</p>
+                    <p>{`BriefTotal: ${cost?.BriefTotal?.toFixed(2)}`}</p>
                     <Button onClick={()=>OpenPdf(cost?.PathPDF)}>Open PDF</Button>
                 </TabPane>
                 <TabPane tab="ข้อมูลการชำระเงิน" key="2">

@@ -1,10 +1,8 @@
 import React from 'react'
 import {Table,Space, Button} from 'antd'
-import {CheckOutlined,DeleteFilled}from '@ant-design/icons'
-import {useDispatch} from 'react-redux'
-function NextoTable({tabs,nextos,selectNexto,onDeleteNexto}) {
+import {CheckOutlined,DeleteFilled,SisternodeOutlined}from '@ant-design/icons'
+function NextoTable({tabs,nextos,selectNexto,onDeleteNexto,onIntregateLive}) {
     let uniqueId = 0;
-    const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
   
     return (
@@ -63,6 +61,7 @@ function NextoTable({tabs,nextos,selectNexto,onDeleteNexto}) {
                     <>
                     <Space >
                     {tabs&&<DeleteFilled  style={{color:'red' }} onClick={()=>onDeleteNexto(record)}/>}
+                    {tabs&&record.TypeName === "อยู่อาศัย" && <SisternodeOutlined onClick={()=>onIntregateLive(record.useful_id)} style={{backgroundColor:'#289672',color:'whitesmoke'}}/>}
                     {selectNexto&&<Button style={{borderRadius:'10px'}} onClick={()=>selectNexto(record)}>เลือกแปลงติดกัน</Button>}
                     </Space>
                    

@@ -19,13 +19,13 @@ function PaymentPdf({payment,costbook}) {
     let splitCostPrice =costbook?.BriefTotal.toString().split('.')
     let bathCostPrice = splitCostPrice[0];
     let satangCostPrice =splitCostPrice[1]||0;
-    let splitFineTotal = payment?.FineTotal.toFixed(2).toString().split('.')
+    let splitFineTotal = payment?.FineTotal?.toFixed(2).toString().split('.')
     let bathFineTotal = splitFineTotal[0];
     let satangFineTotal = splitFineTotal[1]||0;
-    let splitFineAdd= payment?.FineAdd.toFixed(2).toString().split('.')
+    let splitFineAdd= payment?.FineAdd?.toFixed(2).toString().split('.')
     let bathFineAdd = splitFineAdd[0];
     let satangFineAdd = splitFineTotal[1]||0;
-    let splitTotalPrice = payment?.totalPay.toFixed(2).toString().split('.')
+    let splitTotalPrice = payment?.totalPay?.toFixed(2).toString().split('.')
     let bathTotalPrice = splitTotalPrice[0];
     let satangTotalPrice = splitTotalPrice[1]||0;
     useEffect(() => {

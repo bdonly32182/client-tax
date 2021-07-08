@@ -5,7 +5,8 @@ import OtherForm from '../Form/OtherForm'
 import axios from '../../config/axios'
 import {FETCH_USEFUL_LAND} from '../../store/action/ActionType'
 import {useDispatch} from 'react-redux'
-function OtherTable({OtherList,onDelete}) {
+import NextoModal from '../Modal/NextoModal'
+function OtherTable({OtherList,onDelete,isAccross,tax_id,useful_id}) {
     const dispatch = useDispatch();
     const {Column,ColumnGroup} = Table;
     const [form] = Form.useForm();
@@ -65,6 +66,9 @@ function OtherTable({OtherList,onDelete}) {
                                     <DeleteOutlined style={{color:'red'}}/>
                                     </Button>
                                 </Popconfirm>
+                                {isAccross &&
+                                    <NextoModal tax_id={tax_id} useful_id={useful_id} TypeName="อื่นๆ" isAccross={isAccross}/>
+                                }
                     </Space>}
                     />
                 </ColumnGroup>
